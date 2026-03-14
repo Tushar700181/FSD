@@ -1,0 +1,391 @@
+/* --- CSS STYLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    overflow: hidden;
+    /* Prevents scrollbars during transitions */
+}
+
+/* Navigation Overlay - Glassmorphism */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    color: white;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo span {
+    color: #ff9f1c;
+    /* Campuseats Orange */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    /* Vertical center all items */
+    gap: 30px;
+}
+
+.nav-links li {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: 0.3s;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    padding: 8px 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a:hover {
+    color: #ff9f1c;
+}
+
+/* Hero Slider Container */
+.hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background: #000;
+}
+
+/* Individual Slides */
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 1;
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* Text & Button Content */
+.hero-content {
+    color: white;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    font-weight: 300;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 15px 40px;
+    background: #ff9f1c;
+    /* Orange Button */
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 159, 28, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cta-button:hover {
+    background: #e68a00;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 159, 28, 0.6);
+}
+
+/* Manual Navigation Arrows */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 20px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.arrow:hover {
+    background: rgba(255, 159, 28, 0.8);
+    /* Orange Hover */
+    border-color: #ff9f1c;
+}
+
+.left-arrow {
+    left: 0;
+}
+
+.right-arrow {
+    right: 0;
+}
+
+/* Slider Dots */
+.dots-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 1002;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 20px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dot:hover,
+.dot.active {
+    background: #ff9f1c;
+    transform: scale(1.2);
+}
+
+/* Auth Button (Login) */
+#auth-btn.login-state {
+    background: white;
+    color: black !important;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    margin-left: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#auth-btn.login-state:hover {
+    background: #ff9f1c;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Profile Icon Mode */
+#auth-btn i {
+    font-size: 1.5rem;
+    transition: 0.3s;
+}
+
+/* Profile Dropdown Container */
+.auth-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    min-width: 200px;
+    padding: 8px 0;
+    margin-top: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+}
+
+/* Hover Bridge to prevent losing hover in the gap */
+.auth-item::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent;
+    display: none;
+}
+
+.auth-item:hover::after {
+    display: block;
+}
+
+.auth-item:hover .profile-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 6px;
+}
+
+.dropdown-header .user-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dropdown-header .user-role {
+    font-size: 0.75rem;
+    color: #ff9f1c;
+    margin: 4px 0 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: 0.2s ease;
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-link i {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+.dropdown-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff !important;
+}
+
+.dropdown-link:hover i {
+    opacity: 1;
+    color: #ff9f1c;
+    transform: scale(1.1);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 6px 0;
+}
+
+.logout-link {
+    color: rgba(255, 107, 107, 0.9) !important;
+}
+
+
+/* --- TOAST NOTIFICATION --- */
+.toast-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(255, 159, 28, 0.95); /* Theme Orange */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toast-container.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-container i {
+    font-size: 1.2rem;
+    color: #fff;
+}

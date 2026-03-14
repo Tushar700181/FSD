@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | OneCampus</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="student_portal.css">
+    <script src="../complaints/storage.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="ph-fill ph-cube"></i>
+            </div>
+            <span class="logo-text">Portal</span>
+        </div>
+
+        <div class="user-profile-summary">
+            <div class="avatar">
+                <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=User&background=random" alt="Profile">
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="sidebar-name">Loading...</div>
+                <div class="user-role" id="sidebar-role">Student</div>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="../landing/index.html" class="nav-link">
+                <i class="ph ph-house"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-link active" onclick="showSection('active', this)">
+                <i class="ph-fill ph-list-dashes"></i>
+                <span>Complaint Status</span>
+            </a>
+            <a href="#" class="nav-link" onclick="showSection('past', this)">
+                <i class="ph ph-clock-counter-clockwise"></i>
+                <span>Past Complaints</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="ph ph-gear"></i>
+                <span>Settings</span>
+            </a>
+
+
+            <!-- Compose Button at Bottom -->
+            <button class="compose-btn" onclick="openModal()">
+                <i class="ph-bold ph-pencil-simple"></i>
+                <span>Register Complaint</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="search-bar">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" placeholder="Search my complaints...">
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="ph-fill ph-bell"></i></button>
+                <button onclick="StorageUtils.logout()" class="logout-btn"
+                    style="background:none; border:none; color:inherit; cursor:pointer; font:inherit;">Logout</button>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- Stats Bar -->
+            <section class="stats-bar">
+                <div class="stats-header">Stats Bar</div>
+                <div class="stats-cards">
+                    <!-- Total Filed -->
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-title">Total Filed: <span class="stat-num"
+                                    id="total-count">0</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar purple" style="width: 70%"></div>
+                        </div>
+                    </div>
+
+                    <!-- In Progress -->
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-title">In Progress: <span class="stat-num"
+                                    id="progress-count">0</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar yellow" style="width: 40%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Resolved -->
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-title">Resolved: <span class="stat-num"
+                                    id="resolved-count">0</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar green" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Complaints -->
+            <section class="active-complaints">
+                <h2 class="section-title" id="section-title">ACTIVE COMPLAINTS</h2>
+                <div class="complaints-grid" id="complaints-grid">
+                    <!-- Cards injected by JS -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- New Complaint Modal -->
+    <div class="modal-overlay" id="complaintModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">New Complaint</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="newComplaintForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select class="form-control" id="complaintCategory">
+                        <option>Academic</option>
+                        <option>Hostel</option>
+                        <option>Mess</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" class="form-control" placeholder="e.g., Internet not working in Room 302"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" rows="4" placeholder="Describe the issue in detail..."
+                        required></textarea>
+                </div>
+                <!-- Image Attachment -->
+                <div class="form-group">
+                    <label>Attach Images (Max 3)</label>
+                    <input type="file" class="form-control" accept="image/*" id="complaintImage" multiple>
+                </div>
+                <button type="submit" class="submit-btn" style="margin-top: 15px;">Submit Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-content" style="width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Complaint Details</h3>
+                <button class="close-btn" onclick="closeDetailsModal()">&times;</button>
+            </div>
+            <div id="detailsContent">
+                <!-- Content injected by JS -->
+            </div>
+            <div class="modal-footer" style="margin-top:20px; text-align:right;">
+                <button class="submit-btn" onclick="closeDetailsModal()"
+                    style="width:auto; padding: 10px 20px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="student_portal.js"></script>
+</body>
+
+</html>

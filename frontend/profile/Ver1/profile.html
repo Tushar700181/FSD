@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | OneCampus</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>OneCampus</span>
+        </div>
+
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Overview</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <i class="fa-solid fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Academics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="logout-section">
+            <a href="#" class="nav-link" style="color: #EF4444;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header>
+            <div class="page-title">
+                <h1>Student Profile</h1>
+                <p>Manage your personal and academic information</p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn-icon">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+                <div class="user-snippet">
+                    <img src="https://ui-avatars.com/api/?name=Tushar+Sharma&background=random" alt="User"
+                        class="user-avatar-small">
+                    <span>Tushar Sharma</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: 0.5rem;"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Profile Grid -->
+        <div class="profile-grid">
+
+            <!-- Left Card: Identity -->
+            <div class="card profile-card">
+                <div class="profile-cover"></div>
+                <div class="profile-avatar-container">
+                    <img src="https://ui-avatars.com/api/?name=Tushar&size=200" alt="Profile Picture"
+                        class="profile-avatar">
+                </div>
+                <h2 class="profile-name">Tushar Sharma</h2>
+                <span class="profile-role">Student</span>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <h3>3.8</h3>
+                        <p>CGPA</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>92%</h3>
+                        <p>Attendance</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>6</h3>
+                        <p>Semester</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section: Details -->
+            <div class="details-section">
+
+                <!-- Roll No -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-icon">
+                            <i class="fa-solid fa-id-card"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Roll Number</div>
+                            <div class="info-value">2023CSB1104</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Branch -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-icon">
+                            <i class="fa-solid fa-code-branch"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Branch</div>
+                            <div class="info-value">Computer Science</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graduation Year -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-icon">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Graduation Year</div>
+                            <div class="info-value">2027</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-icon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Phone Number</div>
+                            <div class="info-value">+91 98765 43210</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Father's Name -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-icon">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Father's Name</div>
+                            <div class="info-value">Mr. Rajendra Sharma</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address (Full Width) -->
+                <div class="info-card full-width">
+                    <div class="info-card-header">
+                        <div class="info-icon">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Permanent Address</div>
+                            <div class="info-value">123/B, Green Valley Apartments, Tech City, Bangalore - 560100</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

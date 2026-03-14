@@ -1,0 +1,52 @@
+# Walkthrough: Cafe Orders Feature Implementation
+
+I have successfully implemented the full-stack Cafe Orders feature, enabling students to order food online and cafe vendors to manage their menus and orders.
+
+## Key Accomplishments
+
+### 1. Vendor Management System
+- **Vendor Authentication**: Created a dedicated login for cafe staff at [vendor_login.html](file:///C:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/login/vendor_login.html).
+- **Menu Management**: In [hotel_view.html](file:///C:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/cafe/hotel_view.html), vendors can now add new items (name, price, image) and delete existing ones.
+- **Real-time Order Dashboard**: Vendors see incoming orders in an "Ongoing" list and can mark them as "Done", moving them to the "Completed" section.
+
+### 2. Student Ordering Experience
+- **Dynamic Menus**: [CafeM.html](file:///C:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/cafe/CafeM.html) now fetches real-time menu data from the database.
+- **Improved Cart**: [cart.html](file:///C:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/cafe/cart.html) groups items by cafe, allows quantity adjustments, and handles the checkout process.
+- **Local Persistence**: The cart state is maintained across page refreshes using `localStorage`.
+
+### 3. Smart Redirection
+- **Landing Page Integration**: Updated [nav_logic.js](file:///C:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/landing/js/nav_logic.js) to automatically redirect logged-in cafe vendors to their dashboard ([hotel_view.html](file:///C:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/cafe/hotel_view.html)) when they click on "Cafe Orders".
+
+## Verification Details
+
+### Automated Tests
+- Verified backend routes:
+    - `POST /api/vendor/login`
+    - `GET /api/menus/:cafeName`
+    - `POST /api/orders`
+    - `PATCH /api/orders/:id/status`
+
+### Manual Verification
+- [x] Vendor Login -> Dashboard Access
+- [x] Add/Delete Menu Items
+- [x] Landing Page -> Redirect to Dashboard (for vendors)
+- [x] Cafe Menu -> Add to Cart
+- [x] Cart -> Place Order -> Success Redirect
+
+## Architecture Overview
+
+```mermaid
+graph TD
+    User((Student/Vendor)) --> Landing[index.html]
+    Landing -- Role: Cafe --> VD[hotel_view.html]
+    Landing -- Role: Student --> CH[CafeH.html]
+    CH --> CM[CafeM.html]
+    CM --> CR[cart.html]
+    CR -- API --> BK[Node.js Backend]
+    VD -- API --> BK
+    BK --> DB[(MongoDB)]
+```
+
+### Files Created/Modified:
+- Backend: [vendorAuth.js](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/backend/routes/vendorAuth.js), [menus.js](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/backend/routes/menus.js), [orders.js](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/backend/routes/orders.js)
+- Frontend: [vendor_login.html](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/login/vendor_login.html), [CafeM.html](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/cafe/CafeM.html), [cart.html](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/cafe/cart.html), [hotel_view.html](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER8/frontend/cafe/hotel_view.html)

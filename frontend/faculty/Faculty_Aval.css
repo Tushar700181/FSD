@@ -1,0 +1,270 @@
+/* Global Reset & Typography */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    background-color: #f4f6f7;
+    /* Very light cool grey/blue */
+    line-height: 1.6;
+    scroll-behavior: smooth;
+    background-image: linear-gradient(to bottom, #d6eaf8, #f4f6f7 400px);
+    /* Ocean fade effect */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.main-header {
+    background-color: #0b2d39;
+    /* Deep Ocean Blue */
+    color: #fff;
+    padding: 15px 0;
+    text-align: left;
+    /* Aligned Left */
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Profile Logo */
+.profile-logo {
+    color: #1abc9c;
+    /* Sea Green Icon */
+    font-size: 2.5rem;
+    /* Icon Size */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.profile-logo:hover {
+    color: #fff;
+    /* White on hover */
+    transform: scale(1.1);
+    text-shadow: 0 0 10px rgba(26, 188, 156, 0.8);
+    /* Glow effect */
+}
+
+/* Navigation */
+.sticky-nav {
+    background-color: #154360;
+    /* Slightly lighter ocean blue */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-start;
+    /* Aligned Left */
+    gap: 30px;
+    padding: 15px 0;
+}
+
+.sticky-nav a {
+    color: #d4e6f1;
+    /* Soft foam blue */
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.sticky-nav a:hover {
+    color: #7fb3d5;
+    /* Brighter aqua hover */
+}
+
+/* Main Content */
+main {
+    padding: 40px 0;
+}
+
+.section-title {
+    text-align: left;
+    margin-bottom: 30px;
+    color: #2c3e50;
+    font-size: 2rem;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #1abc9c;
+    /* Sea Green/Teal accent */
+    margin: 10px 0 0;
+    border-radius: 2px;
+}
+
+.faculty-section {
+    padding: 40px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.faculty-section:last-child {
+    border-bottom: none;
+}
+
+/* Grid Layout */
+.faculty-grid {
+    display: grid;
+    /* Reduce min-width to allow smaller cards, but big enough for side-by-side content */
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+/* Faculty Card */
+.faculty-card {
+    background: #fff;
+    border-radius: 0;
+    /* Sharp corners as requested */
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    /* Explicit shadow */
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #eee;
+    /* Subtle default border */
+
+    /* Layout: Horizontal */
+    display: flex;
+    flex-direction: row;
+    height: 180px;
+}
+
+.faculty-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    /* Stronger soft shadow */
+    z-index: 10;
+    /* Removed dark border, kept simple lift and shadow for focus */
+}
+
+.card-image {
+    width: 35%;
+    /* Slightly narrower image */
+    height: 100%;
+    background-color: #ecf0f1;
+    flex-shrink: 0;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* transition: transform 0.5s ease; Remove zoom if we want strict sharp look */
+}
+
+/* 
+.faculty-card:hover .card-image img {
+    transform: scale(1.1);
+}
+*/
+
+.card-details {
+    width: 65%;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Typography Matches */
+.faculty-name {
+    font-family: 'Merriweather', 'Georgia', serif;
+    /* Serif font for name */
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.faculty-role,
+.faculty-dept {
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    text-transform: none;
+    /* Removed uppercase to match reference image style */
+    letter-spacing: normal;
+}
+
+.info-list {
+    list-style: none;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #444;
+}
+
+.info-list li {
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.info-list strong {
+    color: #154360;
+    /* Ocean Dark Blue for labels */
+    font-weight: 600;
+}
+
+/* Availability Status */
+.status {
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.status.available {
+    background-color: #e8f8f5;
+    color: #27ae60;
+}
+
+.status.in-class {
+    background-color: #fdedec;
+    color: #e74c3c;
+}
+
+/* Footer */
+footer {
+    background-color: #0b2d39;
+    /* Deep Ocean */
+    color: #aed6f1;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}

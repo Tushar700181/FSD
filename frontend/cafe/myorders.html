@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusEats - My Orders</title>
+    <link rel="stylesheet" href="myorder.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-bowl-food"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="../landing/index.html" title="Home"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="CafeM.html" title="Menu"><i class="fa-solid fa-utensils"></i></a></li>
+                <li><a href="cart.html" title="Cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                <li class="active"><a href="myorders.html" title="My Orders"><i
+                            class="fa-solid fa-clock-rotate-left"></i></a></li>
+                <li><a href="profile.html" title="Profile"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+            <div class="logout">
+                <a href="javascript:void(0)" onclick="logoutUser()" title="Logout"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="menu-content">
+            <header class="top-header">
+                <div class="header-text">
+                    <span class="date" id="currentDate">June 15, 2023</span>
+                    <h1>Campus<span>eats</span></h1>
+                </div>
+
+                <div class="header-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search orders...">
+                    <button onclick="fetchMyOrders()"
+                        style="background:none; border:none; cursor:pointer; color:var(--primary-green); padding:0 10px;">
+                        <i class="fa-solid fa-rotate"></i>
+                    </button>
+                </div>
+            </header>
+
+            <h2 class="main-title">My Orders</h2>
+
+            <section class="order-section">
+                <h2 class="sub-heading">Ongoing Orders <span id="ongoingCount"
+                        style="background: var(--primary-green); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; vertical-align: middle;">0</span>
+                </h2>
+                <div id="ongoingOrdersList">
+                    <!-- Dynamic Ongoing Orders -->
+                    <p style="color: #888; padding: 20px;">Fetching active orders...</p>
+                </div>
+            </section>
+
+            <section class="order-section">
+                <h2 class="sub-heading">Order History</h2>
+                <div id="pastOrdersList">
+                    <!-- Dynamic Past Orders -->
+                    <p style="color: #888; padding: 20px;">Fetching history...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+        if (!user.id && !user._id) {
+            window.location.href = '../login/login.html';
+        }
+
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        async function fetchMyOrders() {
+            const studentId = user.id || user._id;
+            try {
+                const res = await fetch(`/api/orders/my/${studentId}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    renderOrders(data.orders);
+                } else {
+                    console.error('Failed to fetch orders:', data.message);
+                }
+            } catch (err) {
+                console.error('Error fetching orders:', err);
+            }
+        }
+
+        function renderOrders(orders) {
+            console.log('Rendering orders:', orders);
+            const ongoingList = document.getElementById('ongoingOrdersList');
+            const pastList = document.getElementById('pastOrdersList');
+            const ongoingCount = document.getElementById('ongoingCount');
+
+            const ongoing = orders.filter(o => {
+                const s = (o.status || '').toLowerCase();
+                return s === 'pending' || s === 'in progress' || s === 'processing';
+            });
+
+            const past = orders.filter(o => {
+                const s = (o.status || '').toLowerCase();
+                return s === 'done' || s === 'cancelled' || s === 'completed';
+            });
+
+            ongoingCount.innerText = ongoing.length;
+
+            ongoingCount.innerText = ongoing.length;
+
+            if (ongoing.length === 0) {
+                ongoingList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-mug-hot"></i>
+                        <p>No active orders right now. Start ordering to see them here!</p>
+                    </div>
+                `;
+            } else {
+                ongoingList.innerHTML = ongoing.map(o => renderOrderCard(o, 'processing')).join('');
+            }
+
+            if (past.length === 0) {
+                pastList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <p>Your order history is empty. Time to grab a bite?</p>
+                    </div>
+                `;
+            } else {
+                pastList.innerHTML = past.map(o => renderOrderCard(o, 'history')).join('');
+            }
+        }
+
+        function renderOrderCard(o, typeClass) {
+            const date = new Date(o.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const time = new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            return `
+                <div class="order-card ${typeClass}">
+                    <div class="order-info">
+                        <div class="info-group">
+                            <strong>Order ID</strong>
+                            <div class="detail-row">#${o._id.slice(-6).toUpperCase()}</div>
+                            <div style="font-size: 0.75rem; color: #95a5a6; margin-top: 8px;">${date}, ${time}</div>
+                        </div>
+                        <div class="info-group">
+                            <strong>Cafe</strong>
+                            <div class="detail-row" style="color: var(--primary-green); font-weight: 600;">${o.cafeName}</div>
+                        </div>
+                        <div class="info-group">
+                            <strong>Items</strong>
+                            <div style="max-height: 80px; overflow-y: auto;">
+                                ${o.items.map(i => `<div class="detail-row" style="font-size: 13px;">${i.name} <span style="color: #95a5a6; font-size: 11px;">x${i.qty}</span></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="info-group">
+                            <strong>Payment</strong>
+                            <div class="detail-row" style="font-weight: 700;">₹${o.total}</div>
+                            <div style="font-size: 0.75rem; color: #95a5a6; margin-top: 8px;">${o.paymentMethod}</div>
+                        </div>
+                        <div class="status-badge-container" style="text-align: right;">
+                            <span class="status-badge status-${o.status.toLowerCase().replace(' ', '-')}">${o.status}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Init
+        fetchMyOrders();
+        setInterval(fetchMyOrders, 10000); // Polling every 10s
+    </script>
+    <script src="auth_check.js"></script>
+</body>
+
+</html>

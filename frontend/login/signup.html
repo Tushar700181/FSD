@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <video autoplay muted loop class="video-bg">
+        <source src="aurora.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="login-card signup-card">
+        <div class="profile-logo">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h2>Create Account</h2>
+
+        <form id="signupForm">
+            <!-- Common Details -->
+            <div class="form-grid">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="fullName" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-id-card"></i>
+                    <input type="text" id="idNumber" placeholder="ID Number" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-calendar"></i>
+                    <input type="date" id="dob" placeholder="Date of Birth" required class="date-input">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="phone" placeholder="Phone Number" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="email" placeholder="Email Address" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fa-solid fa-venus-mars"></i>
+                <select id="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <i class="fa-solid fa-location-dot"></i>
+                <textarea id="address" placeholder="Address for Communication" rows="2" required></textarea>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="role-selection">
+                <label>Register as:</label>
+                <div class="radio-group">
+                    <label class="radio-container">
+                        <input type="radio" name="role" value="student" checked onchange="toggleRole()">
+                        <span class="radio-checkmark"></span>
+                        Student
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="role" value="faculty" onchange="toggleRole()">
+                        <span class="radio-checkmark"></span>
+                        Faculty
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="role" value="admin" onchange="toggleRole()">
+                        <span class="radio-checkmark"></span>
+                        Admin
+                    </label>
+                </div>
+            </div>
+
+            <!-- Student Specific Fields -->
+            <div id="student-fields" class="role-fields">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <i class="fa-solid fa-door-open"></i>
+                        <input type="text" id="roomNo" placeholder="Room No">
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-building"></i>
+                        <input type="text" id="hostelName" placeholder="Hostel Name">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <input type="number" id="graduationYear" placeholder="Graduation Year" min="2000" max="2030">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-book"></i>
+                    <input type="text" id="studentDepartment" placeholder="Department">
+                </div>
+            </div>
+
+            <!-- Faculty Specific Fields -->
+            <div id="faculty-fields" class="role-fields" style="display: none;">
+                <div class="input-group">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <input type="text" id="cadre" placeholder="Cadre (e.g., Professor, Assoc. Prof)">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-book"></i>
+                    <input type="text" id="facultyDepartment" placeholder="Department">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-microscope"></i>
+                    <input type="text" id="focusAreas" placeholder="Focus Areas">
+                </div>
+            </div>
+
+            <!-- Admin Specific Fields -->
+            <div id="admin-fields" class="role-fields" style="display: none;">
+                <div class="input-group">
+                    <i class="fa-solid fa-building-user"></i>
+                    <input type="text" id="adminDepartment" placeholder="Department (e.g., Hostel, Mess, Academic)">
+                </div>
+            </div>
+
+            <!-- Role Verification Key (for Faculty/Admin) -->
+            <div id="verification-group" class="input-group" style="display: none; border: 1px solid #ff9f1c;">
+                <i class="fa-solid fa-key" style="color: #ff9f1c;"></i>
+                <input type="password" id="signUpKey" placeholder="Role Verification Key">
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="password" placeholder="Password" required minlength="6">
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required minlength="6">
+            </div>
+
+            <div id="signupError"
+                style="color: #ff6b6b; text-align: center; margin-bottom: 10px; font-size: 0.85rem; display: none;">
+            </div>
+            <div id="signupSuccess"
+                style="color: #51cf66; text-align: center; margin-bottom: 10px; font-size: 0.85rem; display: none;">
+            </div>
+
+            <button type="submit" class="signin-btn" id="signupBtn">Create Account</button>
+        </form>
+
+        <div class="divider"></div>
+
+        <a href="login.html" class="create-account-btn"
+            style="text-align: center; text-decoration: none; display: block; line-height: 20px;">
+            Already have an account? Login
+        </a>
+    </div>
+
+    <script>
+        function toggleRole() {
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const studentFields = document.getElementById('student-fields');
+            const facultyFields = document.getElementById('faculty-fields');
+            const adminFields = document.getElementById('admin-fields');
+            const verificationGroup = document.getElementById('verification-group');
+
+            studentFields.style.display = role === 'student' ? 'block' : 'none';
+            facultyFields.style.display = role === 'faculty' ? 'block' : 'none';
+            adminFields.style.display = role === 'admin' ? 'block' : 'none';
+            verificationGroup.style.display = (role === 'faculty' || role === 'admin') ? 'block' : 'none';
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const signupBtn = document.getElementById('signupBtn');
+            const errorDiv = document.getElementById('signupError');
+            const successDiv = document.getElementById('signupSuccess');
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Client-side validation
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Build request body
+            const body = {
+                fullName: document.getElementById('fullName').value.trim(),
+                idNumber: document.getElementById('idNumber').value.trim(),
+                dob: document.getElementById('dob').value,
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                gender: document.getElementById('gender').value,
+                address: document.getElementById('address').value.trim(),
+                role: role,
+                password: password,
+                confirmPassword: confirmPassword
+            };
+
+            // Add role-specific fields
+            if (role === 'student') {
+                body.roomNo = document.getElementById('roomNo').value.trim();
+                body.hostelName = document.getElementById('hostelName').value.trim();
+                body.graduationYear = document.getElementById('graduationYear').value;
+                body.department = document.getElementById('studentDepartment').value.trim();
+            } else if (role === 'faculty') {
+                body.cadre = document.getElementById('cadre').value.trim();
+                body.department = document.getElementById('facultyDepartment').value.trim();
+                body.focusAreas = document.getElementById('focusAreas').value.trim();
+                body.signUpKey = document.getElementById('signUpKey').value;
+            } else if (role === 'admin') {
+                body.department = document.getElementById('adminDepartment').value.trim();
+                body.signUpKey = document.getElementById('signUpKey').value;
+            }
+
+            signupBtn.textContent = 'Creating Account...';
+            signupBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    successDiv.textContent = data.message + ' Redirecting to login...';
+                    successDiv.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (err) {
+                errorDiv.textContent = 'Unable to connect to server. Please try again.';
+                errorDiv.style.display = 'block';
+            } finally {
+                signupBtn.textContent = 'Create Account';
+                signupBtn.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+
+</html>

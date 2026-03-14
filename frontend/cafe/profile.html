@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Campuseats</title>
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-bowl-food"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="CafeH.html" title="Home"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="CafeM.html" title="Menu"><i class="fa-solid fa-utensils"></i></a></li>
+                <li><a href="cart.html" title="Cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                <li><a href="myorders.html" title="My Orders"><i class="fa-solid fa-clock-rotate-left"></i></a></li>
+                <li class="active"><a href="profile.html" title="Profile"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+            <div class="logout">
+                <a href="javascript:void(0)" onclick="logoutUser()" title="Logout"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="profile-content">
+            <div id="toast"
+                style="display: none; position: fixed; top: 20px; right: 20px; background: #333; color: white; padding: 12px 25px; border-radius: 10px; z-index: 2000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-size: 14px; animation: slideIn 0.3s ease;">
+            </div>
+
+            <header class="top-header">
+                <div class="header-text">
+                    <span class="date" id="currentDate">June 15, 2023</span>
+                    <h1>Campus<span>eats</span></h1>
+                </div>
+            </header>
+
+            <h2 class="section-title">Profile</h2>
+
+            <div class="profile-grid">
+                <!-- Personal Details Card -->
+                <div class="profile-card">
+                    <div class="user-avatar-small">
+                        <i class="fa-solid fa-user-circle"></i>
+                    </div>
+
+                    <div class="details-grid" id="profileInfoGrid">
+                        <div class="detail-item">
+                            <label>Full Name</label>
+                            <span id="displayFullName">Loading...</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Roll Number</label>
+                            <span id="displayRollNo">Loading...</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Email ID</label>
+                            <span id="displayEmail">Loading...</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Role</label>
+                            <span id="displayRole" style="text-transform: capitalize;">Loading...</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Phone Number</label>
+                            <span id="displayPhone">Loading...</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Department</label>
+                            <span id="displayDept">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #f9f9f9;">
+                        <span
+                            style="font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase;">Engagement</span>
+                        <div style="margin-top: 5px; font-size: 18px; font-weight: 700; color: var(--primary-green);">
+                            <span id="totalOrdersCount">0</span> <span
+                                style="font-size: 13px; font-weight: 500; color: #666;">Total Orders Placed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Locations Section -->
+                <div class="locations-section">
+                    <div class="section-header-row">
+                        <h3>Saved Locations</h3>
+                        <button class="add-loc-btn" id="addLocBtn" onclick="openModal()">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+
+                    <div class="location-cards" id="locationList">
+                        <!-- Primary Address always first -->
+                        <div class="location-box" id="loc-primary" onclick="setActiveLocation('primary')">
+                            <div class="active-indicator"><i class="fa-solid fa-circle-check"></i></div>
+                            <span class="primary-tag">Primary</span>
+                            <i class="fa-solid fa-house"></i>
+                            <div class="loc-info">
+                                <h4>Default Address</h4>
+                                <p id="primaryAddress">Loading...</p>
+                            </div>
+                        </div>
+                        <!-- Other locations will be injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favourites Section -->
+            <section class="favourites-section">
+                <h3>Favourites <i class="fa-solid fa-heart"></i></h3>
+                <div class="fav-grid">
+                    <div style="grid-column: 1/-1; padding: 20px; text-align: center; color: #888;">
+                        No favourites added yet.
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Location Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2>Add New Location</h2>
+            <div class="form-group">
+                <label>Location Label (e.g. Lab, Library)</label>
+                <input type="text" id="locLabel" placeholder="Enter Label">
+            </div>
+            <div class="form-group">
+                <label>Full Address / Room Details</label>
+                <input type="text" id="locAddress" placeholder="Enter full address">
+            </div>
+            <div class="modal-actions">
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button class="save-btn" onclick="saveLocation()">Save Location</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const userSession = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+        const userId = userSession.id || userSession._id;
+
+        if (!userId) {
+            window.location.href = '../login/login.html';
+        }
+
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        function openModal() {
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+
+        async function initProfile() {
+            try {
+                const res = await fetch(`/api/auth/profile/${userId}`);
+                const data = await res.json();
+
+                if (data.success && data.user) {
+                    const u = data.user;
+
+                    if (u.role === 'cafe') {
+                        document.querySelector('.profile-grid').innerHTML = `
+                            <div style="grid-column: 1/-1; text-align:center; padding: 40px; background:white; border-radius:20px;">
+                                <i class="fa-solid fa-store" style="font-size: 50px; color: #ff9f1c; margin-bottom: 20px;"></i>
+                                <h2>Vendor Dashboard</h2>
+                                <p style="margin-bottom:20px; color:#666;">Please use the dedicated Vendor portal.</p>
+                                <a href="hotel_view.html" style="color: var(--primary-green); font-weight: 600; text-decoration:none;">Go to Vendor Dashboard →</a>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    // Populate Profile Info
+                    document.getElementById('displayFullName').innerText = u.fullName;
+                    document.getElementById('displayRollNo').innerText = u.idNumber || 'N/A';
+                    document.getElementById('displayEmail').innerText = u.email;
+                    document.getElementById('displayRole').innerText = u.role;
+                    document.getElementById('displayPhone').innerText = u.phone || 'N/A';
+                    document.getElementById('displayDept').innerText = u.department || 'General';
+
+                    // Primary Address
+                    const fullAddress = (u.roomNo && u.hostelName) ?
+                        `Room ${u.roomNo}, ${u.hostelName}` :
+                        (u.address || 'Address not set');
+                    document.getElementById('primaryAddress').innerText = fullAddress;
+
+                    // Render Saved Locations
+                    window.currentActiveLoc = u.activeLocationId || 'primary';
+                    renderSavedLocations(u.savedLocations || []);
+
+                    updateActiveLocUI(window.currentActiveLoc);
+
+                    fetchStats();
+                    fetchFavorites();
+                }
+            } catch (err) {
+                console.error('initProfile error:', err);
+            }
+        }
+
+        function renderSavedLocations(locations) {
+            const list = document.getElementById('locationList');
+            // Keep first element (Primary)
+            const primary = list.firstElementChild.outerHTML;
+            list.innerHTML = primary;
+
+            locations.forEach(loc => {
+                const box = document.createElement('div');
+                box.className = 'location-box';
+                box.id = `loc-${loc.id}`;
+                box.onclick = () => setActiveLocation(loc.id);
+
+                box.innerHTML = `
+                    <div class="active-indicator"><i class="fa-solid fa-circle-check"></i></div>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div class="loc-info">
+                        <h4>${loc.label}</h4>
+                        <p>${loc.address}</p>
+                    </div>
+                    <button class="delete-loc-btn" onclick="deleteLocation('${loc.id}', event)" title="Remove Location">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                list.appendChild(box);
+            });
+
+            // Disable button if 3 or more (1 primary + 2 saved? No, usually 3 saved + 1 primary? User said Max 3)
+            // Let's assume Max 3 TOTAL including primary or Max 3 ADDITIONAL. 
+            // Most apps limit to 3-5 total. Let's do 3 Saved + 1 Primary = 4 total if needed.
+            // User said: "set the maximum Saved locations as three"
+            if (locations.length >= 3) {
+                document.getElementById('addLocBtn').disabled = true;
+                document.getElementById('addLocBtn').title = "Maximum 3 saved locations reached";
+            }
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            toast.style.background = isError ? '#ff4d4d' : '#2f9476';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        async function saveLocation() {
+            const label = document.getElementById('locLabel').value.trim();
+            const address = document.getElementById('locAddress').value.trim();
+
+            if (!label || !address) {
+                showToast('Please fill all fields', true);
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/auth/locations/${userId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ label, address })
+                });
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    showToast(`Error (${res.status}): Failed to save location.`, true);
+                    return;
+                }
+
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Location saved!');
+                    closeModal();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast(data.message || 'Error saving location', true);
+                }
+            } catch (err) {
+                console.error('Save location error:', err);
+                showToast('Connection error. Is the server running?', true);
+            }
+        }
+
+        async function deleteLocation(locationId, event) {
+            event.stopPropagation(); // prevent row click
+            if (!confirm('Are you sure you want to remove this location?')) return;
+
+            try {
+                const res = await fetch(`/api/auth/locations/${userId}/${locationId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Location removed');
+                    setTimeout(() => location.reload(), 800);
+                } else {
+                    showToast(data.message || 'Error removing location', true);
+                }
+            } catch (err) {
+                console.error('Delete location error:', err);
+                showToast('Connection error', true);
+            }
+        }
+
+        async function setActiveLocation(locId) {
+            if (window.currentActiveLoc === locId) return; // already active
+
+            try {
+                const res = await fetch('/api/auth/locations/active', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, locationId: locId })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    window.currentActiveLoc = locId;
+                    updateActiveLocUI(locId);
+                    showToast('Active delivery address updated');
+                } else {
+                    showToast(data.message || 'Error updating active location', true);
+                }
+            } catch (err) {
+                console.error('Set active location error:', err);
+                showToast('Connection error', true);
+            }
+        }
+
+        function updateActiveLocUI(activeId) {
+            const boxes = document.querySelectorAll('.location-box');
+            boxes.forEach(box => {
+                if (box.id === `loc-${activeId}`) {
+                    box.classList.add('is-active');
+                } else {
+                    box.classList.remove('is-active');
+                }
+            });
+        }
+
+        async function fetchStats() {
+            try {
+                const res = await fetch(`/api/orders/my/${userId}`);
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('totalOrdersCount').innerText = data.orders.length;
+                }
+            } catch (err) {
+                console.error('Stats fetch error:', err);
+            }
+        }
+
+        async function fetchFavorites() {
+            try {
+                const res = await fetch(`/api/auth/favorites/${userId}`);
+                const data = await res.json();
+                const grid = document.querySelector('.fav-grid');
+
+                if (data.success && data.favorites && data.favorites.length > 0) {
+                    grid.innerHTML = data.favorites.map(item => `
+                        <div class="food-card-mini">
+                            <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150'">
+                            <div class="mini-info">
+                                <h4>${item.name}</h4>
+                                <span>${item.cafeName}</span>
+                                <div class="mini-footer">
+                                    <span class="price">₹${item.price}</span>
+                                    <button onclick="window.location.href='CafeM.html'">Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; padding: 20px; text-align: center; color: #888;">
+                            No favorites added yet.
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error('Fetch favorites error:', err);
+                document.querySelector('.fav-grid').innerHTML = '<p style="text-align:center; color:red;">Failed to load favorites</p>';
+            }
+        }
+
+        initProfile();
+    </script>
+    <script src="auth_check.js"></script>
+</body>
+
+</html>

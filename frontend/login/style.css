@@ -1,0 +1,378 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+  overflow: hidden;
+  position: relative;
+  color: white;
+}
+
+/* Video Background */
+.video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* Login Card */
+.login-card {
+  position: relative;
+  z-index: 10;
+  width: 380px;
+  background: rgba(20, 20, 35, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Transition for height change */
+  transition: height 0.3s ease;
+}
+
+/* Signup Card Specifics */
+.signup-card {
+  width: 500px;
+  /* Wider for better layout */
+  max-height: 90vh;
+  /* Don't overflow screen height */
+  overflow-y: auto;
+  /* Scroll if needed */
+  padding: 30px 40px;
+}
+
+/* Scrollbar Styling for Signup */
+.signup-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.signup-card::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.signup-card::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.3);
+  border-radius: 4px;
+}
+
+.signup-card h2 {
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+.profile-logo {
+  font-size: 80px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #00ff88, #00d2ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.3));
+  animation: floatLogo 5s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Form Styles */
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* Reduced gap for compact look */
+}
+
+/* Grid Layout for Signup */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-group i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  /* Default center vertical */
+  transform: translateY(-50%);
+  color: #00ffcc;
+  font-size: 16px;
+  transition: 0.3s;
+  pointer-events: none;
+  /* Let clicks pass through */
+}
+
+/* Special handling for icon in textarea */
+.input-group textarea+i {
+  top: 20px;
+}
+
+/* Use specific class if needed, or target based on child type */
+.input-group:has(textarea) i {
+  top: 20px;
+  transform: none;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.input-group textarea {
+  border-radius: 20px;
+  /* Slight less round regarding multiline */
+  resize: none;
+}
+
+/* Remove default appearance for select */
+.input-group select {
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Add custom arrow for select */
+.input-group:has(select)::after {
+  content: '\f078';
+  /* FontAwesome Chevron Down */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00ffcc;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.input-group option {
+  background-color: #0f1c24;
+  /* Dark background for dropdown options */
+  color: white;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  background: rgba(0, 255, 136, 0.05);
+  border-color: #00ff88;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+/* Date Input Styling */
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* Radio Button Group */
+.role-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.role-selection label {
+  font-size: 14px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  user-select: none;
+}
+
+.radio-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radio-checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.radio-container:hover input~.radio-checkmark {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.radio-container input:checked~.radio-checkmark {
+  background-color: #00ff88;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+}
+
+.radio-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.radio-container input:checked~.radio-checkmark:after {
+  display: block;
+}
+
+.radio-container .radio-checkmark:after {
+  top: 6px;
+  left: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #000;
+}
+
+/* Buttons */
+.signin-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #00b09b, #96c93d);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+  box-shadow: 0 5px 15px rgba(0, 176, 155, 0.3);
+}
+
+.signin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 176, 155, 0.5);
+  filter: brightness(1.1);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  margin: 25px 0;
+}
+
+.create-account-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 2px solid #00d2ff;
+  border-radius: 30px;
+  color: #00d2ff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+}
+
+.create-account-btn:hover {
+  background: rgba(0, 210, 255, 0.1);
+  color: white;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Animations - Role change transition */
+.role-fields {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 550px) {
+  .signup-card {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    /* Stack on mobile */
+  }
+
+  .login-card {
+    width: 90%;
+    padding: 30px;
+  }
+}

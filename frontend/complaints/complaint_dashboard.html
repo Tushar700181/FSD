@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Register | OneCampus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="complaint_dashboard.css">
+    <!-- Using Phosphor Icons for modern, clean icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="storage.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <i class="ph-fill ph-ticket brand-icon"></i>
+            <span>Helpdsk.</span>
+        </div>
+        <div class="nav-links">
+            <a href="../landing/index.html" class="nav-item">
+                <i class="ph ph-house"></i>
+                Home
+            </a>
+            <a href="#" class="nav-item active" id="nav-inbox" onclick="setView('inbox')">
+                <i class="ph ph-envelope-simple"></i>
+                Inbox
+            </a>
+            <a href="#" class="nav-item" id="nav-resolved" onclick="setView('resolved')">
+                <i class="ph ph-check-circle"></i>
+                Resolved
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ph ph-gear"></i>
+                Settings
+            </a>
+            <div style="border-top: 1px solid #e2e8f0; margin: 15px 0;"></div>
+            <a href="javascript:void(0)" class="nav-item" onclick="logoutUser()" style="color: #ef4444;">
+                <i class="ph ph-sign-out"></i>
+                Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-bar">
+            <div class="search-container">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" placeholder="Search tickets, IDs, or keywords...">
+            </div>
+
+            <div class="user-profile">
+                <div class="notifications">
+                    <i class="ph ph-bell" style="font-size: 20px; color: var(--text-secondary); cursor: pointer;"></i>
+                </div>
+                <div class="avatar">OM</div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard Overview</h1>
+            </div>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Total Tickets</span>
+                    <span class="stat-value">124</span>
+                    <span class="stat-trend trend-up">
+                        <i class="ph ph-trend-up"></i>
+                        +12% from last week
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Pending</span>
+                    <span class="stat-value" style="color: var(--warning)">45</span>
+                    <span class="stat-trend">
+                        Needs attention
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Resolved</span>
+                    <span class="stat-value" style="color: var(--success)">79</span>
+                    <span class="stat-trend trend-up">
+                        <i class="ph ph-check-circle"></i>
+                        High efficiency
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Avg. Response Time</span>
+                    <span class="stat-value">2.4h</span>
+                    <span class="stat-trend trend-down">
+                        <i class="ph ph-trend-down"></i>
+                        -15% improvement
+                    </span>
+                </div>
+            </section>
+
+            <!-- Tickets Table -->
+            <section class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">Recent Tickets</h2>
+                    <div class="table-actions">
+                        <button onclick="openNewTicketModal()">+ New Ticket</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Requester</th>
+                                <th>Date</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets-body">
+                            <!-- Rows will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Action Modal -->
+    <div class="modal-overlay" id="actionModal">
+        <div class="modal-content" style="width: 450px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Ticket</h3>
+                <button class="close-btn" onclick="closeActionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="updateTicketForm" onsubmit="handleUpdateSubmit(event)">
+                    <input type="hidden" id="update-ticket-id">
+                    <div class="input-group">
+                        <label class="input-label">New Status</label>
+                        <select id="update-status" class="form-select" required>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="margin-top: 15px;">
+                        <label class="input-label">Official Response</label>
+                        <textarea id="update-response" class="form-textarea"
+                            placeholder="Enter response for the student..." required></textarea>
+                    </div>
+                    <button type="submit" class="table-actions"
+                        style="width: 100%; border-radius: 8px; margin-top: 10px; padding: 12px; font-weight: 600;">Update
+                        Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="complaint_dashboard.js"></script>
+</body>
+
+</html>

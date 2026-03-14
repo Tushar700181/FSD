@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Menu - Campuseats</title>
+    <link rel="stylesheet" href="hotel_view.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .add-item-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-green);
+            outline: none;
+        }
+
+        .image-upload-area {
+            width: 100%;
+            height: 180px;
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            background: #fafafa;
+            transition: all 0.3s;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--primary-green);
+            background: #f0fdf4;
+        }
+
+        .image-upload-area i {
+            font-size: 2.5rem;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .image-upload-area p {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        #imagePreview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Right Panel Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 10px;
+        }
+
+        .menu-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .menu-card-body {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card h4 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+        .menu-card .price {
+            font-weight: 700;
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .remove-btn {
+            margin-top: auto;
+            width: 100%;
+            padding: 10px;
+            background: #fff;
+            border: 1.5px solid #ff4d4d;
+            color: #ff4d4d;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .remove-btn:hover {
+            background: #ff4d4d;
+            color: #fff;
+        }
+
+        .nav-btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-bowl-food" style="color: var(--primary-green); font-size: 24px;"></i>
+            </div>
+            <ul class="nav-links">
+                <li class="border-nav"><a href="hotel_view.html" title="Orders"><i
+                            class="fa-solid fa-clipboard-list"></i></a></li>
+                <li class="active border-nav"><a href="manage_menu.html" title="Manage Menu"><i
+                            class="fa-solid fa-utensils"></i></a></li>
+            </ul>
+            <div class="logout">
+                <a href="javascript:void(0)" onclick="logoutVendor()" title="Logout"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </nav>
+
+        <main class="hotel-content">
+            <header class="top-header">
+                <div class="header-text">
+                    <span class="date" id="currentDate">June 15, 2023</span>
+                    <h1>Campus<span>eats</span></h1>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <a href="hotel_view.html" class="nav-btn" style="background: #666;">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Orders
+                    </a>
+                </div>
+            </header>
+
+            <div class="hotel-layout">
+                <!-- Left Panel (30%) - Add Item Form -->
+                <div class="left-panel">
+                    <h2>Add New Item</h2>
+                    <div class="add-item-card">
+                        <form id="addMenuForm">
+                            <div class="form-group">
+                                <label>Item Name</label>
+                                <input type="text" id="itemName" placeholder="e.g. Schezwan Fried Rice" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Price (₹)</label>
+                                <input type="number" id="itemPrice" placeholder="e.g. 120" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Item Photo</label>
+                                <div class="image-upload-area" onclick="document.getElementById('fileInput').click()">
+                                    <i class="fa-solid fa-cloud-arrow-up" id="uploadIcon"></i>
+                                    <p id="uploadText">Click to upload image</p>
+                                    <img id="imagePreview" src="#" alt="Preview">
+                                    <input type="file" id="fileInput" hidden accept="image/*"
+                                        onchange="previewImage(event)">
+                                </div>
+                            </div>
+                            <button type="submit" class="nav-btn"
+                                style="width: 100%; justify-content: center; border: none; cursor: pointer; padding: 14px;">
+                                <i class="fa-solid fa-plus"></i> Add to Menu
+                            </button>
+                            <p id="message"
+                                style="text-align: center; margin-top: 15px; font-size: 0.9rem; display: none;"></p>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Panel (70%) - Menu List -->
+                <div class="right-panel">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Available Items - <span id="cafeDisplayName">Loading...</span></h2>
+                        <button onclick="fetchMenu()"
+                            style="background: none; border: 1px solid #ccc; padding: 8px 15px; border-radius: 8px; cursor: pointer;">
+                            <i class="fa-solid fa-sync"></i> Sync Menu
+                        </button>
+                    </div>
+
+                    <div id="menuGrid" class="menu-grid">
+                        <!-- Dynamic Menu Cards -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="vendor_common.js"></script>
+    <script>
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        const vendor = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+        // Session check is now handled in vendor_common.js
+        document.getElementById('cafeDisplayName').innerText = vendor.cafeName;
+
+        let base64Image = '';
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('imagePreview');
+                    const icon = document.getElementById('uploadIcon');
+                    const text = document.getElementById('uploadText');
+
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    icon.style.display = 'none';
+                    text.style.display = 'none';
+
+                    base64Image = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function fetchMenu() {
+            try {
+                const res = await fetch(`/api/menus/${vendor.cafeName}`);
+                const data = await res.json();
+                renderMenu(data.items);
+            } catch (err) { console.error(err); }
+        }
+
+        function renderMenu(items) {
+            const grid = document.getElementById('menuGrid');
+            if (!items.length) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #888;"><i class="fa-solid fa-utensils" style="font-size: 3rem; margin-bottom: 20px;"></i><p>No items added yet. Use the form on the left to start your menu!</p></div>';
+                return;
+            }
+            grid.innerHTML = items.map(item => `
+                <div class="menu-card">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=60'">
+                    <div class="menu-card-body">
+                        <h4>${item.name}</h4>
+                        <div class="price">₹${item.price}</div>
+                        <button class="remove-btn" onclick="deleteItem('${item._id}')">
+                            <i class="fa-solid fa-trash-can"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('addMenuForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = document.getElementById('message');
+            const signupBtn = e.target.querySelector('button[type="submit"]');
+
+            const name = document.getElementById('itemName').value;
+            const price = document.getElementById('itemPrice').value;
+            const image = base64Image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=60';
+
+            message.style.display = 'none';
+            signupBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adding...';
+            signupBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/menus', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, price, image, cafeName: vendor.cafeName })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Reset Form
+                    document.getElementById('itemName').value = '';
+                    document.getElementById('itemPrice').value = '';
+                    document.getElementById('imagePreview').style.display = 'none';
+                    document.getElementById('uploadIcon').style.display = 'block';
+                    document.getElementById('uploadText').style.display = 'block';
+                    base64Image = '';
+                    fetchMenu();
+
+                    message.innerText = 'Item added successfully!';
+                    message.style.color = '#51cf66';
+                    message.style.display = 'block';
+                } else {
+                    message.innerText = data.message || 'Failed to add item. Image might be too large.';
+                    message.style.color = '#ff6b6b';
+                    message.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                message.innerText = 'Server error. Please try again.';
+                message.style.color = '#ff6b6b';
+                message.style.display = 'block';
+            } finally {
+                signupBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add to Menu';
+                signupBtn.disabled = false;
+            }
+        });
+
+        async function deleteItem(id) {
+            if (!confirm('Are you sure you want to remove this item from the menu?')) return;
+            await fetch(`/api/menus/${id}`, { method: 'DELETE' });
+            fetchMenu();
+        }
+
+        // Initial Load
+        fetchMenu();
+    </script>
+</body>
+
+</html>

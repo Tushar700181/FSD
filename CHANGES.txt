@@ -1,0 +1,13 @@
+Added Login and Changes Profile to be based on the type of account which is logged in
+
+Reorganised into frontend ,backend etc
+
+Changed the default page to Landing page and the added the requirement of being logged in to access any internal features like Cafe orders etc
+
+Completed the functioning of Complaints Page(Both student and faculty and admin pages)
+
+Changed from mongoose to pure mongodb
+
+NEW-------------------------------------------------------------------------------------------------------------------------------------
+
+Cafe Orders

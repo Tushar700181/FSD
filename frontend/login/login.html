@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <video autoplay muted loop class="video-bg">
+    <source src="aurora.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="login-card">
+    <div class="profile-logo">
+      <i class="fa-solid fa-circle-user"></i>
+    </div>
+
+    <form id="loginForm">
+      <div class="input-group">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="loginEmail" placeholder="Email Address" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+      </div>
+
+      <div id="loginError"
+        style="color: #ff6b6b; text-align: center; margin-bottom: 10px; font-size: 0.85rem; display: none;"></div>
+
+      <button type="submit" class="signin-btn" id="loginBtn">Sign In</button>
+    </form>
+
+    <div class="divider"></div>
+    <a href="signup.html" class="create-account-btn"
+      style="text-decoration: none; text-align: center; display: block;">Create an Account</a>
+    <div style="text-align: center; margin-top: 15px;">
+      <a href="vendor_login.html"
+        style="color: rgba(255, 255, 255, 0.4); text-decoration: none; font-size: 0.8rem; transition: 0.3s;"
+        onmouseover="this.style.color='#00ffcc'" onmouseout="this.style.color='rgba(255, 255, 255, 0.4)'">Cafe Owner?
+        Login here</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const loginBtn = document.getElementById('loginBtn');
+      const errorDiv = document.getElementById('loginError');
+      errorDiv.style.display = 'none';
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        errorDiv.textContent = 'Please fill in all fields';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      loginBtn.textContent = 'Signing In...';
+      loginBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          // Store user info in localStorage
+          localStorage.setItem('onecampus_user', JSON.stringify(data.user));
+          // Redirect to Landing Page
+          window.location.href = data.redirectUrl;
+        } else {
+          errorDiv.textContent = data.message;
+          errorDiv.style.display = 'block';
+        }
+      } catch (err) {
+        errorDiv.textContent = 'Unable to connect to server. Please try again.';
+        errorDiv.style.display = 'block';
+      } finally {
+        loginBtn.textContent = 'Sign In';
+        loginBtn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+
+</html>

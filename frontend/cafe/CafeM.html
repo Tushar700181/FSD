@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Campuseats</title>
+    <link rel="stylesheet" href="CafeM.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="auth_check.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-bowl-food"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="../landing/index.html" title="Home"><i class="fa-solid fa-house"></i></a></li>
+                <li class="active"><a href="CafeM.html" title="Menu"><i class="fa-solid fa-utensils"></i></a></li>
+                <li><a href="cart.html" title="Cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                <li><a href="myorders.html" title="My Orders"><i class="fa-solid fa-clock-rotate-left"></i></a></li>
+                <li><a href="profile.html" title="Profile"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+            <div class="logout">
+                <a href="javascript:void(0)" onclick="logoutUser()" title="Logout"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="menu-content">
+            <header class="top-header">
+                <div class="header-text">
+                    <span class="date">June 15, 2023</span>
+                    <h1>Campus<span>eats</span></h1>
+                </div>
+
+                <div class="header-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search Here">
+                    <i class="fa-solid fa-filter"></i>
+                </div>
+            </header>
+
+
+            <!-- Dynamic Restaurant Sections Container -->
+            <div id="dynamic-menus">
+                <!-- Sections will be injected here -->
+            </div>
+
+            <script>
+                let cart = JSON.parse(localStorage.getItem('cafe_cart') || '[]');
+                let userFavorites = [];
+                const userSession = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+                const userId = userSession.id || userSession._id;
+
+                async function fetchUserFavorites() {
+                    if (!userId) return;
+                    try {
+                        const res = await fetch(`/api/auth/profile/${userId}`);
+                        const data = await res.json();
+                        if (data.success && data.user) {
+                            userFavorites = data.user.favorites || [];
+                        }
+                    } catch (err) {
+                        console.error('Fetch favorites error:', err);
+                    }
+                }
+
+                async function fetchMenus() {
+                    try {
+                        const container = document.getElementById('dynamic-menus');
+                        container.innerHTML = '<div style="text-align: center; padding: 50px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-green);"></i><p>Loading menus...</p></div>';
+
+                        await fetchUserFavorites();
+
+                        // 1. Fetch list of all cafes
+                        const cafesRes = await fetch('/api/menus/cafes/list');
+                        const cafesData = await cafesRes.json();
+
+                        console.log('Cafes received from backend:', cafesData.cafes);
+
+                        if (!cafesData.cafes || cafesData.cafes.length === 0) {
+                            container.innerHTML = '<div style="text-align: center; padding: 50px;"><p>No cafes found in the system yet.</p></div>';
+                            return;
+                        }
+
+                        container.innerHTML = ''; // Clear loader
+
+                        // 2. Fetch menus for each cafe
+                        let sectionsCount = 0;
+                        for (const cafeName of cafesData.cafes) {
+                            console.log(`Fetching items for cafe: "${cafeName}"`);
+                            const res = await fetch(`/api/menus/${encodeURIComponent(cafeName)}`);
+                            const data = await res.json();
+                            console.log(`Items for ${cafeName}:`, data.items);
+
+                            // Render section even if empty, so user knows cafe is detected
+                            renderCafeSection(cafeName, data.items || []);
+                            sectionsCount++;
+                        }
+
+                        if (sectionsCount === 0) {
+                            container.innerHTML = '<div style="text-align: center; padding: 50px;"><p>No active menus found.</p></div>';
+                        }
+                    } catch (err) {
+                        console.error('CRITICAL Error in fetchMenus:', err);
+                        document.getElementById('dynamic-menus').innerHTML = `<p style="text-align: center; color: red;">Failed to load menus. Error: ${err.message}</p>`;
+                    }
+                }
+
+                function renderCafeSection(cafeName, items) {
+                    const container = document.getElementById('dynamic-menus');
+                    const sectionId = cafeName.replace(/\s+/g, '-').toLowerCase() + '-section';
+
+                    const section = document.createElement('section');
+                    section.id = sectionId;
+                    section.className = 'restaurant-section';
+
+                    const itemsHtml = items.length > 0
+                        ? items.map(item => {
+                            const isFav = userFavorites.includes(item._id);
+                            return `
+                                <div class="food-card">
+                                    <div class="card-top">
+                                        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=60'">
+                                        <i class="${isFav ? 'fa-solid active' : 'fa-regular'} fa-heart" 
+                                           onclick="toggleFavorite('${item._id}', event)"></i>
+                                    </div>
+                                    <h3>${item.name}</h3>
+                                    <p class="description">Freshly prepared at ${cafeName}</p>
+                                    <div class="card-footer">
+                                        <div class="rating"><i class="fa-solid fa-star"></i> 5.0</div>
+                                        <span class="price">₹${item.price}</span>
+                                    </div>
+                                    <button class="add-btn" onclick="addToCart('${item._id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${cafeName.replace(/'/g, "\\'")}', '${item.image}', event)">Add to cart</button>
+                                </div>
+                            `;
+                        }).join('')
+                        : `<div style="grid-column: 1/-1; text-align: center; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 12px; border: 1px dashed #ccc;">
+                             <p style="color: #666;">No items available in this cafe yet.</p>
+                           </div>`;
+
+                    section.innerHTML = `
+                        <div class="section-header">
+                            <h2>${cafeName}</h2>
+                            <button class="view-all-btn" onclick="toggleSection('${sectionId}')">View All</button>
+                        </div>
+                        <div id="${sectionId}-grid" class="food-grid ${items.length > 0 ? 'collapsed' : ''}">
+                            ${itemsHtml}
+                        </div>
+                    `;
+                    container.appendChild(section);
+                }
+
+                function addToCart(id, name, price, cafeName, image, event) {
+                    const existing = cart.find(i => i.id === id);
+                    if (existing) {
+                        existing.qty++;
+                    } else {
+                        cart.push({ id, name, price, cafeName, image, qty: 1 });
+                    }
+                    saveCart();
+                    updateOrderPanel();
+
+                    // Show animation or feedback
+                    if (event && event.currentTarget) {
+                        const btn = event.currentTarget;
+                        const originalText = btn.innerText;
+                        btn.innerText = 'Added! ✓';
+                        btn.style.background = '#51cf66';
+                        setTimeout(() => {
+                            btn.innerText = originalText;
+                            btn.style.background = '#2f9476';
+                        }, 1000);
+                    }
+                }
+
+                async function toggleFavorite(itemId, event) {
+                    if (!userId) return;
+                    const icon = event.currentTarget;
+
+                    try {
+                        const res = await fetch('/api/auth/favorites/toggle', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId, itemId })
+                        });
+                        const data = await res.json();
+
+                        if (data.success) {
+                            if (data.isFavorite) {
+                                icon.classList.remove('fa-regular');
+                                icon.classList.add('fa-solid', 'active');
+                                userFavorites.push(itemId);
+                            } else {
+                                icon.classList.remove('fa-solid', 'active');
+                                icon.classList.add('fa-regular');
+                                userFavorites = userFavorites.filter(id => id !== itemId);
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Toggle favorite error:', err);
+                    }
+                }
+
+                function saveCart() {
+                    localStorage.setItem('cafe_cart', JSON.stringify(cart));
+                }
+
+                function setOrderType(type, event) {
+                    const buttons = document.querySelectorAll('.order-type-toggle button');
+                    const toggle = document.getElementById('order-type-toggle');
+
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    if (event && event.currentTarget) {
+                        event.currentTarget.classList.add('active');
+                    }
+
+                    if (type === 'delivery') {
+                        toggle.classList.add('delivery-active');
+                    } else {
+                        toggle.classList.remove('delivery-active');
+                    }
+
+                    localStorage.setItem('cafe_order_type', type);
+                }
+
+                function updateOrderPanel() {
+                    const orderList = document.querySelector('.order-list');
+                    if (cart.length === 0) {
+                        orderList.innerHTML = `
+                            <div class="empty-selection">
+                                <i class="fa-solid fa-utensils"></i>
+                                <p>Your selection is empty</p>
+                                <span>Add something delicious!</span>
+                            </div>
+                        `;
+                        document.getElementById('order-summary').style.display = 'none';
+                        return;
+                    }
+
+                    document.getElementById('order-summary').style.display = 'block';
+
+                    let subtotal = 0;
+                    orderList.innerHTML = cart.map((item, index) => {
+                        subtotal += (item.price * item.qty);
+                        return `
+                            <div class="order-item">
+                                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/50'">
+                                <div class="item-details">
+                                    <h4>${item.name}</h4>
+                                    <span>${item.cafeName}</span>
+                                    <div class="price">₹${item.price}</div>
+                                </div>
+                                <div class="item-qty">
+                                    <button onclick="changeQty(${index}, -1)">-</button>
+                                    <span>${item.qty}</span>
+                                    <button onclick="changeQty(${index}, 1)">+</button>
+                                </div>
+                                <button class="remove-item" onclick="removeItem(${index})"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        `;
+                    }).join('');
+
+                    document.getElementById('subtotal').innerText = `₹${subtotal}`;
+                    document.getElementById('total-amount').innerText = `₹${subtotal}`;
+                }
+
+                function changeQty(index, delta) {
+                    cart[index].qty += delta;
+                    if (cart[index].qty <= 0) {
+                        cart.splice(index, 1);
+                    }
+                    saveCart();
+                    updateOrderPanel();
+                }
+
+                function removeItem(index) {
+                    cart.splice(index, 1);
+                    saveCart();
+                    updateOrderPanel();
+                }
+
+                function toggleSection(id) {
+                    const section = document.getElementById(id);
+                    const grid = section.querySelector('.food-grid');
+                    const btn = section.querySelector('.view-all-btn');
+                    if (grid.classList.contains('collapsed')) {
+                        grid.classList.remove('collapsed');
+                        btn.innerText = 'View Less';
+                    } else {
+                        grid.classList.add('collapsed');
+                        btn.innerText = 'View All';
+                    }
+                }
+
+                async function fetchUserLocations() {
+                    const select = document.getElementById('delivery-location-select');
+                    try {
+                        const userSession = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+                        const userId = userSession.id || userSession._id;
+                        if (!userId) return;
+
+                        const res = await fetch(`/api/auth/profile/${userId}`);
+                        const data = await res.json();
+
+                        if (data.success && data.user) {
+                            const u = data.user;
+                            let options = '';
+                            const activeId = u.activeLocationId || 'primary';
+
+                            // Primary Address
+                            const primAddr = (u.roomNo && u.hostelName) ? `${u.roomNo}, ${u.hostelName}` : (u.address || 'Default Address');
+                            const primSelected = (activeId === 'primary') ? 'selected' : '';
+                            options += `<option value="${primAddr}" ${primSelected}>${primAddr} (Primary)</option>`;
+
+                            // Saved Locations
+                            if (u.savedLocations && u.savedLocations.length > 0) {
+                                u.savedLocations.forEach(loc => {
+                                    const locSelected = (activeId === loc.id) ? 'selected' : '';
+                                    options += `<option value="${loc.address}" ${locSelected}>${loc.address} (${loc.label})</option>`;
+                                });
+                            }
+                            select.innerHTML = options;
+                        }
+                    } catch (err) {
+                        console.error('Fetch locations error:', err);
+                        select.innerHTML = '<option value="">Error loading addresses</option>';
+                    }
+                }
+
+                // Init
+                document.addEventListener('DOMContentLoaded', () => {
+                    fetchMenus();
+                    updateOrderPanel();
+                    fetchUserLocations(); // Load delivery addresses
+
+                    // Set initial order type if exists
+                    const savedType = localStorage.getItem('cafe_order_type') || 'dine';
+                    const buttons = document.querySelectorAll('.order-type-toggle button');
+                    const toggle = document.getElementById('order-type-toggle');
+
+                    if (savedType === 'delivery') {
+                        toggle.classList.add('delivery-active');
+                    }
+
+                    buttons.forEach(btn => {
+                        if (btn.innerText.toLowerCase().includes(savedType)) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+
+                    const checkoutBtn = document.querySelector('.checkout-btn');
+                    if (checkoutBtn) {
+                        checkoutBtn.addEventListener('click', () => {
+                            if (cart.length === 0) return alert('Cart is empty!');
+
+                            const orderType = localStorage.getItem('cafe_order_type') || 'dine';
+                            if (orderType === 'delivery') {
+                                const deliveryLocation = document.getElementById('delivery-location-select').value;
+                                if (!deliveryLocation) return alert('Please select a delivery location');
+                                localStorage.setItem('cafe_delivery_location', deliveryLocation);
+                            } else {
+                                localStorage.removeItem('cafe_delivery_location');
+                            }
+
+                            window.location.href = 'cart.html';
+                        });
+                    }
+                });
+            </script>
+        </main>
+
+        <!-- Right Order Panel -->
+        <aside class="order-panel">
+            <div class="order-header">
+                <h2>My Order</h2>
+                <button class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="order-type-toggle" id="order-type-toggle">
+                <div class="toggle-slider"></div>
+                <button class="active" onclick="setOrderType('dine', event)">Dine In</button>
+                <button onclick="setOrderType('delivery', event)">Delivery</button>
+            </div>
+
+            <div class="delivery-extra">
+                <div id="delivery-extra-content">
+                    <label>Deliver to:</label>
+                    <select id="delivery-location-select">
+                        <option value="">Loading addresses...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="order-list">
+                <!-- Items will be injected here by updateOrderPanel() -->
+            </div>
+
+            <div class="order-summary" id="order-summary">
+                <div class="summary-line">
+                    <span>Subtotal</span>
+                    <span id="subtotal">₹0</span>
+                </div>
+                <div class="summary-line">
+                    <span>Service Fee</span>
+                    <span>₹0</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="total-amount">₹0</span>
+                </div>
+            </div>
+
+            <div class="checkout-area">
+                <button class="checkout-btn">Review Order & Proceed</button>
+            </div>
+    </div>
+    </aside>
+    </div>
+</body>
+
+</html>

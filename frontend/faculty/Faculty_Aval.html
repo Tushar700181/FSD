@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Availability Portal - OneCampus</title>
+    <link rel="stylesheet" href="Faculty_Aval.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container header-flex">
+            <h1>OneCampus</h1>
+            <div class="profile-logo">
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sticky-nav">
+        <div class="container">
+            <ul>
+                <li><a href="#hods">HODs</a></li>
+                <li><a href="#cse">CSE Faculty</a></li>
+                <li><a href="#ece">ECE Faculty</a></li>
+                <li><a href="#mech">Mech Faculty</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <!-- HOD Section -->
+        <section id="hods" class="faculty-section">
+            <h2 class="section-title">Heads of Department</h2>
+            <div class="faculty-grid">
+                <!-- HOD 1 -->
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=John+Doe&background=random" alt="Dr. John Doe">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Dr. John Doe</h3>
+                        <p class="faculty-role">HOD - CSE</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> hod.cse@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> A-101</li>
+                            <li><strong>Focus:</strong> AI, Machine Learning</li>
+                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- HOD 2 -->
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=random" alt="Dr. Jane Smith">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Dr. Jane Smith</h3>
+                        <p class="faculty-role">HOD - ECE</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> hod.ece@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> B-204</li>
+                            <li><strong>Focus:</strong> VLSI, Embedded Systems</li>
+                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- HOD 3 -->
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Alan+Turing&background=random" alt="Dr. Alan Turing">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Dr. Alan Turing</h3>
+                        <p class="faculty-role">HOD - Mech</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> hod.mech@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> C-105</li>
+                            <li><strong>Focus:</strong> Thermodynamics</li>
+                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CSE Faculty Section -->
+        <section id="cse" class="faculty-section">
+            <h2 class="section-title">CSE Faculty</h2>
+            <div class="faculty-grid">
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Alice+Wonder&background=random" alt="Alice Wonder">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Prof. Alice Wonder</h3>
+                        <p class="faculty-dept">Dept: CSE</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> alice@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> A-102</li>
+                            <li><strong>Focus:</strong> Data Science</li>
+                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Bob+Builder&background=random" alt="Bob Builder">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Prof. Bob Builder</h3>
+                        <p class="faculty-dept">Dept: CSE</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> bob@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> A-103</li>
+                            <li><strong>Focus:</strong> Cloud Computing</li>
+                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Charlie+Day&background=random" alt="Charlie Day">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Prof. Charlie Day</h3>
+                        <p class="faculty-dept">Dept: CSE</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> charlie@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> A-104</li>
+                            <li><strong>Focus:</strong> Networks</li>
+                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ECE Faculty Section -->
+        <section id="ece" class="faculty-section">
+            <h2 class="section-title">ECE Faculty</h2>
+            <div class="faculty-grid">
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=David+Copper&background=random" alt="David Copper">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Prof. David Copper</h3>
+                        <p class="faculty-dept">Dept: ECE</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> david@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> B-201</li>
+                            <li><strong>Focus:</strong> Signal Processing</li>
+                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Eva+Green&background=random" alt="Eva Green">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Prof. Eva Green</h3>
+                        <p class="faculty-dept">Dept: ECE</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> eva@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> B-202</li>
+                            <li><strong>Focus:</strong> Microcontrollers</li>
+                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mech Faculty Section -->
+        <section id="mech" class="faculty-section">
+            <h2 class="section-title">Mech Faculty</h2>
+            <div class="faculty-grid">
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Frank+Castle&background=random" alt="Frank Castle">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Prof. Frank Castle</h3>
+                        <p class="faculty-dept">Dept: Mech</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> frank@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> C-101</li>
+                            <li><strong>Focus:</strong> Robotics</li>
+                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="faculty-card">
+                    <div class="card-image">
+                        <img src="https://ui-avatars.com/api/?name=Grace+Hopper&background=random" alt="Grace Hopper">
+                    </div>
+                    <div class="card-details">
+                        <h3 class="faculty-name">Prof. Grace Hopper</h3>
+                        <p class="faculty-dept">Dept: Mech</p>
+                        <ul class="info-list">
+                            <li><strong>Mail:</strong> grace@onecampus.edu</li>
+                            <li><strong>Cabin:</strong> C-102</li>
+                            <li><strong>Focus:</strong> Fluid Dynamics</li>
+                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 OneCampus - Faculty Availability Portal</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
