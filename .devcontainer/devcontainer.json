@@ -1,0 +1,20 @@
+{
+  "name": "OneCampus Node.js & MongoDB",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/mongodb-server:1": {}
+  },
+  "forwardPorts": [5000],
+  "portsAttributes": {
+    "5000": {
+      "label": "OneCampus Web App",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "npm install && npm run dev",
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md", "backend/server.js"]
+    }
+  }
+}
