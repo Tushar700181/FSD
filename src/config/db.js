@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 const client = new MongoClient(process.env.MONGO_URI);
 

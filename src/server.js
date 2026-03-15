@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
-const { connectDB } = require('./db');
+const { connectDB } = require('./config/db');
 const authRoutes = require('./routes/auth');
 const vendorAuthRoutes = require('./routes/vendorAuth');
 const complaintRoutes = require('./routes/complaints');
@@ -26,7 +26,7 @@ app.use('/api/menus', menuRoutes);
 app.use('/api/orders', orderRoutes);
 
 // 2. Static Files
-const frontendPath = path.resolve(__dirname, '../frontend');
+const frontendPath = path.resolve(__dirname, '../public');
 app.use(express.static(frontendPath));
 
 // Default route — redirect to landing page
