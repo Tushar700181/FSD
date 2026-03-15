@@ -2,7 +2,7 @@
   "name": "OneCampus Node.js & MongoDB",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
   "features": {
-    "ghcr.io/devcontainers/features/mongodb-server:1": {}
+    "ghcr.io/mongodb/devcontainer-features/mongodb-community:1": {}
   },
   "forwardPorts": [5000],
   "portsAttributes": {
