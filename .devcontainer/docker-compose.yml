@@ -6,7 +6,8 @@ services:
     volumes:
       - ..:/workspaces/FSD:cached
     command: sleep infinity
-    network_mode: service:db
+    depends_on:
+      - db
 
   db:
     image: mongo:latest
