@@ -317,4 +317,16 @@ router.get('/favorites/:userId', async (req, res) => {
     }
 });
 
+// GET /api/auth/faculty - Get all faculty members
+router.get('/faculty', async (req, res) => {
+    try {
+        const usersCollection = collections.users();
+        const faculty = await usersCollection.find({ role: 'faculty' }).toArray();
+        res.json({ success: true, faculty });
+    } catch (err) {
+        console.error('Fetch faculty error:', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 module.exports = router;

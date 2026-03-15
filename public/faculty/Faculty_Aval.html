@@ -34,186 +34,92 @@
 
     <main class="container">
 
-        <!-- HOD Section -->
-        <section id="hods" class="faculty-section">
-            <h2 class="section-title">Heads of Department</h2>
-            <div class="faculty-grid">
-                <!-- HOD 1 -->
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=John+Doe&background=random" alt="Dr. John Doe">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Dr. John Doe</h3>
-                        <p class="faculty-role">HOD - CSE</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> hod.cse@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> A-101</li>
-                            <li><strong>Focus:</strong> AI, Machine Learning</li>
-                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- HOD 2 -->
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=random" alt="Dr. Jane Smith">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Dr. Jane Smith</h3>
-                        <p class="faculty-role">HOD - ECE</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> hod.ece@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> B-204</li>
-                            <li><strong>Focus:</strong> VLSI, Embedded Systems</li>
-                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- HOD 3 -->
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Alan+Turing&background=random" alt="Dr. Alan Turing">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Dr. Alan Turing</h3>
-                        <p class="faculty-role">HOD - Mech</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> hod.mech@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> C-105</li>
-                            <li><strong>Focus:</strong> Thermodynamics</li>
-                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- Faculty Sections container -->
+        <div id="faculty-sections-container">
+            <!-- Sections will be injected here -->
+        </div>
 
-        <!-- CSE Faculty Section -->
-        <section id="cse" class="faculty-section">
-            <h2 class="section-title">CSE Faculty</h2>
-            <div class="faculty-grid">
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Alice+Wonder&background=random" alt="Alice Wonder">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Prof. Alice Wonder</h3>
-                        <p class="faculty-dept">Dept: CSE</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> alice@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> A-102</li>
-                            <li><strong>Focus:</strong> Data Science</li>
-                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Bob+Builder&background=random" alt="Bob Builder">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Prof. Bob Builder</h3>
-                        <p class="faculty-dept">Dept: CSE</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> bob@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> A-103</li>
-                            <li><strong>Focus:</strong> Cloud Computing</li>
-                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Charlie+Day&background=random" alt="Charlie Day">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Prof. Charlie Day</h3>
-                        <p class="faculty-dept">Dept: CSE</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> charlie@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> A-104</li>
-                            <li><strong>Focus:</strong> Networks</li>
-                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <script>
+            async function loadFaculty() {
+                try {
+                    const response = await fetch('/api/auth/faculty');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        renderFaculty(data.faculty);
+                    }
+                } catch (err) {
+                    console.error('Error loading faculty:', err);
+                }
+            }
 
-        <!-- ECE Faculty Section -->
-        <section id="ece" class="faculty-section">
-            <h2 class="section-title">ECE Faculty</h2>
-            <div class="faculty-grid">
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=David+Copper&background=random" alt="David Copper">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Prof. David Copper</h3>
-                        <p class="faculty-dept">Dept: ECE</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> david@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> B-201</li>
-                            <li><strong>Focus:</strong> Signal Processing</li>
-                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Eva+Green&background=random" alt="Eva Green">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Prof. Eva Green</h3>
-                        <p class="faculty-dept">Dept: ECE</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> eva@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> B-202</li>
-                            <li><strong>Focus:</strong> Microcontrollers</li>
-                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+            function renderFaculty(faculty) {
+                const container = document.getElementById('faculty-sections-container');
+                container.innerHTML = '';
 
-        <!-- Mech Faculty Section -->
-        <section id="mech" class="faculty-section">
-            <h2 class="section-title">Mech Faculty</h2>
-            <div class="faculty-grid">
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Frank+Castle&background=random" alt="Frank Castle">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Prof. Frank Castle</h3>
-                        <p class="faculty-dept">Dept: Mech</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> frank@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> C-101</li>
-                            <li><strong>Focus:</strong> Robotics</li>
-                            <li><strong>Status:</strong> <span class="status available">Available</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="faculty-card">
-                    <div class="card-image">
-                        <img src="https://ui-avatars.com/api/?name=Grace+Hopper&background=random" alt="Grace Hopper">
-                    </div>
-                    <div class="card-details">
-                        <h3 class="faculty-name">Prof. Grace Hopper</h3>
-                        <p class="faculty-dept">Dept: Mech</p>
-                        <ul class="info-list">
-                            <li><strong>Mail:</strong> grace@onecampus.edu</li>
-                            <li><strong>Cabin:</strong> C-102</li>
-                            <li><strong>Focus:</strong> Fluid Dynamics</li>
-                            <li><strong>Status:</strong> <span class="status in-class">In-Class</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+                // Group by department
+                const departments = {};
+                faculty.forEach(f => {
+                    if (!departments[f.department]) {
+                        departments[f.department] = [];
+                    }
+                    departments[f.department].push(f);
+                });
+
+                // Department Full Names Map
+                const deptMap = {
+                    'CSE': 'Computer Science Engineering',
+                    'ECE': 'Electronics and Communication',
+                    'MECH': 'Mechanical Engineering',
+                    'DOS': 'Department of Sciences (Physics/Math)'
+                };
+
+                for (const dept in departments) {
+                    const section = document.createElement('section');
+                    section.id = dept.toLowerCase();
+                    section.className = 'faculty-section';
+                    
+                    const title = document.createElement('h2');
+                    title.className = 'section-title';
+                    title.textContent = deptMap[dept] || dept;
+                    section.appendChild(title);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'faculty-grid';
+
+                    departments[dept].forEach(f => {
+                        const card = document.createElement('div');
+                        card.className = 'faculty-card';
+                        
+                        // Pick a background color based on status
+                        const statusClass = f.status.toLowerCase().replace(' ', '-');
+                        
+                        card.innerHTML = `
+                            <div class="card-image">
+                                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random" alt="${f.fullName}">
+                            </div>
+                            <div class="card-details">
+                                <h3 class="faculty-name">${f.fullName}</h3>
+                                <p class="faculty-dept">${f.designation}</p>
+                                <ul class="info-list">
+                                    <li><strong>Mail:</strong> ${f.email}</li>
+                                    <li><strong>Cabin:</strong> ${f.cabin}</li>
+                                    <li><strong>Focus:</strong> ${f.focusAreas}</li>
+                                    <li><strong>Status:</strong> <span class="status ${statusClass}">${f.status}</span></li>
+                                </ul>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+
+                    section.appendChild(grid);
+                    container.appendChild(section);
+                }
+            }
+
+            // Load on start
+            loadFaculty();
+        </script>
 
     </main>
 
