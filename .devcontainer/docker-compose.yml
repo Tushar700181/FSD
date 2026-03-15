@@ -6,6 +6,8 @@ services:
     volumes:
       - ..:/workspaces/FSD:cached
     command: sleep infinity
+    ports:
+      - "5000:5000"
     depends_on:
       - db
 

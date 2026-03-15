@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
 // Connect to local MongoDB and start server
 connectDB()
     .then(() => {
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server running at http://localhost:${PORT}`);
             console.log(`Login page: http://localhost:${PORT}/login/login.html`);
             console.log(`Landing page: http://localhost:${PORT}/landing/index.html`);
