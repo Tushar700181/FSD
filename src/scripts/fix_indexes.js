@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
 
 async function fixIndexes() {
     const client = new MongoClient(process.env.MONGO_URI);

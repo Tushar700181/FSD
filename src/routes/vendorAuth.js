@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { collections } = require('../db');
+const { collections } = require('../config/db');
 const { hashPassword, comparePassword } = require('../utils/authUtils');
 
 // POST /api/vendor/signup
