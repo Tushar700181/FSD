@@ -10,7 +10,7 @@
       "onAutoForward": "openBrowser"
     }
   },
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install && printf 'MONGO_URI=mongodb://db:27017/onecampus\\nPORT=5000\\nFACULTY_SIGNUP_KEY=faculty123\\nADMIN_SIGNUP_KEY=admin123\\nVENDOR_SIGNUP_KEY=cafe123' > backend/.env",
   "postAttachCommand": "npm run dev",
   "customizations": {
     "codespaces": {
