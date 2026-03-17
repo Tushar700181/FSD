@@ -38,9 +38,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fa-solid fa-sliders"></i>
-                        Settings
+                    <a href="../../dashboard/student_portal.html" class="nav-link">
+                        <i class="fa-solid fa-ticket-simple"></i>
+                        Complaints
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../leave/Leaveform.html" class="nav-link">
+                        <i class="fa-solid fa-file-signature"></i>
+                        Leave Form
                     </a>
                 </li>
             </ul>
@@ -57,15 +63,14 @@
 
             <header class="header">
                 <div class="page-title">
-                    <h1>Student Profile</h1>
+                    <h1 id="page-role-title">Student Profile</h1>
                     <p>Academic Year 2026-27</p>
                 </div>
-                <div class="actions">
-                    <button
-                        style="padding: 10px 20px; background: #111; color: #fff; border: none; border-radius: 8px; cursor: pointer;">
+                <!-- <div class="actions">
+                    <button style="padding: 10px 20px; background: #111; color: #fff; border: none; border-radius: 8px; cursor: pointer;">
                         Edit Profile
                     </button>
-                </div>
+                </div> -->
             </header>
 
             <div class="profile-grid">
@@ -73,65 +78,84 @@
                 <!-- Left Card -->
                 <div class="profile-card">
                     <div class="photo-frame">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=387&q=80"
-                            alt="Student">
+                        <img id="profile-img" src="https://ui-avatars.com/api/?name=User&background=random&size=200" alt="Profile">
                     </div>
                     <div class="core-info">
-                        <h2>Tushar Sharma</h2>
-                        <span class="role">Computer Science Engineering</span>
+                        <h2 id="display-name">Loading...</h2>
+                        <span class="role" id="display-dept">Department</span>
                     </div>
                     <div class="stats-row">
                         <div class="stat">
-                            <h3>2027</h3>
+                            <h3 id="stat-year">2027</h3>
                             <span>Class of</span>
                         </div>
                         <div class="stat">
-                            <h3>CS-B</h3>
-                            <span>Section</span>
+                            <h3 id="stat-dept-short">CSE</h3>
+                            <span>Dept</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Grid -->
-                <div class="details-section">
+                <div class="details-section" id="details-section">
                     <div class="info-box full-width">
                         <label>Full Name</label>
-                        <div class="value">Tushar Rajendra Sharma</div>
+                        <div class="value" id="val-fullName">...</div>
                     </div>
 
                     <div class="info-box">
                         <label>ID Number</label>
-                        <div class="value">123AD0024</div>
+                        <div class="value" id="val-idNumber">...</div>
                     </div>
 
                     <div class="info-box">
                         <label>Date of Birth</label>
-                        <div class="value">15 Aug 2003</div>
+                        <div class="value" id="val-dob">...</div>
                     </div>
 
                     <div class="info-box">
                         <label>Email Address</label>
-                        <div class="value">tushar.sharma@onecampus.edu</div>
+                        <div class="value" id="val-email">...</div>
                     </div>
 
                     <div class="info-box">
                         <label>Phone Number</label>
-                        <div class="value">+91 98765 43210</div>
+                        <div class="value" id="val-phone">...</div>
                     </div>
 
                     <div class="info-box">
                         <label>Gender</label>
-                        <div class="value">Male</div>
+                        <div class="value" id="val-gender">...</div>
                     </div>
 
                     <div class="info-box">
                         <label>Hostel</label>
-                        <div class="value">MVHR</div>
+                        <div class="value" id="val-hostel">...</div>
+                    </div>
+
+                    <div class="info-box">
+                        <label>Room Number</label>
+                        <div class="value" id="val-room">...</div>
+                    </div>
+
+                    <div class="info-box">
+                        <label>Graduation Year</label>
+                        <div class="value" id="val-gradYear">...</div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <label>Branch</label>
+                        <div class="value" id="val-branch">...</div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <label>Current Semester</label>
+                        <div class="value" id="val-semester">...</div>
                     </div>
 
                     <div class="info-box full-width">
                         <label>Permanent Address</label>
-                        <div class="value">123/B, Green Valley Apartments, Tech City, Bangalore - 560100</div>
+                        <div class="value" id="val-address">...</div>
                     </div>
                 </div>
             </div>
@@ -139,6 +163,50 @@
         </main>
     </div>
 
+    <script>
+        const userSummary = JSON.parse(localStorage.getItem('onecampus_user'));
+        if (!userSummary) {
+            window.location.href = '../../login/login.html';
+        }
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`/api/auth/profile/${userSummary.id}`);
+                const data = await res.json();
+                
+                if (data.success) {
+                    const u = data.user;
+                    
+                    document.getElementById('page-role-title').innerText = u.role === 'faculty' ? 'Faculty Profile' : 'Student Profile';
+                    document.getElementById('display-name').innerText = u.fullName;
+                    document.getElementById('display-dept').innerText = u.department || 'General';
+                    
+                    document.getElementById('val-fullName').innerText = u.fullName;
+                    document.getElementById('val-idNumber').innerText = u.idNumber;
+                    document.getElementById('val-dob').innerText = u.dob ? new Date(u.dob).toLocaleDateString() : 'N/A';
+                    document.getElementById('val-email').innerText = u.email;
+                    document.getElementById('val-phone').innerText = u.phone || 'N/A';
+                    document.getElementById('val-gender').innerText = u.gender || 'N/A';
+                    document.getElementById('val-hostel').innerText = u.hostelName || 'N/A';
+                    document.getElementById('val-room').innerText = u.roomNo || 'N/A';
+                    document.getElementById('val-gradYear').innerText = u.graduationYear || 'N/A';
+                    document.getElementById('val-address').innerText = u.address || 'N/A';
+                    document.getElementById('val-branch').innerText = u.branch || 'N/A';
+                    const semMap = { '1': '1st', '2': '2nd', '3': '3rd', '4': '4th', '5': '5th', '6': '6th', '7': '7th', '8': '8th' };
+                    document.getElementById('val-semester').innerText = u.semester ? (semMap[u.semester] || u.semester) + ' Sem' : 'N/A';
+
+                    document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName)}&background=random&size=200`;
+                    
+                    document.getElementById('stat-year').innerText = u.graduationYear || 'N/A';
+                    document.getElementById('stat-dept-short').innerText = u.department ? u.department.substring(0, 3).toUpperCase() : 'N/A';
+                }
+            } catch (err) {
+                console.error("Profile load error:", err);
+            }
+        }
+
+        loadProfile();
+    </script>
 </body>
 
 </html>

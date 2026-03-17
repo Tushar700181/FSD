@@ -167,16 +167,124 @@
                         </div>
                         <div class="status-badge-container" style="text-align: right;">
                             <span class="status-badge status-${o.status.toLowerCase().replace(' ', '-')}">${o.status}</span>
+                            ${typeClass === 'history' && (o.status.toLowerCase() === 'done' || o.status.toLowerCase() === 'completed') ? 
+                                `<br><button class="rating-action-btn" style="margin-top: 10px;" onclick="openRatingModal('${o._id}')">Rate Items</button>` : ''
+                            }
                         </div>
                     </div>
                 </div>
             `;
         }
 
+        // Rating Modal Logic
+        let currentRatingOrderId = null;
+
+        function openRatingModal(orderId) {
+            currentRatingOrderId = orderId;
+            const res = fetchMyOrders(); // Get fresh data
+            // Since fetchMyOrders updates the UI, we should find the order in the local scope if cached
+            // For simplicity, let's find it in the DOM or re-fetch specifically
+            const orders = JSON.parse(sessionStorage.getItem('last_orders') || '[]');
+            const order = orders.find(o => o._id === orderId);
+            
+            if (!order) return;
+
+            const modal = document.getElementById('ratingOverlay');
+            const list = document.getElementById('ratingItemsList');
+            
+            list.innerHTML = order.items.map(item => `
+                <div class="rating-item" data-item-id="${item.id}">
+                    <span style="font-weight: 600; font-size: 14px;">${item.name}</span>
+                    <div class="stars" id="stars-${item.id}">
+                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 1)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 2)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 3)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 4)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 5)"></i>
+                    </div>
+                </div>
+            `).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        function setRating(itemId, val) {
+            const container = document.getElementById(`stars-${itemId}`);
+            const stars = container.querySelectorAll('i');
+            container.setAttribute('data-value', val);
+            stars.forEach((s, idx) => {
+                if (idx < val) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+        }
+
+        async function submitRatings() {
+            const items = document.querySelectorAll('.rating-item');
+            const submissions = [];
+            
+            items.forEach(el => {
+                const itemId = el.getAttribute('data-item-id');
+                const val = el.querySelector('.stars').getAttribute('data-value');
+                if (val) {
+                    submissions.push({ itemId, rating: Number(val) });
+                }
+            });
+
+            if (submissions.length === 0) return alert('Please rate at least one item!');
+
+            try {
+                for (const sub of submissions) {
+                    await fetch(`/api/menus/${sub.itemId}/rate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: user.id || user._id, rating: sub.rating })
+                    });
+                }
+                alert('Thank you for your feedback!');
+                closeRatingModal();
+            } catch (err) {
+                console.error('Submit ratings error:', err);
+                alert('Failed to submit ratings.');
+            }
+        }
+
+        function closeRatingModal() {
+            document.getElementById('ratingOverlay').style.display = 'none';
+        }
+
+        async function fetchMyOrders() {
+            const studentId = user.id || user._id;
+            try {
+                const res = await fetch(`/api/orders/my/${studentId}`);
+                const data = await res.json();
+                if (data.success) {
+                    sessionStorage.setItem('last_orders', JSON.stringify(data.orders));
+                    renderOrders(data.orders);
+                }
+            } catch (err) {
+                console.error('Error fetching orders:', err);
+            }
+        }
+
         // Init
         fetchMyOrders();
-        setInterval(fetchMyOrders, 10000); // Polling every 10s
+        // setInterval(fetchMyOrders, 10000); // Polling disabled for manual refresh to avoid jitter
     </script>
+
+    <!-- Rating Modal -->
+    <div id="ratingOverlay" class="rating-overlay">
+        <div class="rating-modal">
+            <h3 style="margin-bottom: 20px; font-weight: 700;">Rate your meal</h3>
+            <div id="ratingItemsList" style="margin-bottom: 25px;">
+                <!-- Items injected here -->
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeRatingModal()" style="flex: 1; padding: 12px; border: none; background: #eee; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+                <button onclick="submitRatings()" style="flex: 2; padding: 12px; border: none; background: var(--primary-green); color: white; border-radius: 12px; font-weight: 600; cursor: pointer;">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+
     <script src="auth_check.js"></script>
 </body>
 

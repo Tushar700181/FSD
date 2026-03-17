@@ -47,6 +47,9 @@ router.post('/', async (req, res) => {
             image: image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=60',
             cafeName: (cafeName || '').trim(),
             available: true,
+            ratings: [], // Store {userId, rating, comment, date}
+            averageRating: 0,
+            totalRatings: 0,
             createdAt: new Date()
         };
 
@@ -110,6 +113,59 @@ router.delete('/:id', async (req, res) => {
     } catch (err) {
         console.error('Delete menu item error:', err.message);
         res.status(500).json({ success: false, message: 'Failed to delete item' });
+    }
+});
+
+// POST /api/menus/:id/rate - Submit a rating for an item
+router.post('/:id/rate', async (req, res) => {
+    try {
+        const { userId, rating, comment } = req.body;
+        const menusCollection = collections.menus();
+        
+        if (rating === undefined) {
+            return res.status(400).json({ success: false, message: 'Rating is required' });
+        }
+
+        let objectId;
+        try {
+            objectId = new ObjectId(req.params.id);
+        } catch (e) {
+            return res.status(400).json({ success: false, message: 'Invalid item ID format' });
+        }
+
+        const item = await menusCollection.findOne({ _id: objectId });
+        if (!item) {
+            return res.status(404).json({ success: false, message: 'Item not found' });
+        }
+
+        const newRating = {
+            userId: userId ? new ObjectId(userId) : null,
+            rating: Number(rating),
+            comment: comment || '',
+            date: new Date()
+        };
+
+        const ratings = item.ratings || [];
+        ratings.push(newRating);
+
+        const total = ratings.reduce((sum, r) => sum + r.rating, 0);
+        const average = total / ratings.length;
+
+        await menusCollection.updateOne(
+            { _id: objectId },
+            { 
+                $set: { 
+                    ratings, 
+                    averageRating: average, 
+                    totalRatings: ratings.length 
+                } 
+            }
+        );
+
+        res.json({ success: true, averageRating: average, totalRatings: ratings.length });
+    } catch (err) {
+        console.error('Rating error:', err.message);
+        res.status(500).json({ success: false, message: 'Failed to submit rating' });
     }
 });
 

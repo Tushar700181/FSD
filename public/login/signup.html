@@ -97,6 +97,24 @@
                         <i class="fa-solid fa-building"></i>
                         <input type="text" id="hostelName" placeholder="Hostel Name">
                     </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-code-branch"></i>
+                        <input type="text" id="branch" placeholder="Branch (e.g., CSE, ECE)">
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <select id="semester">
+                            <option value="" disabled selected>Select Current Semester</option>
+                            <option value="1">1st Semester</option>
+                            <option value="2">2nd Semester</option>
+                            <option value="3">3rd Semester</option>
+                            <option value="4">4th Semester</option>
+                            <option value="5">5th Semester</option>
+                            <option value="6">6th Semester</option>
+                            <option value="7">7th Semester</option>
+                            <option value="8">8th Semester</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-graduation-cap"></i>
@@ -224,6 +242,8 @@
             if (role === 'student') {
                 body.roomNo = document.getElementById('roomNo').value.trim();
                 body.hostelName = document.getElementById('hostelName').value.trim();
+                body.branch = document.getElementById('branch').value.trim();
+                body.semester = document.getElementById('semester').value;
                 body.graduationYear = document.getElementById('graduationYear').value;
                 body.department = document.getElementById('studentDepartment').value.trim();
             } else if (role === 'faculty') {

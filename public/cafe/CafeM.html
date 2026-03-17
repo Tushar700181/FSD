@@ -19,7 +19,7 @@
                 <i class="fa-solid fa-bowl-food"></i>
             </div>
             <ul class="nav-links">
-                <li><a href="../landing/index.html" title="Home"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="CafeH.html" title="Home"><i class="fa-solid fa-house"></i></a></li>
                 <li class="active"><a href="CafeM.html" title="Menu"><i class="fa-solid fa-utensils"></i></a></li>
                 <li><a href="cart.html" title="Cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
                 <li><a href="myorders.html" title="My Orders"><i class="fa-solid fa-clock-rotate-left"></i></a></li>
@@ -134,7 +134,15 @@
                                     <h3>${item.name}</h3>
                                     <p class="description">Freshly prepared at ${cafeName}</p>
                                     <div class="card-footer">
-                                        <div class="rating"><i class="fa-solid fa-star"></i> 5.0</div>
+                                        <div class="rating">
+                                            <div class="stars" data-item-id="${item._id}">
+                                                ${[1, 2, 3, 4, 5].map(v => `
+                                                    <i class="${v <= Math.round(item.averageRating || 5) ? 'fa-solid' : 'fa-regular'} fa-star" 
+                                                       style="cursor: default;"></i>
+                                                `).join('')}
+                                            </div>
+                                            <span class="avg-val">${(item.averageRating || 5.0).toFixed(1)}</span>
+                                        </div>
                                         <span class="price">₹${item.price}</span>
                                     </div>
                                     <button class="add-btn" onclick="addToCart('${item._id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${cafeName.replace(/'/g, "\\'")}', '${item.image}', event)">Add to cart</button>
@@ -177,6 +185,38 @@
                             btn.innerText = originalText;
                             btn.style.background = '#2f9476';
                         }, 1000);
+                    }
+                }
+
+                async function rateItem(itemId, value, event) {
+                    event.stopPropagation(); // Prevents clicking the card
+                    if (!userId) return alert('Please login to rate items!');
+
+                    try {
+                        const res = await fetch(`/api/menus/${itemId}/rate`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId, rating: value })
+                        });
+                        const data = await res.json();
+
+                        if (data.success) {
+                            // Update UI instantly
+                            const starsContainer = event.currentTarget.parentElement;
+                            const stars = starsContainer.querySelectorAll('i');
+                            stars.forEach((s, idx) => {
+                                if (idx < value) {
+                                    s.classList.remove('fa-regular');
+                                    s.classList.add('fa-solid');
+                                } else {
+                                    s.classList.remove('fa-solid');
+                                    s.classList.add('fa-regular');
+                                }
+                            });
+                            starsContainer.nextElementSibling.innerText = data.averageRating.toFixed(1);
+                        }
+                    } catch (err) {
+                        console.error('Rate item error:', err);
                     }
                 }
 

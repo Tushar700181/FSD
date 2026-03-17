@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Availability Portal - OneCampus</title>
     <link rel="stylesheet" href="Faculty_Aval.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
@@ -21,106 +21,36 @@
         </div>
     </header>
 
+    <!-- Glass Search Bar Section -->
+    <section class="container search-section">
+        <div class="search-container">
+            <i class="fas fa-search" style="color: var(--text-muted)"></i>
+            <input type="text" id="facultySearch" placeholder="Search by name, expertise, or cabin..." oninput="filterFaculty()">
+            <select id="deptFilter" onchange="filterFaculty()">
+                <option value="all">All Departments</option>
+                <option value="CSE">Computer Science</option>
+                <option value="ECE">Electronics</option>
+                <option value="MECH">Mechanical</option>
+                <option value="DOS">Sciences</option>
+            </select>
+        </div>
+    </section>
+
     <nav class="sticky-nav">
         <div class="container">
-            <ul>
-                <li><a href="#hods">HODs</a></li>
-                <li><a href="#cse">CSE Faculty</a></li>
-                <li><a href="#ece">ECE Faculty</a></li>
-                <li><a href="#mech">Mech Faculty</a></li>
+            <ul id="dept-nav">
+                <!-- Dept links will be injected -->
             </ul>
         </div>
     </nav>
 
     <main class="container">
-
-        <!-- Faculty Sections container -->
         <div id="faculty-sections-container">
-            <!-- Sections will be injected here -->
+            <div style="text-align: center; padding: 100px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--accent-teal)"></i>
+                <p style="margin-top: 1rem; font-weight: 500;">Connecting to Campus Database...</p>
+            </div>
         </div>
-
-        <script>
-            async function loadFaculty() {
-                try {
-                    const response = await fetch('/api/auth/faculty');
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        renderFaculty(data.faculty);
-                    }
-                } catch (err) {
-                    console.error('Error loading faculty:', err);
-                }
-            }
-
-            function renderFaculty(faculty) {
-                const container = document.getElementById('faculty-sections-container');
-                container.innerHTML = '';
-
-                // Group by department
-                const departments = {};
-                faculty.forEach(f => {
-                    if (!departments[f.department]) {
-                        departments[f.department] = [];
-                    }
-                    departments[f.department].push(f);
-                });
-
-                // Department Full Names Map
-                const deptMap = {
-                    'CSE': 'Computer Science Engineering',
-                    'ECE': 'Electronics and Communication',
-                    'MECH': 'Mechanical Engineering',
-                    'DOS': 'Department of Sciences (Physics/Math)'
-                };
-
-                for (const dept in departments) {
-                    const section = document.createElement('section');
-                    section.id = dept.toLowerCase();
-                    section.className = 'faculty-section';
-                    
-                    const title = document.createElement('h2');
-                    title.className = 'section-title';
-                    title.textContent = deptMap[dept] || dept;
-                    section.appendChild(title);
-
-                    const grid = document.createElement('div');
-                    grid.className = 'faculty-grid';
-
-                    departments[dept].forEach(f => {
-                        const card = document.createElement('div');
-                        card.className = 'faculty-card';
-                        
-                        // Pick a background color based on status
-                        const statusClass = f.status.toLowerCase().replace(' ', '-');
-                        
-                        card.innerHTML = `
-                            <div class="card-image">
-                                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random" alt="${f.fullName}">
-                            </div>
-                            <div class="card-details">
-                                <h3 class="faculty-name">${f.fullName}</h3>
-                                <p class="faculty-dept">${f.designation}</p>
-                                <ul class="info-list">
-                                    <li><strong>Mail:</strong> ${f.email}</li>
-                                    <li><strong>Cabin:</strong> ${f.cabin}</li>
-                                    <li><strong>Focus:</strong> ${f.focusAreas}</li>
-                                    <li><strong>Status:</strong> <span class="status ${statusClass}">${f.status}</span></li>
-                                </ul>
-                            </div>
-                        `;
-                        grid.appendChild(card);
-                    });
-
-                    section.appendChild(grid);
-                    container.appendChild(section);
-                }
-            }
-
-            // Load on start
-            loadFaculty();
-        </script>
-
     </main>
 
     <footer>
@@ -129,6 +59,111 @@
         </div>
     </footer>
 
-</body>
+    <script>
+        let allFaculty = [];
 
-</html>
+        async function loadFaculty() {
+            try {
+                const response = await fetch('/api/auth/faculty');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allFaculty = data.faculty;
+                    renderFaculty(allFaculty);
+                }
+            } catch (err) {
+                console.error('Error loading faculty:', err);
+                document.getElementById('faculty-sections-container').innerHTML = '<p style="text-align:center; color:red;">Connection error. Please try again.</p>';
+            }
+        }
+
+        function filterFaculty() {
+            const searchTerm = document.getElementById('facultySearch').value.toLowerCase();
+            const deptFilter = document.getElementById('deptFilter').value;
+
+            const filtered = allFaculty.filter(f => {
+                const matchesSearch = f.fullName.toLowerCase().includes(searchTerm) || 
+                                    f.focusAreas.toLowerCase().includes(searchTerm) ||
+                                    f.cabin.toLowerCase().includes(searchTerm);
+                const matchesDept = deptFilter === 'all' || f.department === deptFilter;
+                return matchesSearch && matchesDept;
+            });
+
+            renderFaculty(filtered);
+        }
+
+        function renderFaculty(faculty) {
+            const container = document.getElementById('faculty-sections-container');
+            const nav = document.getElementById('dept-nav');
+            container.innerHTML = '';
+            nav.innerHTML = '';
+
+            if (faculty.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding: 100px;"><i class="fas fa-search-minus" style="font-size:3rem; opacity:0.2;"></i><p>No matches found.</p></div>';
+                return;
+            }
+
+            const departments = {};
+            faculty.forEach(f => {
+                if (!departments[f.department]) departments[f.department] = [];
+                departments[f.department].push(f);
+            });
+
+            const deptMap = {
+                'CSE': 'Computer Science Engineering',
+                'ECE': 'Electronics and Communication',
+                'MECH': 'Mechanical Engineering',
+                'DOS': 'Department of Sciences'
+            };
+
+            for (const dept in departments) {
+                // Add to Nav
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#${dept.toLowerCase()}">${dept}</a>`;
+                nav.appendChild(li);
+
+                // Create Section
+                const section = document.createElement('section');
+                section.id = dept.toLowerCase();
+                section.className = 'faculty-section';
+                
+                section.innerHTML = `
+                    <h2 class="section-title">
+                        <i class="fas fa-university" style="color: var(--accent-teal)"></i>
+                        ${deptMap[dept] || dept}
+                    </h2>
+                    <div class="faculty-grid">
+                        ${departments[dept].map(f => {
+                            const status = f.status.trim();
+                            const statusClass = status.includes('Class') ? 'status-busy' : (status.includes('Meeting') ? 'status-meeting' : 'status-available');
+                            return `
+                                <div class="faculty-card">
+                                    <div class="card-top">
+                                        <img class="card-image" src="https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random" alt="${f.fullName}">
+                                        <div class="faculty-header-info">
+                                            <h3>${f.fullName}</h3>
+                                            <p>${f.designation}</p>
+                                        </div>
+                                    </div>
+                                    <ul class="info-list">
+                                        <li><i class="fas fa-envelope"></i> ${f.email}</li>
+                                        <li><i class="fas fa-door-open"></i> Cabin: ${f.cabin}</li>
+                                        <li><i class="fas fa-microscope"></i> ${f.focusAreas}</li>
+                                        <li style="justify-content: space-between; margin-top: 1rem;">
+                                            <span style="font-weight: 600;">Status</span>
+                                            <span class="status-badge ${statusClass}">${status}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            }
+        }
+
+        loadFaculty();
+    </script>
+</body>
+</html>

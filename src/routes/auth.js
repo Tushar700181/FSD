@@ -8,7 +8,7 @@ const { hashPassword, comparePassword } = require('../utils/authUtils');
 router.post('/signup', async (req, res) => {
     try {
         const { fullName, idNumber, dob, phone, email, gender, address, role,
-            roomNo, hostelName, graduationYear, department,
+            roomNo, hostelName, graduationYear, department, branch, semester,
             cadre, focusAreas, password, confirmPassword, signUpKey } = req.body;
 
         const usersCollection = collections.users();
@@ -59,6 +59,8 @@ router.post('/signup', async (req, res) => {
             hostelName,
             graduationYear: graduationYear ? Number(graduationYear) : null,
             department,
+            branch,
+            semester,
             cadre,
             focusAreas,
             password: hashedPassword,

@@ -9,6 +9,7 @@ const vendorAuthRoutes = require('./routes/vendorAuth');
 const complaintRoutes = require('./routes/complaints');
 const menuRoutes = require('./routes/menus');
 const orderRoutes = require('./routes/orders');
+const leaveRoutes = require('./routes/leaves');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use('/api/vendor', vendorAuthRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use('/api/menus', menuRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/leaves', leaveRoutes);
 
 // 2. Static Files
 const frontendPath = path.resolve(__dirname, '../public');

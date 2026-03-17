@@ -578,11 +578,11 @@
             <li><a href="../cafe/CafeH.html" target="_blank">Cafe</a></li>
             <li><a href="../faculty/Faculty_Aval.html" target="_blank">Faculty</a></li>
             <li><a href="../placement/Placement.html" target="_blank">Placement</a></li>
-            <li><a href="#">Leave</a></li>
+            <li><a href="../leave/Leaveform.html" target="_blank">Leave</a></li>
             <li><a href="../dashboard/student_portal.html">Complaints</a></li>
             <li><a href="#">Maps</a></li>
             <li id="auth-item" class="auth-item">
-                <a href="../login/login.html" id="auth-btn" class="login-state">Login</a>
+                <!-- Data will be injected -->
             </li>
         </ul>
     </nav>
@@ -610,7 +610,7 @@
             <a href="../placement/Placement.html" class="quick-chip" target="_blank">
                 <i class="fa-solid fa-briefcase"></i> Placements
             </a>
-            <a href="#" class="quick-chip">
+            <a href="../leave/Leaveform.html" class="quick-chip" target="_blank">
                 <i class="fa-solid fa-file-signature"></i> Leave Form
             </a>
             <a href="../dashboard/student_portal.html" class="quick-chip">
@@ -701,7 +701,7 @@
                 <h3>Placements</h3>
                 <p>Opportunities, drives, and company listings in one hub.</p>
             </a>
-            <a href="#" class="feature-card">
+            <a href="../leave/Leaveform.html" class="feature-card" target="_blank">
                 <div class="feature-icon"><i class="fa-solid fa-file-signature"></i></div>
                 <h3>Leave Forms</h3>
                 <p>Submit and track leave requests digitally — zero paperwork.</p>
@@ -792,6 +792,35 @@
         startAuto();
 
         /* ── PROTECTED ROUTES ─────────────────────────── */
+        const user = JSON.parse(localStorage.getItem('onecampus_user'));
+        const authItem = document.getElementById('auth-item');
+
+        if (user) {
+            authItem.innerHTML = `
+                <a href="../profile/Ver2/profile_glass.html" class="login-state">
+                    <i class="fa-solid fa-user-circle"></i> ${user.fullName.split(' ')[0]}
+                </a>
+                <div class="profile-dropdown">
+                    <div class="dropdown-header">
+                        <div class="user-name">${user.fullName}</div>
+                        <div class="user-role">${user.role}</div>
+                    </div>
+                    <a href="../profile/Ver2/profile_glass.html" class="dropdown-link"><i class="fa-regular fa-user"></i> My Profile</a>
+                    <a href="../dashboard/student_portal.html" class="dropdown-link"><i class="fa-solid fa-ticket-simple"></i> My Complaints</a>
+                    <a href="../leave/Leaveform.html" class="dropdown-link"><i class="fa-solid fa-file-signature"></i> Leave History</a>
+                    <div class="dropdown-divider"></div>
+                    <button onclick="logout()" class="dropdown-link logout-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+                </div>
+            `;
+        } else {
+            authItem.innerHTML = `<a href="../login/login.html" id="auth-btn" class="login-state">Login</a>`;
+        }
+
+        function logout() {
+            localStorage.removeItem('onecampus_user');
+            window.location.reload();
+        }
+
         function showToast(msg) {
             let t = document.querySelector('.toast-container');
             if (!t) {
@@ -838,6 +867,15 @@
                     if (href && (href.includes('CafeH.html') || href.includes('CafeM.html'))) {
                         link.setAttribute('href', '../cafe/hotel_view.html');
                         link.removeAttribute('target');
+                    }
+                });
+            }
+
+            if (user.role === 'admin') {
+                document.querySelectorAll('a').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && href.includes('Leaveform.html')) {
+                        link.setAttribute('href', '../leave/LeaveAdmin.html');
                     }
                 });
             }
