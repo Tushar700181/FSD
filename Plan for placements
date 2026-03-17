@@ -1,0 +1,65 @@
+# Placement System Upgrade & TPO Role Implementation
+
+Extend the placement module to support role-based management, dynamic data fetching, and automated statistics visualization.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Data Persistence (No Cloud)**: To avoid the cloud while keeping data consistent across environments (like your friend's Codespaces), we will use **Approach: Seeding Script**.
+> - I will create a `seed_data.json` file in the repository.
+> - I will provide a `npm run seed` command that imports this data into the local MongoDB.
+> - This way, whoever clones and runs the project gets the exact same "starting" data.
+
+> [!NOTE]
+> **TPO Data Entry Options**: You mentioned CSV vs GUI. I suggest a **Hybrid Approach**:
+> - **Bulk Upload (CSV)**: For importing massive "Past Offers" and "Alumni" data quickly.
+> - **Live GUI (CRUD)**: For the TPO to add a "Present Drive" or edit a specific record instantly without re-uploading a file.
+
+## Proposed Changes
+
+### [TPO Role & Authentication]
+
+#### [MODIFY] [public/login/signup.html](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER9/public/login/signup.html)
+- Add "TPO" as a role option in the sign-up/login flow.
+- Ensure TPO uses a secure `SIGNUP_KEY`.
+
+#### [MODIFY] [src/routes/auth.js](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER9/src/routes/auth.js)
+- Handle the `tpo` role in the backend authentication logic.
+
+---
+
+### [Placement Module Enhancement]
+
+#### [MODIFY] [public/placement/Placement.html](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER9/public/placement/Placement.html)
+- **Role-Based UI**:
+    - Students: See "Apply" buttons and view-only stats.
+    - TPO: See "Add Drive", "Add Alumni", "Edit", and "Delete" buttons.
+- **Dynamic Content**: Replace hardcoded cards with data fetched from `GET /api/placements`.
+- **Statistics**: Implement dynamic SVG/Chart generation using real database counts.
+
+#### [NEW] [src/routes/placements.js](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER9/src/routes/placements.js)
+- `GET /api/placements`: Fetch all drives, alumni, and aggregated stats.
+- `POST /api/placements`: TPO-only route to add new drives/alumni.
+- `POST /api/placements/bulk-upload`: Process CSV files for mass data entry.
+- `GET /api/placements/stats`: Aggregated summary for the statistics tab.
+
+---
+
+### [Local Data Persistence]
+
+#### [NEW] [scripts/seed_db.js](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER9/scripts/seed_db.js)
+- A script to read `data/seed_data.json` and populate the local MongoDB collection.
+
+#### [NEW] [data/seed_data.json](file:///c:/Users/tusha/OneDrive/Desktop/FSD/OneCampus_VER9/data/seed_data.json)
+- Store the initial "good data" you want everyone to have.
+
+## Verification Plan
+
+### Automated Tests
+- Test TPO login and access control.
+- Verify `POST /api/placements` returns 403 for non-TPO roles.
+- Check if statistics update correctly after adding a new drive.
+
+### Manual Verification
+- Log in as TPO and add a sample placement drive; verify it appears for students.
+- Check layout of the "Past Offers" section with dynamic data.

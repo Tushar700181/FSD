@@ -9,7 +9,7 @@ router.post('/signup', async (req, res) => {
     try {
         const { fullName, idNumber, dob, phone, email, gender, address, role,
             roomNo, hostelName, graduationYear, department, branch, semester,
-            cadre, focusAreas, password, confirmPassword, signUpKey } = req.body;
+            cadre, focusAreas, position, password, confirmPassword, signUpKey } = req.body;
 
         const usersCollection = collections.users();
 
@@ -21,6 +21,10 @@ router.post('/signup', async (req, res) => {
         } else if (role === 'admin') {
             if (signUpKey !== process.env.ADMIN_SIGNUP_KEY) {
                 return res.status(401).json({ success: false, message: 'Invalid Admin Verification Key' });
+            }
+        } else if (role === 'tpo') {
+            if (signUpKey !== (process.env.TPO_SIGNUP_KEY || 'tpo123')) {
+                return res.status(401).json({ success: false, message: 'Invalid TPO Verification Key' });
             }
         }
 
@@ -63,6 +67,7 @@ router.post('/signup', async (req, res) => {
             semester,
             cadre,
             focusAreas,
+            position,
             password: hashedPassword,
             createdAt: new Date(),
             updatedAt: new Date()

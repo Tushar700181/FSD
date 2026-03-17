@@ -83,6 +83,11 @@
                         <span class="radio-checkmark"></span>
                         Admin
                     </label>
+                    <label class="radio-container">
+                        <input type="radio" name="role" value="tpo" onchange="toggleRole()">
+                        <span class="radio-checkmark"></span>
+                        TPO
+                    </label>
                 </div>
             </div>
 
@@ -101,20 +106,22 @@
                         <i class="fa-solid fa-code-branch"></i>
                         <input type="text" id="branch" placeholder="Branch (e.g., CSE, ECE)">
                     </div>
-                    <div class="input-group">
-                        <i class="fa-solid fa-layer-group"></i>
-                        <select id="semester">
-                            <option value="" disabled selected>Select Current Semester</option>
-                            <option value="1">1st Semester</option>
-                            <option value="2">2nd Semester</option>
-                            <option value="3">3rd Semester</option>
-                            <option value="4">4th Semester</option>
-                            <option value="5">5th Semester</option>
-                            <option value="6">6th Semester</option>
-                            <option value="7">7th Semester</option>
-                            <option value="8">8th Semester</option>
-                        </select>
                     </div>
+                </div>
+                <!-- Move Semester out of grid for better layout -->
+                <div class="input-group">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <select id="semester">
+                        <option value="" disabled selected>Select Current Semester</option>
+                        <option value="1">1st Semester</option>
+                        <option value="2">2nd Semester</option>
+                        <option value="3">3rd Semester</option>
+                        <option value="4">4th Semester</option>
+                        <option value="5">5th Semester</option>
+                        <option value="6">6th Semester</option>
+                        <option value="7">7th Semester</option>
+                        <option value="8">8th Semester</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-graduation-cap"></i>
@@ -147,6 +154,14 @@
                 <div class="input-group">
                     <i class="fa-solid fa-building-user"></i>
                     <input type="text" id="adminDepartment" placeholder="Department (e.g., Hostel, Mess, Academic)">
+                </div>
+            </div>
+
+            <!-- TPO Specific Fields -->
+            <div id="tpo-fields" class="role-fields" style="display: none;">
+                <div class="input-group">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <input type="text" id="tpoPosition" placeholder="Position (e.g., Head - T&P)">
                 </div>
             </div>
 
@@ -190,12 +205,14 @@
             const studentFields = document.getElementById('student-fields');
             const facultyFields = document.getElementById('faculty-fields');
             const adminFields = document.getElementById('admin-fields');
+            const tpoFields = document.getElementById('tpo-fields');
             const verificationGroup = document.getElementById('verification-group');
 
             studentFields.style.display = role === 'student' ? 'block' : 'none';
             facultyFields.style.display = role === 'faculty' ? 'block' : 'none';
             adminFields.style.display = role === 'admin' ? 'block' : 'none';
-            verificationGroup.style.display = (role === 'faculty' || role === 'admin') ? 'block' : 'none';
+            tpoFields.style.display = role === 'tpo' ? 'block' : 'none';
+            verificationGroup.style.display = (role === 'faculty' || role === 'admin' || role === 'tpo') ? 'block' : 'none';
         }
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
@@ -253,6 +270,9 @@
                 body.signUpKey = document.getElementById('signUpKey').value;
             } else if (role === 'admin') {
                 body.department = document.getElementById('adminDepartment').value.trim();
+                body.signUpKey = document.getElementById('signUpKey').value;
+            } else if (role === 'tpo') {
+                body.position = document.getElementById('tpoPosition').value.trim();
                 body.signUpKey = document.getElementById('signUpKey').value;
             }
 
