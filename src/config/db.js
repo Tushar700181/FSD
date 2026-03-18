@@ -31,7 +31,11 @@ const collections = {
     complaints: () => getDB().collection('complaints'),
     orders: () => getDB().collection('orders'),
     menus: () => getDB().collection('menus'),
-    leaves: () => getDB().collection('leaves')
+    leaves: () => getDB().collection('leaves'),
+    classrooms: () => getDB().collection('classrooms'),
+    period_schedule: () => getDB().collection('period_schedule'),
+    timetable_slots: () => getDB().collection('timetable_slots'),
+    personal_blocks: () => getDB().collection('personal_blocks')
 };
 
 module.exports = { connectDB, getDB, collections };

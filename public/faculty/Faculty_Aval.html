@@ -8,6 +8,111 @@
     <link rel="stylesheet" href="Faculty_Aval.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ── Cursor pointer on cards ── */
+        .faculty-card { cursor: pointer; }
+
+        /* ── Modal Overlay ── */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; animation: fadeIn .25s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal {
+            background: #fff;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 92%;
+            max-width: 750px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,.25);
+            animation: slideUp .3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-close {
+            position: absolute; top: 1.25rem; right: 1.25rem;
+            background: #f1f5f9; border: none; border-radius: 50%;
+            width: 36px; height: 36px; cursor: pointer;
+            font-size: 1rem; color: #64748b; transition: background .2s;
+        }
+        .modal-close:hover { background: #fee2e2; color: #991b1b; }
+
+        /* Modal header */
+        .modal-faculty-header {
+            display: flex; align-items: center; gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .modal-avatar {
+            width: 72px; height: 72px; border-radius: 1rem;
+            object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,.12);
+        }
+        .modal-faculty-header h2 { font-size: 1.4rem; font-weight: 700; }
+        .modal-faculty-header p { color: #64748b; font-size: .9rem; margin-top: .2rem; }
+
+        /* Current status */
+        .current-status-bar {
+            border-radius: 1rem; padding: 1rem 1.5rem;
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 1.5rem; font-weight: 600;
+        }
+        .cs-available { background: #dcfce7; color: #166534; }
+        .cs-busy      { background: #fee2e2; color: #991b1b; }
+        .cs-meeting   { background: #fef9c3; color: #854d0e; }
+        .cs-hidden    { background: #f1f5f9; color: #475569; }
+        .current-status-bar .cs-icon { font-size: 1.4rem; }
+
+        /* Location pill (faculty-view only) */
+        .location-pill {
+            background: #0f172a; color: #2dd4bf;
+            border-radius: 2rem; padding: .35rem 1rem;
+            font-size: .8rem; font-weight: 700; letter-spacing: .04em;
+            display: inline-flex; align-items: center; gap: .4rem;
+        }
+
+        /* Weekly timetable grid */
+        .weekly-title {
+            font-size: .9rem; font-weight: 700; color: #64748b;
+            text-transform: uppercase; letter-spacing: .06em;
+            margin-bottom: 1rem;
+        }
+        .tt-grid {
+            overflow-x: auto;
+        }
+        .tt-table {
+            width: 100%; border-collapse: collapse; font-size: .82rem;
+        }
+        .tt-table th {
+            background: #0f172a; color: #2dd4bf;
+            padding: .6rem .8rem; text-align: center;
+            font-weight: 700; letter-spacing: .04em;
+        }
+        .tt-table td {
+            padding: .55rem .75rem; text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .tt-table tr:nth-child(even) td { background: #f8fafc; }
+        .tt-cell-busy    { background: #fee2e2 !important; color: #991b1b; font-weight: 600; border-radius: .4rem; }
+        .tt-cell-meeting { background: #fef9c3 !important; color: #854d0e; font-weight: 600; border-radius: .4rem; }
+        .tt-cell-free    { color: #94a3b8; font-size: .75rem; }
+
+        /* Role badge in header */
+        .role-tag {
+            font-size: .7rem; font-weight: 700; text-transform: uppercase;
+            padding: .2rem .6rem; border-radius: 2rem; letter-spacing: .06em;
+        }
+        .role-student { background: #e0f2fe; color: #0369a1; }
+        .role-faculty { background: #ede9fe; color: #5b21b6; }
+    </style>
 </head>
 
 <body>
@@ -15,13 +120,14 @@
     <header class="main-header">
         <div class="container header-flex">
             <h1>OneCampus</h1>
-            <div class="profile-logo">
-                <i class="fas fa-user-circle"></i>
+            <div style="display:flex;align-items:center;gap:1rem;">
+                <span id="roleDisplay" class="role-tag role-student">Student View</span>
+                <div class="profile-logo"><i class="fas fa-user-circle"></i></div>
             </div>
         </div>
     </header>
 
-    <!-- Glass Search Bar Section -->
+    <!-- Search -->
     <section class="container search-section">
         <div class="search-container">
             <i class="fas fa-search" style="color: var(--text-muted)"></i>
@@ -38,17 +144,15 @@
 
     <nav class="sticky-nav">
         <div class="container">
-            <ul id="dept-nav">
-                <!-- Dept links will be injected -->
-            </ul>
+            <ul id="dept-nav"></ul>
         </div>
     </nav>
 
     <main class="container">
         <div id="faculty-sections-container">
-            <div style="text-align: center; padding: 100px;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--accent-teal)"></i>
-                <p style="margin-top: 1rem; font-weight: 500;">Connecting to Campus Database...</p>
+            <div style="text-align:center;padding:100px">
+                <i class="fas fa-spinner fa-spin" style="font-size:3rem;color:var(--accent-teal)"></i>
+                <p style="margin-top:1rem;font-weight:500;">Connecting to Campus Database...</p>
             </div>
         </div>
     </main>
@@ -59,37 +163,68 @@
         </div>
     </footer>
 
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+        <div class="modal" id="detailModal">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div id="modalContent">Loading...</div>
+        </div>
+    </div>
+
     <script>
         let allFaculty = [];
 
+        // ── Read role from the real session key ──
+        const _session = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+        const userRole = _session.role || 'student'; // 'student' | 'faculty' | 'admin' | 'tpo'
+
+        // Admin → send to the admin grid immediately
+        if (userRole === 'admin') {
+            window.location.href = '/faculty/Admin_Grid.html';
+        }
+
+        // Update role badge
+        const roleDisplay = document.getElementById('roleDisplay');
+        if (userRole === 'faculty') {
+            roleDisplay.textContent = 'Faculty View';
+            roleDisplay.className = 'role-tag role-faculty';
+        } else {
+            roleDisplay.textContent = 'Student View';
+            roleDisplay.className = 'role-tag role-student';
+        }
+
         async function loadFaculty() {
             try {
-                const response = await fetch('/api/auth/faculty');
-                const data = await response.json();
-                
+                const res = await fetch(`/api/faculty/status?role=${userRole}`);
+                const data = await res.json();
                 if (data.success) {
                     allFaculty = data.faculty;
                     renderFaculty(allFaculty);
                 }
             } catch (err) {
-                console.error('Error loading faculty:', err);
-                document.getElementById('faculty-sections-container').innerHTML = '<p style="text-align:center; color:red;">Connection error. Please try again.</p>';
+                document.getElementById('faculty-sections-container').innerHTML =
+                    '<p style="text-align:center;color:red;padding:4rem">Connection error. Please try again.</p>';
             }
         }
 
         function filterFaculty() {
-            const searchTerm = document.getElementById('facultySearch').value.toLowerCase();
-            const deptFilter = document.getElementById('deptFilter').value;
-
+            const term = document.getElementById('facultySearch').value.toLowerCase();
+            const dept = document.getElementById('deptFilter').value;
             const filtered = allFaculty.filter(f => {
-                const matchesSearch = f.fullName.toLowerCase().includes(searchTerm) || 
-                                    f.focusAreas.toLowerCase().includes(searchTerm) ||
-                                    f.cabin.toLowerCase().includes(searchTerm);
-                const matchesDept = deptFilter === 'all' || f.department === deptFilter;
-                return matchesSearch && matchesDept;
+                const matchSearch = (f.fullName || '').toLowerCase().includes(term) ||
+                    (f.focusAreas || '').toLowerCase().includes(term) ||
+                    (f.cabin || '').toLowerCase().includes(term);
+                const matchDept = dept === 'all' || f.department === dept;
+                return matchSearch && matchDept;
             });
-
             renderFaculty(filtered);
+        }
+
+        function getStatusInfo(av) {
+            if (!av || av.status === 'Hidden') return { cls: 'status-busy', label: 'Timetable Hidden' };
+            if (av.status === 'Available') return { cls: 'status-available', label: 'Available' };
+            if (av.status === 'In Meeting') return { cls: 'status-meeting', label: 'In Meeting' };
+            return { cls: 'status-busy', label: 'In Class' };
         }
 
         function renderFaculty(faculty) {
@@ -98,8 +233,8 @@
             container.innerHTML = '';
             nav.innerHTML = '';
 
-            if (faculty.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding: 100px;"><i class="fas fa-search-minus" style="font-size:3rem; opacity:0.2;"></i><p>No matches found.</p></div>';
+            if (!faculty.length) {
+                container.innerHTML = '<div style="text-align:center;padding:100px"><i class="fas fa-search-minus" style="font-size:3rem;opacity:.2"></i><p>No matches found.</p></div>';
                 return;
             }
 
@@ -110,60 +245,149 @@
             });
 
             const deptMap = {
-                'CSE': 'Computer Science Engineering',
-                'ECE': 'Electronics and Communication',
-                'MECH': 'Mechanical Engineering',
-                'DOS': 'Department of Sciences'
+                CSE: 'Computer Science Engineering',
+                ECE: 'Electronics and Communication',
+                MECH: 'Mechanical Engineering',
+                DOS: 'Department of Sciences'
             };
 
             for (const dept in departments) {
-                // Add to Nav
                 const li = document.createElement('li');
                 li.innerHTML = `<a href="#${dept.toLowerCase()}">${dept}</a>`;
                 nav.appendChild(li);
 
-                // Create Section
                 const section = document.createElement('section');
                 section.id = dept.toLowerCase();
                 section.className = 'faculty-section';
-                
+
                 section.innerHTML = `
                     <h2 class="section-title">
-                        <i class="fas fa-university" style="color: var(--accent-teal)"></i>
+                        <i class="fas fa-university" style="color:var(--accent-teal)"></i>
                         ${deptMap[dept] || dept}
                     </h2>
                     <div class="faculty-grid">
                         ${departments[dept].map(f => {
-                            const status = f.status.trim();
-                            const statusClass = status.includes('Class') ? 'status-busy' : (status.includes('Meeting') ? 'status-meeting' : 'status-available');
+                            const { cls, label } = getStatusInfo(f.availability);
                             return `
-                                <div class="faculty-card">
+                                <div class="faculty-card" onclick="openModal('${f._id}')">
                                     <div class="card-top">
                                         <img class="card-image" src="https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random" alt="${f.fullName}">
                                         <div class="faculty-header-info">
                                             <h3>${f.fullName}</h3>
-                                            <p>${f.designation}</p>
+                                            <p>${f.designation || ''}</p>
                                         </div>
                                     </div>
                                     <ul class="info-list">
                                         <li><i class="fas fa-envelope"></i> ${f.email}</li>
-                                        <li><i class="fas fa-door-open"></i> Cabin: ${f.cabin}</li>
-                                        <li><i class="fas fa-microscope"></i> ${f.focusAreas}</li>
-                                        <li style="justify-content: space-between; margin-top: 1rem;">
-                                            <span style="font-weight: 600;">Status</span>
-                                            <span class="status-badge ${statusClass}">${status}</span>
+                                        <li><i class="fas fa-door-open"></i> Cabin: ${f.cabin || 'N/A'}</li>
+                                        <li><i class="fas fa-microscope"></i> ${f.focusAreas || 'N/A'}</li>
+                                        <li style="justify-content:space-between;margin-top:1rem;">
+                                            <span style="font-weight:600">Status</span>
+                                            <span class="status-badge ${cls}">${label}</span>
                                         </li>
                                     </ul>
-                                </div>
-                            `;
+                                </div>`;
                         }).join('')}
-                    </div>
-                `;
+                    </div>`;
                 container.appendChild(section);
             }
+        }
+
+        async function openModal(facultyId) {
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+            overlay.classList.add('open');
+            content.innerHTML = '<div style="text-align:center;padding:3rem"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:#2dd4bf"></i></div>';
+
+            try {
+                const res = await fetch(`/api/faculty/${facultyId}/timetable?role=${userRole}`);
+                const data = await res.json();
+                if (!data.success) throw new Error('Failed');
+
+                const { faculty: f, timetable, currentStatus: cs } = data;
+
+                // Current status bar
+                let csClass = 'cs-available', csIcon = 'fa-check-circle', csText = 'Currently Available';
+                if (cs.status === 'In Class')   { csClass = 'cs-busy';   csIcon = 'fa-chalkboard-teacher'; csText = 'Currently In Class'; }
+                if (cs.status === 'In Meeting') { csClass = 'cs-meeting'; csIcon = 'fa-comments';           csText = 'Currently In Meeting'; }
+                if (cs.status === 'Hidden')     { csClass = 'cs-hidden'; csIcon = 'fa-eye-slash';           csText = 'Timetable Private'; }
+                if (cs.status === 'Unavailable'){ csClass = 'cs-busy';   csIcon = 'fa-ban';                csText = 'Personal Block'; }
+
+                // Location pill (faculty view with classroom info)
+                let locationHTML = '';
+                if (userRole !== 'student' && cs.classroom) {
+                    locationHTML = `<span class="location-pill"><i class="fas fa-map-marker-alt"></i> ${cs.classroom.roomCode} — ${cs.classroom.block}</span>`;
+                }
+
+                // Build week grid
+                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const periods = ['P1', 'P2', 'P3', 'P4', 'Afternoon'];
+
+                // Index timetable
+                const ttMap = {};
+                (timetable || []).forEach(s => { ttMap[`${s.day}_${s.period}`] = s; });
+
+                let gridHTML = `
+                    <p class="weekly-title"><i class="fas fa-calendar-week"></i> &nbsp;Weekly Timetable</p>
+                    <div class="tt-grid">
+                    <table class="tt-table">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                ${days.map(d => `<th>${d}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${periods.map(p => `
+                                <tr>
+                                    <td style="font-weight:700;color:#0f172a">${p}</td>
+                                    ${days.map(d => {
+                                        const key = `${d}_${p}`;
+                                        const slot = ttMap[key];
+                                        if (!slot) return `<td class="tt-cell-free">—</td>`;
+                                        if (slot.type === 'meeting') {
+                                            return `<td><span class="tt-cell-meeting">${userRole !== 'student' && slot.label ? slot.label : 'Meeting'}</span></td>`;
+                                        }
+                                        let detail = slot.type === 'lab' ? 'Lab' : 'Class';
+                                        if (userRole !== 'student') {
+                                            if (slot.label) detail = slot.label;
+                                            if (slot.classroom) detail += `<br><small style="color:#64748b">${slot.classroom.roomCode}</small>`;
+                                        }
+                                        return `<td><span class="tt-cell-busy">${detail}</span></td>`;
+                                    }).join('')}
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>
+                    </div>`;
+
+                content.innerHTML = `
+                    <div class="modal-faculty-header">
+                        <img class="modal-avatar" src="https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random" alt="${f.fullName}">
+                        <div>
+                            <h2>${f.fullName}</h2>
+                            <p>${f.designation || ''} &bull; ${f.department || ''}</p>
+                        </div>
+                    </div>
+                    <div class="current-status-bar ${csClass}">
+                        <i class="fas ${csIcon} cs-icon"></i>
+                        <span>${csText}</span>
+                        ${locationHTML}
+                    </div>
+                    ${cs.status !== 'Hidden' ? gridHTML : '<p style="color:#64748b;text-align:center;padding:2rem">This faculty has set their timetable to private.</p>'}`;
+
+            } catch (e) {
+                content.innerHTML = '<p style="text-align:center;color:red;padding:2rem">Could not load timetable. Please try again.</p>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+        }
+        function closeModalOnBg(e) {
+            if (e.target === document.getElementById('modalOverlay')) closeModal();
         }
 
         loadFaculty();
     </script>
 </body>
-</html>
+</html>
