@@ -50,7 +50,8 @@ function authorize(roles = [], departments = []) {
 
         // Department check (for Admin-level actions)
         if (req.user.role === 'admin' && departments.length > 0) {
-            if (!departments.includes(req.user.department)) {
+            const userDept = (req.user.department || '').trim();
+            if (!departments.some(d => d.trim().toLowerCase() === userDept.toLowerCase())) {
                 return res.status(403).json({ 
                     success: false, 
                     message: `Forbidden: This action is restricted to the following departments: ${departments.join(', ')}` 

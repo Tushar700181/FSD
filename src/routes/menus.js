@@ -12,7 +12,6 @@ router.get('/cafes/list', async (req, res) => {
         const cafesList = await usersCollection.find({ role: 'cafe' }).project({ cafeName: 1, _id: 0 }).toArray();
         const cafeNames = cafesList.map(c => c.cafeName).filter(name => !!name);
 
-        console.log('Detected Cafes:', cafeNames); // SERVER LOG
         res.json({ success: true, cafes: cafeNames });
     } catch (err) {
         console.error('Fetch cafes error:', err.message);
