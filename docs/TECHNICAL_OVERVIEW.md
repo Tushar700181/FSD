@@ -1,53 +1,69 @@
-# OneCampus: Technical Architecture & Security Overview
+# OneCampus: Full-Spectrum Technical Documentation
 
-This document provides a deep dive into the core technical implementations, security layers, and operational logic that define the production-ready OneCampus platform.
+OneCampus is an integrated university management ecosystem built for scale, security, and superior user experience. This document details the architectural decisions, operational logic, and functional modules of the platform.
 
-## 1. Role-Based Access Control (RBAC)
+---
 
-The platform utilizes a strictly siloed RBAC model to ensure that different administrative departments operate without data crosstalk.
+## 🏗️ 1. Technical Stack & Architecture
 
-### Core Roles & Permissions
-| Role | Primary Functions | Access Restricted Areas |
-| :--- | :--- | :--- |
-| **Student** | Cafe Orders, Leave Applications, Complaints | All Admin Dashboards |
-| **Faculty** | Availability Tracking, Appointment Bookings | Portal Administration |
-| **TPO** | Placement Drives, Alumni Database, Stats | Leave Management, Complaints, Cafe Vendor Portal |
-| **Admin (Hostel)** | Full Leave/Rebate Approval Life-cycle | Academic Promotion, Cafe Vendor Portal |
-| **Admin (Academic)** | Batch Promotion, Graduation, Faculty Grid | Leave Approval (View Only), Cafe Vendor Portal |
-| **Admin (Mess)** | Leave Records (View Only) | Academic Promotion, Hostel Admin |
-| **Cafe Vendor** | Order Fulfillment, Menu Management | All Academic/Hostel/Placement Portals |
+### Backend Core
+- **Engine**: Node.js & Express.js.
+- **Database**: Native MongoDB Driver (optimized for high-performance CRUD without the overhead of Mongoose).
+- **Middleware Architecture**: Multi-tier authentication guards implemented in `src/middleware/auth.js` for role and department-level authorization.
 
-## 2. Security Infrastructure
+### Frontend Layers
+- **Technology**: Semantic HTML5, Vanilla JavaScript (ES6+), and Vanilla CSS/Tailwind.
+- **UI Paradigm**: Glassmorphic, responsive design with dynamic theme tokens.
+- **Security Guards**: `auth_check.js` enforced on every page to prevent unauthenticated access.
 
-### Backend Authentication (`auth.js`)
-All sensitive API routes are protected by a two-tier middleware system:
-- **`authenticate`**: Verifies the session ID against the MongoDB `users` collection.
-- **`authorize(roles, departments)`**: A higher-order function that enforces both top-level roles and department-specific isolation for administrators.
+### DevOps & Deployment
+- **Containerization**: Fully Docker-ready via `.devcontainer/docker-compose.yml`.
+- **Environment**: Automated provisioning of Node.js 20 and MongoDB environments for seamless development across teams.
 
-### Frontend Security Guards (`auth_check.js`)
-Frontend routes use an autonomous guard script that:
-- Prevents unauthenticated access via local storage verification.
-- Implements **Unauthorized Overlays** (animated Rose-themed blocks) and alerts to prevent manual URL tampering.
-- Strictly isolates the **Cafe Vendor Portal** environment from academic administrators.
+---
 
-## 3. Advanced Administrative Operations
+## 🚀 2. Functional Application Modules
 
-### Batch Promotion & Graduation
-Implemented in `src/routes/admin_students.js`, the promotion logic handles:
-- **Semester Increment**: Mass updates for specific departments and batches.
-- **Graduation (Sem 8)**: A critical process that generates a **CSV backup**, archives the data to `/uploads/graduated_records/`, and then permanently deletes the graduated accounts to maintain system efficiency.
+### 🍔 CampusEats (Cafe Ordering)
+- **Vendor Dashboard**: Complete menu management and order fulfillment pipeline, strictly isolated from campus administrators.
+- **Student Portal**: Real-time menu browsing and secure order placement.
 
-### Read-Only "Viewer" Mode
-Implemented for Academic and Mess admins within the **Leave Admin** portal. 
-- **Dynamic UI Transformation**: Action buttons (Approve/Reject) are replaced with a "View Details" button.
-- **Departmental Logic**: The system detects the user's department and automatically strips modification privileges for non-Hostel administrators.
+### 🎓 Career Growth (Placement Portal)
+- **Drive Management**: End-to-end management of recruitment drives, company listings, and student eligibility tracking.
+- **Analytics**: Live statistics dashboard for TPO officials.
 
-## 4. UX & Navigation Polish
+### 👨‍🏫 Academic Sync (Faculty Availability)
+- **Live Status**: Real-time availability updates for faculty (Available, Busy, Meeting).
+- **Departmental Filtering**: Students can scan faculty by expertise, cabin number, and academic department.
 
-### Tab Management
-To resolve "tab explosion," the platform enforces single-window navigation for all internal modules.
-- **Recursive Logic**: `index.html` dynamically removes `target="_blank"` attributes for internal redirects.
-- **Consistency**: Unified "Home" buttons across all deep-linked management portals ensure a cohesive application feel.
+### 📋 Institutional Governance (Leave & Complaints)
+- **Leave Life-cycle**: Multi-tier approval system for Hostel administrators with read-only oversight for Academic and Mess departments.
+- **Ticketing System**: Transparent grievance submission and status tracking for campus-wide complaints.
 
-### Global Session Termination
-The logout routine performs a recursive `localStorage.clear()` and `sessionStorage.clear()`, ensuring absolutely no user data, cart state, or authentication tokens persist between sessions.
+---
+
+## 🛠️ 3. Key Methods & Operations
+
+### Advanced Administrative Engine
+- **`src/routes/admin_students.js`**:
+    - `Batch Promotion`: Dynamic semester incrementing for departmental cohorts.
+    - `Graduation Archival`: Automated CSV generation for graduating batches, followed by data archival and secure account pruning.
+- **`src/routes/placements.js`**:
+    - `Registration Pipeline`: Logical validation of student applications against drive-specific eligibility criteria.
+
+### Security & UX Operations
+- **Single-Window Logic**: Dynamic removal of `target="_blank"` for a unified app experience.
+- **Zero-Trust Session Hardening**: Recursive `localStorage` and `sessionStorage` clearance on logout to guarantee session destruction.
+- **RBAC Siloing**: Department-aware middleware that prevents horizontal privilege escalation between administrative units.
+
+---
+
+## 📂 4. Repository Structure
+
+- `src/routes/`: Module-specific backend API definitions.
+- `public/`: Modular frontend dashboards (Cafe, Faculty, Placement, Leave, Profile).
+- `scripts/`: Database seeding and maintenance utilities.
+- `.devcontainer/`: Standardized Docker environment configuration.
+- `uploads/`: Centralized storage for CSV reports and user-generated media.
+
+&copy; 2025 OneCampus Technical Team. All rights reserved.

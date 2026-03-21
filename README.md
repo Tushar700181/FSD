@@ -1,41 +1,44 @@
-# OneCampus 🛡️ Unified Student Management System
+# OneCampus 🛡️ Unified University Ecosystem
 
-OneCampus is a premium, full-stack campus management platform designed to unify student life, career placement, and administrative operations into a single, secure environment.
+OneCampus is a premium, full-stack management platform that unifies student life, career growth, and administrative governance. Designed with a security-first philosophy, it provides a seamless interface for students, faculty, and campus administrators.
 
-## 🌟 Key Features
+## 🚀 The OneCampus Experience
 
-- 🎓 **Career Hub (TPO)**: Full-lifecycle placement drive management, alumni tracking, and recruitment statistics.
-- 📋 **Leave & Mess Management**: Digital leave forms with multi-department read-only oversight and Hostel-exclusive approvals.
-- 👨‍🏫 **Faculty Availability**: Real-time faculty status tracking and appointment booking system.
-- 🍔 **CampusEats**: A robust Cafe ordering system with a completely isolated vendor-management dashboard.
-- ⚖️ **Complaints & Ticketing**: Role-based grievance submission and administrative resolution.
-- 🚀 **Academic Management**: Automated batch promotion and graduation exports.
+### For Students
+- **CampusEats**: Pre-order meals and skip the queue.
+- **Expertise Hub**: Locate and connect with faculty based on expertise.
+- **Digital Governance**: Submit leave forms and track complaints in real-time.
 
-## 🔒 Security First
+### For Faculty
+- **Presence Management**: Update availability status instantly for student transparency.
+- **Appointment Management**: Streamline student-faculty interactions.
 
-OneCampus implements a **Zero-Trust Administrative Model**:
-- **Departmental Isolation**: TPOs, Academic Admins, and Hostel Admins are strictly barred from each other's sensitive management zones.
-- **Isolated Vendor Logic**: The Cafe management portal is technically and logically separated from the broader academic environment.
-- **Verified Operations**: Critical actions like batch graduation require high-level verification keys and multi-tier authorization.
+### For TPO & Administrators
+- **Career Portal**: Manage placement drives and recruitment analytics.
+- **Operations Engine**: Automate batch promotions and graduation archival.
+- **Security Silos**: Department-specific isolation for Hostel, Academic, and Mess administrators.
 
-## 🛠️ Technical Overview
+## 🛠️ Technical Prowess
 
-The platform is built on a modern **Node.js, Express, and MongoDB** stack, utilizing a tailored RBAC (Role-Based Access Control) architecture.
-
-- **Frontend**: Vanilla JS with premium Tailwind CSS and Phosphor Icons for a glassmorphic UI.
-- **Backend Architecture**: Department-aware middleware guards every API endpoint.
-- **Session Security**: Unified, secure session termination ensures no client-side persistence.
+- **Modern Stack**: Node.js, Express, and Native MongoDB.
+- **Containerized**: Instant setup via **Docker** and DevContainers.
+- **Security**: Robust RBAC (Role-Based Access Control) with zero-trust departmental silos.
+- **User Experience**: Consolidated single-tab navigation and glassmorphic UI.
 
 ---
 
-### [📄 Read the Full Technical Overview](docs/TECHNICAL_OVERVIEW.md)
-*Detailed documentation on RBAC, Security Layers, and Batch Operations.*
+### [📄 Comprehensive Technical Manual](docs/TECHNICAL_OVERVIEW.md)
+*Detailed breakdown of modules, API logic, and security architecture.*
 
-## 🚀 Quick Start (Local)
+## ⚙️ Quick Start
 
-1. **Install Dependencies**: `npm install`
-2. **Configure Environment**: Set your MongoDB URI and Admin Keys in a `.env` file.
-3. **Run Dev Server**: `npm run dev`
-4. **Access Portal**: `http://localhost:5000/landing/index.html`
+### 🐳 Via Docker (Recommended)
+Simply open the project in VS Code with the **Dev Containers** extension. Docker will automatically provision the Node.js and MongoDB environment.
+
+### 💻 Local Setup
+1.  `npm install`
+2.  Set `MONGODB_URI` and `ADMIN_KEY` in `.env`.
+3.  `npm run seed` (to initialize the database).
+4.  `npm run dev`.
 
 &copy; 2025 OneCampus Team. All rights reserved.
