@@ -1,69 +1,65 @@
-# OneCampus: Full-Spectrum Technical Documentation
+# OneCampus: Comprehensive Operational & Technical Manual
 
-OneCampus is an integrated university management ecosystem built for scale, security, and superior user experience. This document details the architectural decisions, operational logic, and functional modules of the platform.
-
----
-
-## 🏗️ 1. Technical Stack & Architecture
-
-### Backend Core
-- **Engine**: Node.js & Express.js.
-- **Database**: Native MongoDB Driver (optimized for high-performance CRUD without the overhead of Mongoose).
-- **Middleware Architecture**: Multi-tier authentication guards implemented in `src/middleware/auth.js` for role and department-level authorization.
-
-### Frontend Layers
-- **Technology**: Semantic HTML5, Vanilla JavaScript (ES6+), and Vanilla CSS/Tailwind.
-- **UI Paradigm**: Glassmorphic, responsive design with dynamic theme tokens.
-- **Security Guards**: `auth_check.js` enforced on every page to prevent unauthenticated access.
-
-### DevOps & Deployment
-- **Containerization**: Fully Docker-ready via `.devcontainer/docker-compose.yml`.
-- **Environment**: Automated provisioning of Node.js 20 and MongoDB environments for seamless development across teams.
+This document provides an exhaustive breakdown of every sub-application, operational workflow, and security layer within the OneCampus ecosystem.
 
 ---
 
-## 🚀 2. Functional Application Modules
+## 🍽️ 1. CampusEats: Hotel & Item Management
 
-### 🍔 CampusEats (Cafe Ordering)
-- **Vendor Dashboard**: Complete menu management and order fulfillment pipeline, strictly isolated from campus administrators.
-- **Student Portal**: Real-time menu browsing and secure order placement.
+OneCampus features a decentralized Cafe management system where each vendor controls their own culinary environment.
 
-### 🎓 Career Growth (Placement Portal)
-- **Drive Management**: End-to-end management of recruitment drives, company listings, and student eligibility tracking.
-- **Analytics**: Live statistics dashboard for TPO officials.
+### 🛠️ Item Management (Vendor Dashboard)
+Cafe vendors have full CRUD (Create, Read, Update, Delete) control over their digital menus via `src/routes/menus.js`:
+- **Item Fields**: Name, Price (Numeric), Image URL, CafeName, and Availability Toggle.
+- **Dynamic Status**: Vendors can toggle any item to "Unavailable" instantly to reflect real-time stock levels.
+- **Rating System**: Integrated user feedback loop allowing students to submit 1-5 star ratings with comments. The system dynamically calculates `averageRating` and `totalRatings` on every submission.
 
-### 👨‍🏫 Academic Sync (Faculty Availability)
-- **Live Status**: Real-time availability updates for faculty (Available, Busy, Meeting).
-- **Departmental Filtering**: Students can scan faculty by expertise, cabin number, and academic department.
-
-### 📋 Institutional Governance (Leave & Complaints)
-- **Leave Life-cycle**: Multi-tier approval system for Hostel administrators with read-only oversight for Academic and Mess departments.
-- **Ticketing System**: Transparent grievance submission and status tracking for campus-wide complaints.
+### 📦 Order Fulfillment Pipeline
+Located in `src/routes/orders.js`, the order flow ensures transparency:
+- **Placement**: Students select items, calculate totals, and place orders.
+- **Tracking**: Orders progress through lifecycle stages: `Pending` -> `Preparing` -> `Ready` -> `Completed`.
+- **Persistence**: Full order history is maintained for both vendors and students.
 
 ---
 
-## 🛠️ 3. Key Methods & Operations
+## ⚖️ 2. Institutional Governance: Complaint Management
 
-### Advanced Administrative Engine
-- **`src/routes/admin_students.js`**:
-    - `Batch Promotion`: Dynamic semester incrementing for departmental cohorts.
-    - `Graduation Archival`: Automated CSV generation for graduating batches, followed by data archival and secure account pruning.
-- **`src/routes/placements.js`**:
-    - `Registration Pipeline`: Logical validation of student applications against drive-specific eligibility criteria.
+The ticketing system is strictly departmentalized to ensure that grievances reach the correct administrative eyes.
 
-### Security & UX Operations
-- **Single-Window Logic**: Dynamic removal of `target="_blank"` for a unified app experience.
-- **Zero-Trust Session Hardening**: Recursive `localStorage` and `sessionStorage` clearance on logout to guarantee session destruction.
-- **RBAC Siloing**: Department-aware middleware that prevents horizontal privilege escalation between administrative units.
+### 📂 Departmentalized Lifecycles
+Complaints are routed via the `assignedTo` attribute in `src/routes/complaints.js`:
+- **Hostel Complaint Management**: Dedicated queue for room maintenance, cleaning, and facilities, accessible only by **Hostel Administrators**.
+- **Mess Complaint Management**: Focused on food quality and cafeteria services, accessible only by **Mess Administrators**.
+- **Cross-Department Oversight**: Academic Administrators retain "Super-Admin" visibility to ensure overall campus harmony.
+
+### 🎟️ Ticketing Operations
+- **ID Generation**: Automated custom ID generation following the `CMP-1001` sequential pattern.
+- **Resolution Flow**: Admins provide a structured `adminResponse` and update the status to `Resolved`, which triggers a real-time update on the student's dashboard.
 
 ---
 
-## 📂 4. Repository Structure
+## 🛡️ 3. Security & RBAC Architecture
 
-- `src/routes/`: Module-specific backend API definitions.
-- `public/`: Modular frontend dashboards (Cafe, Faculty, Placement, Leave, Profile).
-- `scripts/`: Database seeding and maintenance utilities.
-- `.devcontainer/`: Standardized Docker environment configuration.
-- `uploads/`: Centralized storage for CSV reports and user-generated media.
+### The Zero-Trust Middleware (`auth.js`)
+Security is enforced at the network layer before any data is processed:
+1. **`authenticate`**: Validates the session token against the user database.
+2. **`authorize(['admin', 'cafe'], ['Hostel', 'Academic'])`**: A strict multi-key check that verifies BOTH the user role and their administrative department.
+
+### Departmental Silos
+- **The Cafe Wall**: Vendors are technically prevented from even querying administrative data.
+- **Management Isolation**: A Hostel Administrator cannot "accidentally" view or modify academic promotion records, and vice versa.
+
+---
+
+## 🚀 4. Technical Infrastructure & DevOps
+
+### Deployment via Docker
+OneCampus is built for "One-Click Deployment" using the included Docker configuration in `.devcontainer/`:
+- **`app` Service**: Provisions a Node.js 20 environment with automated port forwarding on `5000`.
+- **`db` Service**: Spawns a dedicated MongoDB instance with persistent volume mapping to `mongodb-data`.
+
+### Administrative Batch Engine
+- **Graduation Archival**: Critical logic (`src/routes/admin_students.js`) that exports graduating batch data to CSV before clearing database records, maintaining a lean production environment.
+- **Semester Promotion**: Mass-update operations for student cohorts across different engineering departments.
 
 &copy; 2025 OneCampus Technical Team. All rights reserved.

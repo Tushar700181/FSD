@@ -1,44 +1,39 @@
-# OneCampus 🛡️ Unified University Ecosystem
+# OneCampus 🛡️ The Ultimate Campus Ecosystem
 
-OneCampus is a premium, full-stack management platform that unifies student life, career growth, and administrative governance. Designed with a security-first philosophy, it provides a seamless interface for students, faculty, and campus administrators.
+OneCampus is a production-grade, full-stack university management platform designed to unify student life, career placement, and administrative governance.
 
-## 🚀 The OneCampus Experience
+## 🌟 Core Application Suite
 
-### For Students
-- **CampusEats**: Pre-order meals and skip the queue.
-- **Expertise Hub**: Locate and connect with faculty based on expertise.
-- **Digital Governance**: Submit leave forms and track complaints in real-time.
+### 🍔 CampusEats (Cafe & Hotel Management)
+- **Vendors**: Manage your digital storefront, curate menu items, and track order fulfillment in real-time.
+- **Item Management**: Dynamic pricing, availability toggling, and integrated customer rating analytics.
+- **Students**: Browse live menus, place orders, and rate your culinary experience.
 
-### For Faculty
-- **Presence Management**: Update availability status instantly for student transparency.
-- **Appointment Management**: Streamline student-faculty interactions.
+### 🏢 Governance & Support (Complaints & Leaves)
+- **Hostel Management**: Dedicated dashboard for hostel leaves and facility complaints.
+- **Mess Governance**: Specialized portal for mess rebate tracking and cafeteria grievances.
+- **Ticketing System**: Sequential ID tracking (`CMP-1001+`) with departmental resolution pipelines.
 
-### For TPO & Administrators
-- **Career Portal**: Manage placement drives and recruitment analytics.
-- **Operations Engine**: Automate batch promotions and graduation archival.
-- **Security Silos**: Department-specific isolation for Hostel, Academic, and Mess administrators.
+### 🎓 Academic & Career (TPO & Faculty)
+- **TPO Hub**: End-to-end placement drive management and recruiter statistics.
+- **Faculty Sync**: Live availability tracking and appointment scheduling.
+- **Admin Engine**: Automated semester promotions and batch graduation data archival.
 
-## 🛠️ Technical Prowess
+## 🔒 Security Architecture
 
-- **Modern Stack**: Node.js, Express, and Native MongoDB.
-- **Containerized**: Instant setup via **Docker** and DevContainers.
-- **Security**: Robust RBAC (Role-Based Access Control) with zero-trust departmental silos.
-- **User Experience**: Consolidated single-tab navigation and glassmorphic UI.
+- **Departmental Isolation**: Absolute silos between Hostel, Academic, and Mess administrative units.
+- **Zero-Trust Auth**: Multi-tier backend middleware (`auth.js`) and frontend route guards.
+- **Session Hardening**: Unified, deep session destruction on logout.
+
+## ⚙️ Deployment & Stack
+
+- **Tech**: Node.js, Express, Native MongoDB.
+- **DevOps**: Fully containerized via **Docker** (Node 20 + MongoDB).
+- **Setup**: `npm install` -> `npm run seed` -> `npm run dev`.
 
 ---
 
-### [📄 Comprehensive Technical Manual](docs/TECHNICAL_OVERVIEW.md)
-*Detailed breakdown of modules, API logic, and security architecture.*
-
-## ⚙️ Quick Start
-
-### 🐳 Via Docker (Recommended)
-Simply open the project in VS Code with the **Dev Containers** extension. Docker will automatically provision the Node.js and MongoDB environment.
-
-### 💻 Local Setup
-1.  `npm install`
-2.  Set `MONGODB_URI` and `ADMIN_KEY` in `.env`.
-3.  `npm run seed` (to initialize the database).
-4.  `npm run dev`.
+### [📄 Full Operational Manual](docs/TECHNICAL_OVERVIEW.md)
+*Deep-dive into API logic, Database Schema, and RBAC implementation.*
 
 &copy; 2025 OneCampus Team. All rights reserved.
