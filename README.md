@@ -1,35 +1,41 @@
-# OneCampus - Full Stack Development Project
+# OneCampus 🛡️ Unified Student Management System
 
-Welcome to OneCampus! This is a simplified campus management system with authentication, cafe ordering, and student-faculty collaboration.
+OneCampus is a premium, full-stack campus management platform designed to unify student life, career placement, and administrative operations into a single, secure environment.
 
-## 🚀 One-Click Run
+## 🌟 Key Features
 
-You can run the entire application (Backend + Frontend + MongoDB) directly in your browser without any local setup.
+- 🎓 **Career Hub (TPO)**: Full-lifecycle placement drive management, alumni tracking, and recruitment statistics.
+- 📋 **Leave & Mess Management**: Digital leave forms with multi-department read-only oversight and Hostel-exclusive approvals.
+- 👨‍🏫 **Faculty Availability**: Real-time faculty status tracking and appointment booking system.
+- 🍔 **CampusEats**: A robust Cafe ordering system with a completely isolated vendor-management dashboard.
+- ⚖️ **Complaints & Ticketing**: Role-based grievance submission and administrative resolution.
+- 🚀 **Academic Management**: Automated batch promotion and graduation exports.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Tushar700181/FSD?hide_repo_select=true&ref=main)
+## 🔒 Security First
+
+OneCampus implements a **Zero-Trust Administrative Model**:
+- **Departmental Isolation**: TPOs, Academic Admins, and Hostel Admins are strictly barred from each other's sensitive management zones.
+- **Isolated Vendor Logic**: The Cafe management portal is technically and logically separated from the broader academic environment.
+- **Verified Operations**: Critical actions like batch graduation require high-level verification keys and multi-tier authorization.
+
+## 🛠️ Technical Overview
+
+The platform is built on a modern **Node.js, Express, and MongoDB** stack, utilizing a tailored RBAC (Role-Based Access Control) architecture.
+
+- **Frontend**: Vanilla JS with premium Tailwind CSS and Phosphor Icons for a glassmorphic UI.
+- **Backend Architecture**: Department-aware middleware guards every API endpoint.
+- **Session Security**: Unified, secure session termination ensures no client-side persistence.
 
 ---
 
-## 🛠️ Local Setup
+### [📄 Read the Full Technical Overview](docs/TECHNICAL_OVERVIEW.md)
+*Detailed documentation on RBAC, Security Layers, and Batch Operations.*
 
-If you prefer to run it locally:
+## 🚀 Quick Start (Local)
 
-1. **Prerequisites**: Node.js and MongoDB installed.
-2. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-3. **Configure Environment**: Create a `backend/.env` file (see `backend/.env` for a template).
-4. **Run the App**:
-   ```bash
-   npm run dev
-   ```
-5. **Access**:
-   - Web App: `http://localhost:5000`
-   - Landing Page: `http://localhost:5000/landing/index.html`
+1. **Install Dependencies**: `npm install`
+2. **Configure Environment**: Set your MongoDB URI and Admin Keys in a `.env` file.
+3. **Run Dev Server**: `npm run dev`
+4. **Access Portal**: `http://localhost:5000/landing/index.html`
 
-## 📁 Project Structure
-
-- `backend/`: Node.js/Express server and REST API logic.
-- `frontend/`: HTML, CSS, and Vanilla JS UI.
-- `node_modules/`: Project dependencies.
+&copy; 2025 OneCampus Team. All rights reserved.
