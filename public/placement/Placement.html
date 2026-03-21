@@ -297,6 +297,23 @@
               </button>
             </div>
           </div>
+          <div id="alumni-mgmt-section" class="hidden mb-8 p-6 bg-slate-100 rounded-2xl border border-slate-200">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-star text-amber-500"></i> Manage Notable Students
+            </h3>
+            <div class="flex gap-4">
+              <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="studentSearchInput" placeholder="Search students by name or ID to feature them..." 
+                  class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+                  oninput="searchStudents(this.value)">
+              </div>
+            </div>
+            <div id="search-results-container" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <!-- Search results here -->
+            </div>
+          </div>
+
           <div id="alumni-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <!-- Alumni cards rendered here -->
           </div>
@@ -563,6 +580,9 @@
         document.getElementById('bulk-drive-btn')?.classList.remove('hidden');
         document.getElementById('bulk-alumni-btn')?.classList.remove('hidden');
         document.getElementById('bulk-past-offers-btn')?.classList.remove('hidden');
+      } else if (userRole === 'admin') {
+        // Admins (except TPO) are blocked from Placement for now
+        showUnauthorizedOverlay();
       }
 
       // Initial data fetch
@@ -1044,6 +1064,26 @@
       reader.readAsText(file);
     }
     
+    function showUnauthorizedOverlay() {
+        const overlay = `
+            <div id="unauthorized-overlay" class="fixed inset-0 z-[9999] bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-[2rem] p-10 max-w-lg w-full text-center shadow-2xl scale-in-center">
+                    <div class="w-20 h-20 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0H10m1-6a1 1 0 100-2 1 1 0 000 2zm6 1a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Access Restricted</h2>
+                    <p class="text-slate-500 mb-8 leading-relaxed">The Placement Cell is restricted to students and TPO officials only. Please contact the placement office for authorization.</p>
+                    <a href="../landing/index.html" class="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all transform hover:scale-105">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        Return to Home
+                    </a>
+                </div>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', overlay);
+        const app = document.getElementById('app-wrapper');
+        if (app) app.style.display = 'none';
+        document.body.style.overflow = 'hidden';
+    }
   </script>
   <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9c31041ba1f57eee',t:'MTc2OTI3MzI4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>

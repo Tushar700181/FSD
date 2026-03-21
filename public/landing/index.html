@@ -575,10 +575,10 @@
     <nav class="navbar" id="navbar">
         <div class="logo">One<span>Campus</span></div>
         <ul class="nav-links">
-            <li><a href="../cafe/CafeH.html" target="_blank">Cafe</a></li>
-            <li><a href="../faculty/Faculty_Aval.html" target="_blank">Faculty</a></li>
-            <li><a href="../placement/Placement.html" target="_blank">Placement</a></li>
-            <li><a href="../leave/Leaveform.html" target="_blank">Leave</a></li>
+            <li><a href="../cafe/CafeH.html">Cafe</a></li>
+            <li><a href="../faculty/Faculty_Aval.html">Faculty</a></li>
+            <li><a href="../placement/Placement.html">Placement</a></li>
+            <li><a href="../leave/Leaveform.html">Leave</a></li>
             <li><a href="../dashboard/student_portal.html">Complaints</a></li>
             <li><a href="#">Maps</a></li>
             <li id="auth-item" class="auth-item">
@@ -601,16 +601,16 @@
 
         <!-- Quick Access Pills -->
         <div class="quick-grid">
-            <a href="../cafe/CafeH.html" class="quick-chip" target="_blank">
+            <a href="../cafe/CafeH.html" class="quick-chip">
                 <i class="fa-solid fa-utensils"></i> Cafe Orders
             </a>
-            <a href="../faculty/Faculty_Aval.html" class="quick-chip" target="_blank">
+            <a href="../faculty/Faculty_Aval.html" class="quick-chip">
                 <i class="fa-solid fa-chalkboard-user"></i> Faculty Availability
             </a>
-            <a href="../placement/Placement.html" class="quick-chip" target="_blank">
+            <a href="../placement/Placement.html" class="quick-chip">
                 <i class="fa-solid fa-briefcase"></i> Placements
             </a>
-            <a href="../leave/Leaveform.html" class="quick-chip" target="_blank">
+            <a href="../leave/Leaveform.html" class="quick-chip">
                 <i class="fa-solid fa-file-signature"></i> Leave Form
             </a>
             <a href="../dashboard/student_portal.html" class="quick-chip">
@@ -641,7 +641,7 @@
                     <span class="belt-tag">Academic</span>
                     <h2>Know When Your<br>Faculty Is Free</h2>
                     <p>No more wandering hallways. Check real-time faculty availability and book your sessions instantly.</p>
-                    <a href="../faculty/Faculty_Aval.html" class="belt-cta" target="_blank">
+                    <a href="../faculty/Faculty_Aval.html" class="belt-cta">
                         Check Status <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -653,7 +653,7 @@
                     <span class="belt-tag">Campus Life</span>
                     <h2>Skip the Queue,<br>Order Online</h2>
                     <p>Browse today's menu and place your cafe order before you even step out the door.</p>
-                    <a href="../cafe/CafeH.html" class="belt-cta" target="_blank">
+                    <a href="../cafe/CafeH.html" class="belt-cta">
                         Order Now <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -665,7 +665,7 @@
                     <span class="belt-tag">Career</span>
                     <h2>Your Next Step<br>Starts Here</h2>
                     <p>Explore top placement opportunities, connect with recruiters, and kickstart your career journey.</p>
-                    <a href="../placement/Placement.html" class="belt-cta" target="_blank">
+                    <a href="../placement/Placement.html" class="belt-cta">
                         View Placements <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -686,22 +686,22 @@
     <!-- FEATURES -->
     <section class="features-strip" id="features">
         <div class="features-grid">
-            <a href="../cafe/CafeH.html" class="feature-card" target="_blank">
+            <a href="../cafe/CafeH.html" class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-utensils"></i></div>
                 <h3>Cafe Orders</h3>
                 <p>Browse menus and pre-order meals to skip the rush.</p>
             </a>
-            <a href="../faculty/Faculty_Aval.html" class="feature-card" target="_blank">
+            <a href="../faculty/Faculty_Aval.html" class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
                 <h3>Faculty Availability</h3>
                 <p>Live status updates so you always know who's reachable.</p>
             </a>
-            <a href="../placement/Placement.html" class="feature-card" target="_blank">
+            <a href="../placement/Placement.html" class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-briefcase"></i></div>
                 <h3>Placements</h3>
                 <p>Opportunities, drives, and company listings in one hub.</p>
             </a>
-            <a href="../leave/Leaveform.html" class="feature-card" target="_blank">
+            <a href="../leave/Leaveform.html" class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-file-signature"></i></div>
                 <h3>Leave Forms</h3>
                 <p>Submit and track leave requests digitally — zero paperwork.</p>
@@ -876,6 +876,7 @@
                     const href = link.getAttribute('href');
                     if (href && href.includes('Leaveform.html')) {
                         link.setAttribute('href', '../leave/LeaveAdmin.html');
+                        link.removeAttribute('target');
                     }
                 });
             }
@@ -906,7 +907,8 @@
         }
 
         function logoutUser() {
-            localStorage.removeItem('onecampus_user');
+            localStorage.clear();
+            sessionStorage.clear();
             window.location.reload();
         }
 

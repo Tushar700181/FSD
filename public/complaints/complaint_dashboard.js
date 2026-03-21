@@ -12,6 +12,10 @@ async function renderTickets() {
         window.location.href = '../login/login.html';
         return;
     }
+    if (user.role === 'tpo') {
+        window.location.href = '../profile/Ver2/profile_glass.html';
+        return;
+    }
 
     const tableBody = document.getElementById('tickets-body');
     const allComplaints = await StorageUtils.getAllComplaints();

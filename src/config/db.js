@@ -35,7 +35,8 @@ const collections = {
     classrooms: () => getDB().collection('classrooms'),
     period_schedule: () => getDB().collection('period_schedule'),
     timetable_slots: () => getDB().collection('timetable_slots'),
-    personal_blocks: () => getDB().collection('personal_blocks')
+    personal_blocks: () => getDB().collection('personal_blocks'),
+    appointments: () => getDB().collection('appointments')
 };
 
 module.exports = { connectDB, getDB, collections };

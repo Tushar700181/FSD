@@ -112,6 +112,47 @@
         }
         .role-student { background: #e0f2fe; color: #0369a1; }
         .role-faculty { background: #ede9fe; color: #5b21b6; }
+
+        /* Substitution Badge */
+        .sub-badge {
+            background: #fffbeb; color: #b45309; border: 1px solid #fde68a;
+            font-size: .65rem; font-weight: 700; padding: .1rem .4rem;
+            border-radius: .4rem; display: inline-flex; align-items: center; gap: .2rem;
+            margin-top: .2rem;
+        }
+        /* Appointment Form */
+        .appt-form {
+            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1rem;
+            padding: 1.5rem; margin-top: 1.5rem; display: none;
+            animation: slideUp .3s ease;
+        }
+        .appt-form.open { display: block; }
+        .appt-form h4 { font-size: 1rem; margin-bottom: 1rem; color: #0f172a; }
+        .appt-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .appt-form input, .appt-form textarea {
+            width: 100%; padding: .6rem .8rem; border: 1px solid #cbd5e1;
+            border-radius: .6rem; font-size: .85rem; outline: none;
+        }
+        .appt-form button {
+            background: #0f172a; color: #2dd4bf; border: none;
+            padding: .7rem 1.5rem; border-radius: .6rem; font-weight: 700;
+            cursor: pointer; width: 100%; transition: opacity .2s;
+        }
+        .btn-request-slot {
+            display: block; margin-top: .4rem; background: #0f172a;
+            color: #2dd4bf; border: none; border-radius: .4rem;
+            padding: .2rem .5rem; font-size: .65rem; font-weight: 700;
+            cursor: pointer; transition: transform .1s;
+        }
+        .btn-request-slot:active { transform: scale(0.95); }
+        .home-btn {
+            display: flex; align-items: center; gap: 0.6rem;
+            color: #fff; text-decoration: none; font-weight: 700;
+            font-size: 0.85rem; padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1); border-radius: 0.8rem;
+            transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .home-btn:hover { background: rgba(255,255,255,0.2); border-color: var(--accent-teal); transform: translateY(-1px); }
     </style>
 </head>
 
@@ -119,7 +160,13 @@
 
     <header class="main-header">
         <div class="container header-flex">
-            <h1>OneCampus</h1>
+            <div style="display:flex;align-items:center;gap:1.5rem;">
+                <a href="../landing/index.html" class="home-btn">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <h1>OneCampus</h1>
+            </div>
             <div style="display:flex;align-items:center;gap:1rem;">
                 <span id="roleDisplay" class="role-tag role-student">Student View</span>
                 <div class="profile-logo"><i class="fas fa-user-circle"></i></div>
@@ -178,8 +225,8 @@
         const _session = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
         const userRole = _session.role || 'student'; // 'student' | 'faculty' | 'admin' | 'tpo'
 
-        // Admin → send to the admin grid immediately
-        if (userRole === 'admin') {
+        // Admin (Academic) → send to the admin grid immediately
+        if (userRole === 'admin' && _session.department === 'Academic') {
             window.location.href = '/faculty/Admin_Grid.html';
         }
 
@@ -222,9 +269,21 @@
 
         function getStatusInfo(av) {
             if (!av || av.status === 'Hidden') return { cls: 'status-busy', label: 'Timetable Hidden' };
-            if (av.status === 'Available') return { cls: 'status-available', label: 'Available' };
-            if (av.status === 'In Meeting') return { cls: 'status-meeting', label: 'In Meeting' };
-            return { cls: 'status-busy', label: 'In Class' };
+            let label = av.status;
+            if (av.status === 'Available') label = 'Available';
+            if (av.status === 'In Meeting') label = 'In Meeting';
+            if (av.status === 'In Class') label = 'In Class';
+            
+            let subText = '';
+            if (av.substituteName) {
+                subText = `<div class="sub-badge"><i class="fas fa-exchange-alt"></i> Sub: ${av.substituteName}</div>`;
+            }
+            
+            let cls = 'status-busy';
+            if (av.status === 'Available') cls = 'status-available';
+            if (av.status === 'In Meeting') cls = 'status-meeting';
+
+            return { cls, label, subText };
         }
 
         function renderFaculty(faculty) {
@@ -282,7 +341,10 @@
                                         <li><i class="fas fa-door-open"></i> Cabin: ${f.cabin || 'N/A'}</li>
                                         <li><i class="fas fa-microscope"></i> ${f.focusAreas || 'N/A'}</li>
                                         <li style="justify-content:space-between;margin-top:1rem;">
-                                            <span style="font-weight:600">Status</span>
+                                            <div style="display:flex;flex-direction:column;">
+                                                <span style="font-weight:600">Status</span>
+                                                ${f.availability.substituteName ? `<div class="sub-badge" style="margin-top:.2rem;"><i class="fas fa-exchange-alt"></i> Sub: ${f.availability.substituteName}</div>` : ''}
+                                            </div>
                                             <span class="status-badge ${cls}">${label}</span>
                                         </li>
                                     </ul>
@@ -345,13 +407,20 @@
                                         const key = `${d}_${p}`;
                                         const slot = ttMap[key];
                                         if (!slot) return `<td class="tt-cell-free">—</td>`;
+                                        
                                         if (slot.type === 'meeting') {
                                             return `<td><span class="tt-cell-meeting">${userRole !== 'student' && slot.label ? slot.label : 'Meeting'}</span></td>`;
                                         }
-                                        let detail = slot.type === 'lab' ? 'Lab' : 'Class';
-                                        if (userRole !== 'student') {
-                                            if (slot.label) detail = slot.label;
-                                            if (slot.classroom) detail += `<br><small style="color:#64748b">${slot.classroom.roomCode}</small>`;
+                                        
+                                        let detail = `<span style="font-weight:600;display:block">${slot.subject}</span>`;
+                                        if (slot.substituteName) {
+                                            detail += `<div style="font-size:.65rem;color:#b45309;font-weight:700;margin-top:.1rem">Sub: ${slot.substituteName}</div>`;
+                                        }
+                                        if (slot.topics) {
+                                            detail += `<i style="font-size:.65rem;color:#64748b;display:block;margin-top:.1rem">Topic: ${slot.topics}</i>`;
+                                        }
+                                        if (slot.type === 'available') {
+                                            detail += `<button class="btn-request-slot" onclick="toggleApptForm('${f._id}', '${key}')">Request 10m</button>`;
                                         }
                                         return `<td><span class="tt-cell-busy">${detail}</span></td>`;
                                     }).join('')}
@@ -368,12 +437,16 @@
                             <p>${f.designation || ''} &bull; ${f.department || ''}</p>
                         </div>
                     </div>
-                    <div class="current-status-bar ${csClass}">
-                        <i class="fas ${csIcon} cs-icon"></i>
-                        <span>${csText}</span>
-                        ${locationHTML}
-                    </div>
-                    ${cs.status !== 'Hidden' ? gridHTML : '<p style="color:#64748b;text-align:center;padding:2rem">This faculty has set their timetable to private.</p>'}`;
+                    ${cs.status !== 'Hidden' ? gridHTML : '<p style="color:#64748b;text-align:center;padding:2rem">This faculty has set their timetable to private.</p>'}
+                    <div id="apptForm" class="appt-form">
+                        <h4><i class="fas fa-calendar-plus"></i> Request Appointment</h4>
+                        <div class="form-row">
+                            <input type="text" id="apName" placeholder="Your Name" required>
+                            <input type="text" id="apRoll" placeholder="Roll Number" required>
+                        </div>
+                        <input type="text" id="apReason" placeholder="Reason for meeting (e.g. Project doubt)" style="margin-bottom:1rem">
+                        <button id="btnSubmitAppt" onclick="submitAppointmentRequest()">Confirm Request</button>
+                    </div>`;
 
             } catch (e) {
                 content.innerHTML = '<p style="text-align:center;color:red;padding:2rem">Could not load timetable. Please try again.</p>';
@@ -388,6 +461,60 @@
         }
 
         loadFaculty();
+
+        let activeApptFacultyId = null;
+        let activeApptSlotKey = null;
+
+        function toggleApptForm(fid, skey) {
+            const form = document.getElementById('apptForm');
+            if (activeApptSlotKey === skey) {
+                form.classList.remove('open');
+                activeApptSlotKey = null;
+            } else {
+                activeApptFacultyId = fid;
+                activeApptSlotKey = skey;
+                form.classList.add('open');
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        async function submitAppointmentRequest() {
+            const name = document.getElementById('apName').value.trim();
+            const roll = document.getElementById('apRoll').value.trim();
+            const reason = document.getElementById('apReason').value.trim();
+            const btn = document.getElementById('btnSubmitAppt');
+
+            if (!name || !roll) return alert('Name and Roll Number are required.');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+            try {
+                const res = await fetch('/api/faculty/appointments/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        facultyId: activeApptFacultyId,
+                        slotKey: activeApptSlotKey,
+                        studentName: name,
+                        studentRoll: roll,
+                        reason
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Request sent successfully! Faculty will be notified.');
+                    document.getElementById('apptForm').classList.remove('open');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (e) {
+                alert('Network error. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Confirm Request';
+            }
+        }
     </script>
 </body>
 </html>

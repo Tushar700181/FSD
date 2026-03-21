@@ -98,18 +98,37 @@
                         <i class="fa-solid fa-door-open"></i>
                         <input type="text" id="roomNo" placeholder="Room No">
                     </div>
-                    <div class="input-group">
+                     <div class="input-group">
                         <i class="fa-solid fa-building"></i>
                         <input type="text" id="hostelName" placeholder="Hostel Name">
                     </div>
-                    <div class="input-group">
-                        <i class="fa-solid fa-code-branch"></i>
-                        <input type="text" id="branch" placeholder="Branch (e.g., CSE, ECE)">
-                    </div>
-                    </div>
                 </div>
-                <!-- Move Semester out of grid for better layout -->
-                <div class="input-group">
+                
+                <label style="display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600;">Department (Branch):</label>
+                <div class="radio-group" style="margin-bottom: 20px;">
+                    <label class="radio-container">
+                        <input type="radio" name="studentDept" value="CSE" checked>
+                        <span class="radio-checkmark"></span>
+                        CSE
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="studentDept" value="AI&DS">
+                        <span class="radio-checkmark"></span>
+                        AI&DS
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="studentDept" value="ECE">
+                        <span class="radio-checkmark"></span>
+                        ECE
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="studentDept" value="MECH">
+                        <span class="radio-checkmark"></span>
+                        MECH
+                    </label>
+                </div>
+
+                <div class="input-group" style="margin-top: 15px;">
                     <i class="fa-solid fa-layer-group"></i>
                     <select id="semester">
                         <option value="" disabled selected>Select Current Semester</option>
@@ -123,13 +142,9 @@
                         <option value="8">8th Semester</option>
                     </select>
                 </div>
-                <div class="input-group">
+                <div class="input-group" style="margin-top: 15px;">
                     <i class="fa-solid fa-graduation-cap"></i>
                     <input type="number" id="graduationYear" placeholder="Graduation Year" min="2000" max="2030">
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-book"></i>
-                    <input type="text" id="studentDepartment" placeholder="Department">
                 </div>
             </div>
 
@@ -151,9 +166,23 @@
 
             <!-- Admin Specific Fields -->
             <div id="admin-fields" class="role-fields" style="display: none;">
-                <div class="input-group">
-                    <i class="fa-solid fa-building-user"></i>
-                    <input type="text" id="adminDepartment" placeholder="Department (e.g., Hostel, Mess, Academic)">
+                <label>Admin Department:</label>
+                <div class="radio-group" style="margin-top: 10px; margin-bottom: 20px;">
+                    <label class="radio-container">
+                        <input type="radio" name="adminDept" value="Academic" checked>
+                        <span class="radio-checkmark"></span>
+                        Academic
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="adminDept" value="Hostel">
+                        <span class="radio-checkmark"></span>
+                        Hostel
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="adminDept" value="Mess">
+                        <span class="radio-checkmark"></span>
+                        Mess
+                    </label>
                 </div>
             </div>
 
@@ -259,17 +288,19 @@
             if (role === 'student') {
                 body.roomNo = document.getElementById('roomNo').value.trim();
                 body.hostelName = document.getElementById('hostelName').value.trim();
-                body.branch = document.getElementById('branch').value.trim();
-                body.semester = document.getElementById('semester').value;
-                body.graduationYear = document.getElementById('graduationYear').value;
-                body.department = document.getElementById('studentDepartment').value.trim();
+                const studentDept = document.querySelector('input[name="studentDept"]:checked');
+                body.department = studentDept ? studentDept.value : '';
+                body.branch = body.department; // Keeping both for compatibility
+                body.semester = parseInt(document.getElementById('semester').value);
+                body.graduationYear = document.getElementById('graduationYear').value.trim();
             } else if (role === 'faculty') {
                 body.cadre = document.getElementById('cadre').value.trim();
                 body.department = document.getElementById('facultyDepartment').value.trim();
                 body.focusAreas = document.getElementById('focusAreas').value.trim();
                 body.signUpKey = document.getElementById('signUpKey').value;
             } else if (role === 'admin') {
-                body.department = document.getElementById('adminDepartment').value.trim();
+                const adminDept = document.querySelector('input[name="adminDept"]:checked');
+                body.department = adminDept ? adminDept.value : '';
                 body.signUpKey = document.getElementById('signUpKey').value;
             } else if (role === 'tpo') {
                 body.position = document.getElementById('tpoPosition').value.trim();

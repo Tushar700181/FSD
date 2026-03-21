@@ -33,13 +33,13 @@
                     <span>My Profile</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item admin-hide">
                 <a href="#" class="nav-link">
                     <i class="fa-solid fa-book-open"></i>
                     <span>Academics</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item admin-hide">
                 <a href="#" class="nav-link">
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>Attendance</span>
@@ -96,7 +96,7 @@
                 <h2 class="profile-name">Tushar Sharma</h2>
                 <span class="profile-role">Student</span>
 
-                <div class="profile-stats">
+                <div class="profile-stats admin-hide">
                     <div class="stat-item">
                         <h3>3.8</h3>
                         <p>CGPA</p>
@@ -197,6 +197,12 @@
         </div>
     </div>
 
+    <script>
+        const user = JSON.parse(localStorage.getItem('onecampus_user'));
+        if (user && user.role === 'admin') {
+            document.querySelectorAll('.admin-hide').forEach(el => el.style.display = 'none');
+        }
+    </script>
 </body>
 
 </html>

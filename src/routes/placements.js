@@ -5,6 +5,7 @@ const { ObjectId } = require('mongodb');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const { authenticate, authorize } = require('../middleware/auth');
 
 // Configure Multer for PDF resumes
 const storage = multer.diskStorage({
@@ -26,29 +27,13 @@ const upload = multer({
     }
 });
 
-// Middleware to check if user is TPO
-async function isTPO(req, res, next) {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
-
-    try {
-        const user = await collections.users().findOne({ _id: new ObjectId(userId) });
-        if (user && user.role === 'tpo') {
-            next();
-        } else {
-            res.status(403).json({ success: false, message: 'Forbidden: TPO access required' });
-        }
-    } catch (err) {
-        res.status(500).json({ success: false, message: 'Server error check' });
-    }
-}
+// Middleware to check if user is TPO (DEPRECATED: Use authorize(['tpo']) instead)
+// Removed isTPO
 
 // GET /api/placements/student-profile - Fetch persistent profile
-router.get('/student-profile', async (req, res) => {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
-
+router.get('/student-profile', authenticate, async (req, res) => {
     try {
+        const userId = req.user._id;
         const profile = await collections.getDB().collection('student_profiles').findOne({ userId: new ObjectId(userId) });
         res.json(profile || { skills: '', resumeUrl: '', mobile: '', parentName: '' });
     } catch (err) {
@@ -57,11 +42,9 @@ router.get('/student-profile', async (req, res) => {
 });
 
 // POST /api/placements/student-profile - Update persistent profile
-router.post('/student-profile', async (req, res) => {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
-
+router.post('/student-profile', authenticate, async (req, res) => {
     try {
+        const userId = req.user._id;
         const { skills, resumeUrl, mobile, parentName } = req.body;
         await collections.getDB().collection('student_profiles').updateOne(
             { userId: new ObjectId(userId) },
@@ -75,11 +58,9 @@ router.post('/student-profile', async (req, res) => {
 });
 
 // POST /api/placements/apply - Submit application
-router.post('/apply', upload.single('resume'), async (req, res) => {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
-
+router.post('/apply', authenticate, upload.single('resume'), async (req, res) => {
     try {
+        const userId = req.user._id;
         const { driveId, company, role, skills, mobile, parentName, fullName, idNumber, department, gender } = req.body;
         const resumeUrl = req.file ? `/uploads/${req.file.filename}` : req.body.resumeUrl;
 
@@ -141,7 +122,7 @@ router.get('/drives', async (req, res) => {
     }
 });
 
-// GET /api/placements/alumni - Fetch all alumni
+// GET /api/placements/alumni - Fetch manual alumni
 router.get('/alumni', async (req, res) => {
     try {
         const alumni = await collections.getDB().collection('alumni').find({}).toArray();
@@ -176,7 +157,7 @@ router.get('/stats', async (req, res) => {
 });
 
 // POST /api/placements/drive - Add a new placement drive (TPO only)
-router.post('/drive', isTPO, async (req, res) => {
+router.post('/drive', authenticate, authorize(['tpo']), async (req, res) => {
     try {
         const drive = req.body;
         // Basic validation
@@ -197,7 +178,7 @@ router.post('/drive', isTPO, async (req, res) => {
 });
 
 // POST /api/placements/alumni - Add a new alumni (TPO only)
-router.post('/alumni', isTPO, async (req, res) => {
+router.post('/alumni', authenticate, authorize(['tpo']), async (req, res) => {
     try {
         const alumnus = req.body;
         if (!alumnus.name || !alumnus.company || !alumnus.batch) {
@@ -216,7 +197,7 @@ router.post('/alumni', isTPO, async (req, res) => {
 });
 
 // POST /api/placements/bulk-upload - Bulk add data via CSV (TPO only)
-router.post('/bulk-upload', isTPO, async (req, res) => {
+router.post('/bulk-upload', authenticate, authorize(['tpo']), async (req, res) => {
     try {
         const { type, csvData } = req.body;
         if (!type || !csvData) {
@@ -247,7 +228,7 @@ router.post('/bulk-upload', isTPO, async (req, res) => {
 });
 
 // POST /api/placements/bulk-upload-past-offers - Process past offers and auto-calculate stats (TPO only)
-router.post('/bulk-upload-past-offers', isTPO, async (req, res) => {
+router.post('/bulk-upload-past-offers', authenticate, authorize(['tpo']), async (req, res) => {
     try {
         const { csvData } = req.body;
         if (!csvData) return res.status(400).json({ success: false, message: 'Missing data' });

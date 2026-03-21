@@ -34,7 +34,9 @@ const StorageUtils = {
                 url = `/api/complaints/student/${user.id}`;
             }
 
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: { 'x-user-id': user.id || user._id }
+            });
             const data = await response.json();
             return data.success ? data.complaints : [];
         } catch (err) {
@@ -44,8 +46,11 @@ const StorageUtils = {
     },
 
     async getComplaintsForStudent(studentId) {
+        const user = this.getCurrentUser();
         try {
-            const response = await fetch(`/api/complaints/student/${studentId}`);
+            const response = await fetch(`/api/complaints/student/${studentId}`, {
+                headers: { 'x-user-id': user.id || user._id }
+            });
             const data = await response.json();
             return data.success ? data.complaints : [];
         } catch (err) {
@@ -69,7 +74,10 @@ const StorageUtils = {
         try {
             const response = await fetch('/api/complaints', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-user-id': currentUser.id || currentUser._id
+                },
                 body: JSON.stringify(body)
             });
             const data = await response.json();
@@ -81,6 +89,7 @@ const StorageUtils = {
     },
 
     async updateComplaintStatus(id, newStatus, assignedTo, responseText) {
+        const user = this.getCurrentUser();
         try {
             const body = {};
             if (newStatus) body.status = newStatus;
@@ -88,7 +97,10 @@ const StorageUtils = {
 
             const response = await fetch(`/api/complaints/${id}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'x-user-id': user.id || user._id 
+                },
                 body: JSON.stringify(body)
             });
             const data = await response.json();

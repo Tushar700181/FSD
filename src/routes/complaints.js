@@ -2,11 +2,18 @@ const express = require('express');
 const router = express.Router();
 const { collections } = require('../config/db');
 const { ObjectId } = require('mongodb');
+const { authenticate, authorize } = require('../middleware/auth');
 
 // POST /api/complaints - Create a new complaint
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     try {
         const { title, category, description, studentId, studentName, requesterRole, assignedTo, images } = req.body;
+        
+        // Ownership check: Student can only create for themselves
+        if (req.user.role !== 'admin' && studentId !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only submit complaints for yourself.' });
+        }
+
         const complaintsCollection = collections.complaints();
 
         // Generate a custom ID: CMP-1001 base
@@ -40,11 +47,18 @@ router.post('/', async (req, res) => {
 });
 
 // GET /api/complaints/student/:studentId - Get all complaints for a student
-router.get('/student/:studentId', async (req, res) => {
+router.get('/student/:studentId', authenticate, async (req, res) => {
     try {
+        const studentId = req.params.studentId;
+        
+        // Personal data isolation
+        if (req.user.role !== 'admin' && req.user._id.toString() !== studentId) {
+            return res.status(403).json({ success: false, message: 'Forbidden: Access to other users complaints is denied.' });
+        }
+
         const complaintsCollection = collections.complaints();
         const complaints = await complaintsCollection
-            .find({ studentId: new ObjectId(req.params.studentId) })
+            .find({ studentId: new ObjectId(studentId) })
             .sort({ timestamp: -1 })
             .toArray();
         res.json({ success: true, complaints });
@@ -55,11 +69,18 @@ router.get('/student/:studentId', async (req, res) => {
 });
 
 // GET /api/complaints/dept/:dept - Get all complaints for a department (for Admins)
-router.get('/dept/:dept', async (req, res) => {
+router.get('/dept/:dept', authenticate, authorize(['admin']), async (req, res) => {
     try {
+        const { dept } = req.params;
+
+        // Department matching check
+        if (req.user.department !== dept && req.user.department !== 'Academic') {
+            return res.status(403).json({ success: false, message: `Forbidden: You are not authorized to view ${dept} complaints.` });
+        }
+
         const complaintsCollection = collections.complaints();
         const complaints = await complaintsCollection
-            .find({ assignedTo: req.params.dept })
+            .find({ assignedTo: dept })
             .sort({ timestamp: -1 })
             .toArray();
         res.json({ success: true, complaints });
@@ -69,11 +90,21 @@ router.get('/dept/:dept', async (req, res) => {
     }
 });
 
-// PATCH /api/complaints/:id - Update complaint status/response
-router.patch('/:id', async (req, res) => {
+// PATCH /api/complaints/:id - Update complaint status/response (Admin Only)
+router.patch('/:id', authenticate, authorize(['admin']), async (req, res) => {
     try {
         const { status, adminResponse } = req.body;
         const complaintsCollection = collections.complaints();
+
+        // Security check: Verify the complaint belongs to the admin's department
+        const complaint = await complaintsCollection.findOne({ id: req.params.id });
+        if (!complaint) {
+            return res.status(404).json({ success: false, message: 'Complaint not found' });
+        }
+
+        if (req.user.department !== complaint.assignedTo && req.user.department !== 'Academic') {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only update complaints assigned to your department.' });
+        }
 
         const update = { $set: { updatedAt: new Date() } };
         if (status) update.$set.status = status;

@@ -108,6 +108,13 @@
       from { transform: translateX(0); opacity: 1; }
       to { transform: translateX(100%); opacity: 0; }
     }
+
+    /* Unauthorized Overlay Animation */
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .scale-in-center { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
@@ -115,8 +122,17 @@
   <script>
     // Initialize user data and check for access immediately
     const userSummary = JSON.parse(localStorage.getItem('onecampus_user'));
+    
+    function showUnauthorized() {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('unauthorized-overlay').classList.remove('hidden');
+        });
+    }
+
     if (!userSummary) {
         window.location.href = '../../login/login.html';
+    } else if (userSummary.role === 'tpo' || userSummary.role === 'faculty' || (userSummary.role === 'admin' && userSummary.department === 'Mess')) {
+        showUnauthorized();
     } else if (userSummary.role === 'admin') {
         window.location.href = 'LeaveAdmin.html';
     }
@@ -135,7 +151,14 @@
         <p id="app-subtitle" class="text-sm text-gray-500 font-medium">Leave &amp; Mess Rebate Management</p>
        </div>
       </div>
-      <div id="form-status" class="status-badge px-4 py-2 rounded-full font-semibold text-sm flex items-center gap-2 bg-orange-100 text-orange-700"><span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> Incomplete
+      <div class="flex items-center gap-4">
+        <div id="form-status" class="status-badge px-4 py-2 rounded-full font-semibold text-sm flex items-center gap-2 bg-orange-100 text-orange-700">
+          <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> Incomplete
+        </div>
+        <a href="../landing/index.html" class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-slate-600 hover:bg-slate-50 transition-all font-bold text-sm shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          Home
+        </a>
       </div>
      </div>
     </header><!-- Main Form Card -->
@@ -231,6 +254,20 @@
      </div>
     </main><!-- Toast Container -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+    <!-- Unauthorized Overlay -->
+    <div id="unauthorized-overlay" class="fixed inset-0 z-[9999] bg-slate-900/90 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] p-10 max-w-lg w-full text-center shadow-2xl scale-in-center">
+            <div class="w-20 h-20 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0H10m1-6a1 1 0 100-2 1 1 0 000 2zm6 1a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h2 class="text-3xl font-extrabold text-slate-800 mb-4">Access Restricted</h2>
+            <p class="text-slate-500 mb-8 leading-relaxed">You are not authorized to access this module. If you believe this is an error, please contact the system administrator.</p>
+            <a href="../landing/index.html" class="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all transform hover:scale-105">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Return to Home
+            </a>
+        </div>
+    </div>
    </div>
   </div>
   <script>
@@ -249,7 +286,9 @@
 
     async function loadProfile() {
         try {
-            const res = await fetch(`/api/auth/profile/${userSummary.id}`);
+            const res = await fetch(`/api/auth/profile/${userSummary.id}`, {
+                headers: { 'x-user-id': userSummary.id || userSummary._id }
+            });
             const data = await res.json();
             if (data.success) {
                 const u = data.user;
@@ -292,9 +331,17 @@
         if (leavingDate.value && returnDate.value) {
             const start = new Date(leavingDate.value);
             const end = new Date(returnDate.value);
-            const diffTime = (end - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            totalDays.value = diffDays > 0 ? diffDays : 0;
+            
+            if (end < start) {
+                totalDays.value = 0;
+                showToast('Return date cannot be before leaving date', 'error');
+                returnDate.classList.add('border-red-500');
+            } else {
+                returnDate.classList.remove('border-red-500');
+                const diffTime = (end - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                totalDays.value = diffDays > 0 ? diffDays : 0;
+            }
         }
     }
 
@@ -304,7 +351,9 @@
 
     async function loadHistory() {
         try {
-            const res = await fetch(`/api/leaves/user/${userSummary.id}`);
+            const res = await fetch(`/api/leaves/user/${userSummary.id}`, {
+                headers: { 'x-user-id': userSummary.id || userSummary._id }
+            });
             const data = await res.json();
             if (data.success) {
                 const history = data.history;
@@ -354,7 +403,10 @@
     async function reportReturn(id) {
         if (!confirm('Are you sure you want to report your return? This will mark your leave as completed.')) return;
         try {
-            const res = await fetch(`/api/leaves/${id}/return`, { method: 'PATCH' });
+            const res = await fetch(`/api/leaves/${id}/return`, { 
+                method: 'PATCH',
+                headers: { 'x-user-id': userSummary.id || userSummary._id }
+            });
             const data = await res.json();
             if (data.success) {
                 showToast('Welcome back! Return recorded.', 'success');
@@ -384,11 +436,15 @@
     }
 
     form.onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submit-btn');
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="animate-spin">🌀</span> Submitting...';
+        const lDate = new Date(document.getElementById('leaving_date').value);
+        const rDate = new Date(document.getElementById('expected_return_date').value);
+        
+        if (rDate < lDate) {
+            showToast('Invalid dates: Return date is before leaving date', 'error');
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            return;
+        }
 
         const formData = {
             userId: userSummary.id,
@@ -416,7 +472,10 @@
         try {
             const res = await fetch('/api/leaves', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-user-id': userSummary.id || userSummary._id
+                },
                 body: JSON.stringify(formData)
             });
             const data = await res.json();
@@ -444,6 +503,11 @@
         container.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
+
+    // Set minimum date for leaving to today
+    const today = new Date().toISOString().split('T')[0];
+    leavingDate.setAttribute('min', today);
+    absenceFrom.setAttribute('min', today);
 
     loadProfile();
     loadHistory();

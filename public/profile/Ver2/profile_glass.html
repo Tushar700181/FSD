@@ -4,9 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile • Glass</title>
+    <title>Profile • OneCampus</title>
     <link rel="stylesheet" href="style_glass.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-link { transition: all 0.2s; cursor: pointer; }
+        .nav-link.active { background: rgba(255,255,255,0.15); border-left: 4px solid #fff; }
+        .section-view { display: none; width: 100%; }
+        .section-view.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Premium Layout Styles from LeaveForm */
+        .form-input-premium { border: 2px solid #e5e7eb; transition: all 0.2s; }
+        .form-input-premium:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); outline: none; }
+        .btn-premium-gradient { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); transition: all 0.3s; }
+        .btn-premium-gradient:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4); }
+
+        /* Fix for glass-wrapper to prevent layout breaking */
+        .sidebar { overflow-y: auto; }
+    </style>
 </head>
 
 <body>
@@ -20,38 +37,38 @@
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">
+                    <a id="link-profile" class="nav-link active" onclick="showSection('profile')">
                         <i class="fa-regular fa-user"></i>
                         Profile
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="nav-grades">
                     <a href="https://aims.iiitk.ac.in/aimskurnool/" target="_blank" class="nav-link">
                         <i class="fa-solid fa-chart-simple"></i>
                         Grades
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fa-solid fa-calendar"></i>
-                        Schedule
-                    </a>
-                </li>
-                <li class="nav-item">
+                <li class="nav-item" id="nav-complaints">
                     <a href="../../dashboard/student_portal.html" class="nav-link">
                         <i class="fa-solid fa-ticket-simple"></i>
                         Complaints
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="nav-leave">
                     <a href="../../leave/Leaveform.html" class="nav-link">
                         <i class="fa-solid fa-file-signature"></i>
                         Leave Form
                     </a>
                 </li>
+                <li class="nav-item" id="nav-promote-tab" style="display: none;">
+                    <a id="link-promote" class="nav-link" onclick="showSection('promote')">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        Batch Promotion
+                    </a>
+                </li>
             </ul>
             <div class="nav-item">
-                <a href="../../landing/index.html" class="nav-link" title="Back to Home">
+                <a href="../../landing/index.html" class="nav-link" title="Back to Home" style="border:none !important; background:none !important;">
                     <i class="fa-solid fa-house"></i>
                     <span>Home</span>
                 </a>
@@ -61,102 +78,163 @@
         <!-- Main Content -->
         <main class="main-content">
 
-            <header class="header">
-                <div class="page-title">
-                    <h1 id="page-role-title">Student Profile</h1>
-                    <p>Academic Year 2026-27</p>
-                </div>
-                <!-- <div class="actions">
-                    <button style="padding: 10px 20px; background: #111; color: #fff; border: none; border-radius: 8px; cursor: pointer;">
-                        Edit Profile
-                    </button>
-                </div> -->
-            </header>
-
-            <div class="profile-grid">
-
-                <!-- Left Card -->
-                <div class="profile-card">
-                    <div class="photo-frame">
-                        <img id="profile-img" src="https://ui-avatars.com/api/?name=User&background=random&size=200" alt="Profile">
+            <!-- Profile View -->
+            <div id="section-profile" class="section-view active">
+                <header class="header">
+                    <div class="page-title">
+                        <h1 id="page-role-title">Profile</h1>
+                        <p>Academic Year 2026-27</p>
                     </div>
-                    <div class="core-info">
-                        <h2 id="display-name">Loading...</h2>
-                        <span class="role" id="display-dept">Department</span>
-                    </div>
-                    <div class="stats-row">
-                        <div class="stat">
-                            <h3 id="stat-year">2027</h3>
-                            <span>Class of</span>
+                </header>
+
+                <div class="profile-grid">
+                    <!-- Left Card -->
+                    <div class="profile-card">
+                        <div class="photo-frame">
+                            <img id="profile-img" src="https://ui-avatars.com/api/?name=User&background=random&size=200" alt="Profile">
                         </div>
-                        <div class="stat">
-                            <h3 id="stat-dept-short">CSE</h3>
-                            <span>Dept</span>
+                        <div class="core-info">
+                            <h2 id="display-name">Loading...</h2>
+                            <span class="role" id="display-dept">Department</span>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat">
+                                <h3 id="stat-year">2027</h3>
+                                <span>Class of</span>
+                            </div>
+                            <div class="stat">
+                                <h3 id="stat-dept-short">CSE</h3>
+                                <span>Dept</span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Right Grid -->
+                    <div class="details-section" id="details-section">
+                        <div class="info-box full-width">
+                            <label>Full Name</label>
+                            <div class="value" id="val-fullName">...</div>
+                        </div>
+
+                        <div class="info-box">
+                            <label>ID Number</label>
+                            <div class="value" id="val-idNumber">...</div>
+                        </div>
+
+                        <div class="info-box">
+                            <label>Date of Birth</label>
+                            <div class="value" id="val-dob">...</div>
+                        </div>
+
+                        <div class="info-box">
+                            <label>Email Address</label>
+                            <div class="value" id="val-email">...</div>
+                        </div>
+
+                        <div class="info-box">
+                            <label>Phone Number</label>
+                            <div class="value" id="val-phone">...</div>
+                        </div>
+
+                        <div class="info-box">
+                            <label>Gender</label>
+                            <div class="value" id="val-gender">...</div>
+                        </div>
+
+                        <div class="info-box">
+                            <label>Hostel</label>
+                            <div class="value" id="val-hostel">...</div>
+                        </div>
+
+                        <div class="info-box">
+                            <label>Room Number</label>
+                            <div class="value" id="val-room">...</div>
+                        </div>
+
+                        <div class="info-box" id="box-grad-year">
+                            <label>Graduation Year</label>
+                            <div class="value" id="val-gradYear">...</div>
+                        </div>
+                        
+                        <div class="info-box" id="box-branch">
+                            <label>Branch</label>
+                            <div class="value" id="val-branch">...</div>
+                        </div>
+                        
+                        <div class="info-box" id="box-semester">
+                            <label>Current Semester</label>
+                            <div class="value" id="val-semester">...</div>
+                        </div>
+
+                        <div class="info-box full-width">
+                            <label>Permanent Address</label>
+                            <div class="value" id="val-address">...</div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Right Grid -->
-                <div class="details-section" id="details-section">
-                    <div class="info-box full-width">
-                        <label>Full Name</label>
-                        <div class="value" id="val-fullName">...</div>
+            <!-- Promotion View -->
+            <div id="section-promote" class="section-view">
+                <header class="max-w-4xl mx-auto mt-2 mb-4 px-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-user-graduate text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl font-extrabold text-gray-800">Batch Promotion</h1>
+                        </div>
                     </div>
+                </header>
 
-                    <div class="info-box">
-                        <label>ID Number</label>
-                        <div class="value" id="val-idNumber">...</div>
+                <div class="max-w-4xl mx-auto px-4">
+                    <div class="bg-white shadow-2xl rounded-[2rem] border border-slate-100 p-8 md:p-12">
+                        <form onsubmit="event.preventDefault(); runPromotion();" class="space-y-8">
+                            <h2 class="text-xl font-bold text-gray-800 border-l-4 border-indigo-500 pl-4 mb-4">Update Configuration</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-600 mb-2">Target Department</label>
+                                    <select id="promDept" class="form-input-premium w-full px-5 py-4 rounded-2xl bg-gray-50">
+                                        <option value="CSE">CSE</option>
+                                        <option value="AI&DS">AI&DS</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="MECH">MECH</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-600 mb-2">Current Semester</label>
+                                    <select id="promSem" class="form-input-premium w-full px-5 py-4 rounded-2xl bg-gray-50">
+                                        <option value="1">Semester 1</option>
+                                        <option value="2">Semester 2</option>
+                                        <option value="3">Semester 3</option>
+                                        <option value="4">Semester 4</option>
+                                        <option value="5">Semester 5</option>
+                                        <option value="6">Semester 6</option>
+                                        <option value="7">Semester 7</option>
+                                        <option value="8">Semester 8 (Graduation & Account Deletion)</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-bold text-gray-600 mb-2">Verification Key</label>
+                                    <input type="password" id="promKey" placeholder="Enter Admin Verification Key" class="form-input-premium w-full px-5 py-4 rounded-2xl bg-gray-50">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-premium-gradient w-full py-4 text-white font-extrabold rounded-2xl shadow-xl flex items-center justify-center gap-3">
+                                <i class="fa-solid fa-rocket"></i> EXECUTE BATCH PROMOTION
+                            </button>
+                            <p class="text-xs text-rose-500 font-bold bg-rose-50 p-4 rounded-xl border border-rose-100 flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Action is irreversible. This will increment the semester for all matching students.
+                            </p>
+                        </form>
                     </div>
+                </div>
+            </div>
 
-                    <div class="info-box">
-                        <label>Date of Birth</label>
-                        <div class="value" id="val-dob">...</div>
-                    </div>
-
-                    <div class="info-box">
-                        <label>Email Address</label>
-                        <div class="value" id="val-email">...</div>
-                    </div>
-
-                    <div class="info-box">
-                        <label>Phone Number</label>
-                        <div class="value" id="val-phone">...</div>
-                    </div>
-
-                    <div class="info-box">
-                        <label>Gender</label>
-                        <div class="value" id="val-gender">...</div>
-                    </div>
-
-                    <div class="info-box">
-                        <label>Hostel</label>
-                        <div class="value" id="val-hostel">...</div>
-                    </div>
-
-                    <div class="info-box">
-                        <label>Room Number</label>
-                        <div class="value" id="val-room">...</div>
-                    </div>
-
-                    <div class="info-box">
-                        <label>Graduation Year</label>
-                        <div class="value" id="val-gradYear">...</div>
-                    </div>
-                    
-                    <div class="info-box">
-                        <label>Branch</label>
-                        <div class="value" id="val-branch">...</div>
-                    </div>
-                    
-                    <div class="info-box">
-                        <label>Current Semester</label>
-                        <div class="value" id="val-semester">...</div>
-                    </div>
-
-                    <div class="info-box full-width">
-                        <label>Permanent Address</label>
-                        <div class="value" id="val-address">...</div>
-                    </div>
+            <!-- Toast -->
+            <div id="toast" class="fixed bottom-8 right-8 z-[2000] hidden">
+                <div id="toast-bg" class="px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 text-white font-bold">
+                    <i id="toast-icon" class="fa-solid"></i>
+                    <span id="toast-msg"></span>
                 </div>
             </div>
 
@@ -165,9 +243,7 @@
 
     <script>
         const userSummary = JSON.parse(localStorage.getItem('onecampus_user'));
-        if (!userSummary) {
-            window.location.href = '../../login/login.html';
-        }
+        if (!userSummary) window.location.href = '../../login/login.html';
 
         async function loadProfile() {
             try {
@@ -177,9 +253,13 @@
                 if (data.success) {
                     const u = data.user;
                     
-                    document.getElementById('page-role-title').innerText = u.role === 'faculty' ? 'Faculty Profile' : 'Student Profile';
+                    const roleTitle = u.role === 'tpo' ? 'TPO Profile' : u.role.charAt(0).toUpperCase() + u.role.slice(1) + ' Profile';
+                    document.getElementById('page-role-title').innerText = roleTitle;
                     document.getElementById('display-name').innerText = u.fullName;
-                    document.getElementById('display-dept').innerText = u.department || 'General';
+                    
+                    let deptDisplay = u.department || 'General';
+                    if (u.role === 'tpo') deptDisplay = 'Placement Office';
+                    document.getElementById('display-dept').innerText = deptDisplay;
                     
                     document.getElementById('val-fullName').innerText = u.fullName;
                     document.getElementById('val-idNumber').innerText = u.idNumber;
@@ -192,17 +272,103 @@
                     document.getElementById('val-gradYear').innerText = u.graduationYear || 'N/A';
                     document.getElementById('val-address').innerText = u.address || 'N/A';
                     document.getElementById('val-branch').innerText = u.branch || 'N/A';
+                    
                     const semMap = { '1': '1st', '2': '2nd', '3': '3rd', '4': '4th', '5': '5th', '6': '6th', '7': '7th', '8': '8th' };
                     document.getElementById('val-semester').innerText = u.semester ? (semMap[u.semester] || u.semester) + ' Sem' : 'N/A';
 
-                    document.getElementById('profile-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName)}&background=random&size=200`;
-                    
                     document.getElementById('stat-year').innerText = u.graduationYear || 'N/A';
                     document.getElementById('stat-dept-short').innerText = u.department ? u.department.substring(0, 3).toUpperCase() : 'N/A';
+                    
+                    // Sidebar Role-Based Visibility
+                    if (u.role === 'admin') {
+                        document.getElementById('nav-grades').style.display = 'none';
+                        document.querySelector('.stats-row').style.display = 'none';
+                        document.getElementById('box-grad-year').style.display = 'none';
+                        document.getElementById('box-semester').style.display = 'none';
+
+                        if (u.department === 'Academic') {
+                            document.getElementById('nav-promote-tab').style.display = 'block';
+                            document.getElementById('nav-leave').style.display = 'none';
+                        }
+                    } else if (u.role === 'tpo') {
+                        document.getElementById('nav-grades').style.display = 'none';
+                        document.getElementById('nav-complaints').style.display = 'none';
+                        document.getElementById('nav-leave').style.display = 'none';
+                        document.querySelector('.stats-row').style.display = 'none';
+                        document.getElementById('box-grad-year').style.display = 'none';
+                        document.getElementById('box-semester').style.display = 'none';
+                    }
                 }
-            } catch (err) {
-                console.error("Profile load error:", err);
+            } catch (err) { console.error("Profile load error:", err); }
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('section-' + id).classList.add('active');
+
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('link-' + id).classList.add('active');
+        }
+
+        async function runPromotion() {
+            const dept = document.getElementById('promDept').value;
+            const sem = document.getElementById('promSem').value;
+            const key = document.getElementById('promKey').value;
+
+            const isGraduation = sem === '8';
+            if (!key) return showToast("Verification key required", "error");
+            
+            let confirmMsg = `Are you sure you want to promote ALL ${dept} students and increment their semester?`;
+            if (isGraduation) {
+                confirmMsg = `CRITICAL ACTION: You are about to GRADUATE and PERMANENTLY DELETE all Semester 8 students in ${dept}. This cannot be undone. Proceed?`;
             }
+
+            if (!confirm(confirmMsg)) return;
+            if (isGraduation && !confirm(`FINAL WARNING: This will immediately delete these accounts. A CSV backup will be provided. Confirm deletion?`)) return;
+            else if (!isGraduation && !confirm(`Confirm batch promotion?`)) return;
+
+            try {
+                const res = await fetch('/api/admin/promote-students', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-user-id': userSummary.id || userSummary._id
+                    },
+                    body: JSON.stringify({ department: dept, currentSemester: sem, adminKey: key })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message, "success");
+                    document.getElementById('promKey').value = '';
+
+                    // Handle CSV Download for Graduation
+                    if (data.csvData) {
+                        const blob = new Blob([data.csvData], { type: 'text/csv' });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.setAttribute('hidden', '');
+                        a.setAttribute('href', url);
+                        a.setAttribute('download', data.fileName || 'graduated_students.csv');
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        showToast("Student data backup downloaded successfully.", "success");
+                    }
+                } else showToast(data.message, "error");
+            } catch (err) { showToast("Network error during operation", "error"); }
+        }
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            const bg = document.getElementById('toast-bg');
+            const m = document.getElementById('toast-msg');
+            const i = document.getElementById('toast-icon');
+
+            m.innerText = msg;
+            bg.className = `px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 text-white font-bold ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'}`;
+            i.className = `fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}`;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 4000);
         }
 
         loadProfile();

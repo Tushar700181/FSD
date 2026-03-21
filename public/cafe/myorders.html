@@ -82,7 +82,9 @@
         async function fetchMyOrders() {
             const studentId = user.id || user._id;
             try {
-                const res = await fetch(`/api/orders/my/${studentId}`);
+                const res = await fetch(`/api/orders/my/${studentId}`, {
+                    headers: { 'x-user-id': user.id || user._id }
+                });
                 const data = await res.json();
 
                 if (data.success) {
@@ -236,7 +238,10 @@
                 for (const sub of submissions) {
                     await fetch(`/api/menus/${sub.itemId}/rate`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'x-user-id': user.id || user._id
+                        },
                         body: JSON.stringify({ userId: user.id || user._id, rating: sub.rating })
                     });
                 }

@@ -113,7 +113,12 @@
 <body>
 
 <div class="header">
-    <h1>OneCampus</h1>
+    <div style="display:flex; align-items:center; gap:2rem;">
+        <h1>OneCampus</h1>
+        <a href="../landing/index.html" style="color:rgba(255,255,255,0.7); text-decoration:none; font-size:.85rem; font-weight:600; display:flex; align-items:center; gap:.5rem; transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </div>
     <span class="badge"><i class="fas fa-shield-alt"></i> &nbsp;Academic Admin</span>
 </div>
 
@@ -155,10 +160,20 @@
             <label>Room <span style="font-weight:400;color:#94a3b8">(e.g. CS102, LAB-01)</span></label>
             <input type="text" id="smRoom" placeholder="e.g. CS102" autocomplete="off">
         </div>
+        <div class="form-group">
+            <label>Substitute Faculty <span style="font-weight:400;color:#94a3b8">(Optional)</span></label>
+            <select id="smSubstitute">
+                <option value="">-- No Substitute --</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Topics Covered / Notes</label>
+            <textarea id="smTopics" placeholder="e.g. Intro to DFS, BFS..." style="width:100%;height:60px;padding:.75rem 1rem;border:1px solid var(--border);border-radius:.7rem;font-size:.9rem;outline:none;resize:none;"></textarea>
+        </div>
         <div class="modal-actions">
-            <button class="btn-modal-save" onclick="saveSlot()"><i class="fas fa-check"></i> Save</button>
             <button class="btn-modal-clear" onclick="clearSlot()"><i class="fas fa-trash"></i> Clear</button>
             <button class="btn-modal-cancel" onclick="closeSlotModal()">Cancel</button>
+            <button class="btn-modal-save" onclick="saveSlot()"><i class="fas fa-check"></i> Save</button>
         </div>
     </div>
 </div>
@@ -172,23 +187,27 @@ const PERIODS = ['P1','P2','P3','P4','Afternoon'];
 
 // ── Session guard ─────────────────────────────────────────────────────────
 const _session = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
-if (!_session.role || _session.role !== 'admin') {
-    // Not an admin → redirect to the viewer page
+if (!_session.role || _session.role !== 'admin' || _session.department !== 'Academic') {
+    // Not an academic admin → redirect to the viewer page
     window.location.href = '/faculty/Faculty_Aval.html';
 }
 
 let currentFacultyId = null;
 let currentFacultyName = '';
-let gridState = {};   // key: "Day_Period" → { label, type, room }
+let gridState = {};   // key: "Day_Period" → { label, type, room, substituteId, topics }
 let originalState = {}; // snapshot before edits
+let allFaculty = [];    // cache for substitute dropdown
 
 // ─── Load faculty list ───────────────────────────────────────────────────────
 async function loadFacultyList() {
-    const res = await fetch('/api/faculty/status?role=admin');
+    const res = await fetch('/api/faculty/status?role=admin', {
+        headers: { 'x-user-id': _session.id || _session._id }
+    });
     const data = await res.json();
     const list = document.getElementById('facultyList');
     list.innerHTML = '';
-    (data.faculty || []).forEach(f => {
+    allFaculty = data.faculty || [];
+    allFaculty.forEach(f => {
         const li = document.createElement('li');
         li.innerHTML = `
             <img class="f-avatar" src="https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random" alt="">
@@ -198,6 +217,16 @@ async function loadFacultyList() {
             </div>`;
         li.onclick = () => selectFaculty(f._id, f.fullName, li);
         list.appendChild(li);
+    });
+
+    // Also populate substitute dropdown once
+    const subSelect = document.getElementById('smSubstitute');
+    subSelect.innerHTML = '<option value="">-- No Substitute --</option>';
+    allFaculty.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f._id;
+        opt.textContent = f.fullName;
+        subSelect.appendChild(opt);
     });
 }
 
@@ -214,7 +243,9 @@ async function selectFaculty(id, name, liEl) {
     document.getElementById('mainPanel').innerHTML =
         '<div class="placeholder"><i class="fas fa-spinner fa-spin"></i><p>Loading timetable…</p></div>';
 
-    const res = await fetch(`/api/admin/timetable/${id}`);
+    const res = await fetch(`/api/admin/timetable/${id}`, {
+        headers: { 'x-user-id': _session.id || _session._id }
+    });
     const data = await res.json();
 
     gridState = {};
@@ -222,7 +253,9 @@ async function selectFaculty(id, name, liEl) {
         gridState[`${s.day}_${s.period}`] = {
             label: s.label || '',
             type:  s.type  || 'class',
-            room:  s.room  || s.classroomId || ''  // support old classroomId string
+            room:  s.room  || s.classroomId || '',
+            substituteId: s.substituteId || '',
+            topics: s.topics || ''
         };
     });
     originalState = JSON.parse(JSON.stringify(gridState));
@@ -272,10 +305,12 @@ function renderGrid() {
 
 function buildCellHTML(slot) {
     if (!slot) return `<div class="slot-inner"><span class="cell-add"><i class="fas fa-plus-circle"></i></span></div>`;
+    const subName = slot.substituteId ? (allFaculty.find(f => f._id === slot.substituteId)?.fullName || 'Sub') : null;
     return `<div class="slot-inner">
         <span class="slot-type-badge">${slot.type}</span>
         <span class="slot-label">${slot.label || '—'}</span>
         ${slot.room ? `<span class="slot-room">${slot.room}</span>` : ''}
+        ${subName ? `<span style="font-size:.6rem;color:#b45309;font-weight:700">Sub: ${subName}</span>` : ''}
     </div>`;
 }
 
@@ -289,6 +324,8 @@ function openSlotModal(day, period, key) {
     document.getElementById('smLabel').value = slot.label || '';
     document.getElementById('smType').value = slot.type || 'class';
     document.getElementById('smRoom').value = slot.room || '';
+    document.getElementById('smSubstitute').value = slot.substituteId || '';
+    document.getElementById('smTopics').value = slot.topics || '';
     document.getElementById('slotModalOverlay').classList.add('open');
     document.getElementById('smLabel').focus();
 }
@@ -302,7 +339,9 @@ function saveSlot() {
     const label = document.getElementById('smLabel').value.trim();
     const type  = document.getElementById('smType').value;
     const room  = document.getElementById('smRoom').value.trim().toUpperCase();
-    gridState[activeSlotKey] = { label, type, room };
+    const substituteId = document.getElementById('smSubstitute').value;
+    const topics = document.getElementById('smTopics').value.trim();
+    gridState[activeSlotKey] = { label, type, room, substituteId, topics };
     closeSlotModal();
     renderGrid();
 }
@@ -335,7 +374,10 @@ async function saveChanges() {
     try {
         const res = await fetch('/api/admin/timetable/update', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-user-id': _session.id || _session._id
+            },
             body: JSON.stringify({ facultyId: currentFacultyId, added, removed, updated })
         });
         const data = await res.json();

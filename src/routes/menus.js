@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { collections } = require('../config/db');
 const { ObjectId } = require('mongodb');
+const { authenticate, authorize } = require('../middleware/auth');
 
-// GET /api/menus/cafes - Get all registered cafes
+// GET /api/menus/cafes - Get all registered cafes (Public)
 router.get('/cafes/list', async (req, res) => {
     try {
         const usersCollection = collections.users();
@@ -31,11 +32,16 @@ router.get('/:cafeName', async (req, res) => {
     }
 });
 
-// POST /api/menus
-router.post('/', async (req, res) => {
+// POST /api/menus (Cafe Vendor Only)
+router.post('/', authenticate, authorize(['cafe']), async (req, res) => {
     try {
         const { name, price, image, cafeName } = req.body;
         const menusCollection = collections.menus();
+
+        // Security check: Vendor can only add to their own cafe
+        if (cafeName !== req.user.cafeName) {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only add items to your own cafe.' });
+        }
 
         if (!name || !price || !cafeName) {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
@@ -61,25 +67,27 @@ router.post('/', async (req, res) => {
     }
 });
 
-// PATCH /api/menus/:id
-router.patch('/:id', async (req, res) => {
+// PATCH /api/menus/:id (Cafe Vendor Only)
+router.patch('/:id', authenticate, authorize(['cafe']), async (req, res) => {
     try {
+        if (!ObjectId.isValid(req.params.id)) return res.status(400).json({ success: false, message: 'Invalid ID' });
+        
         const { price, available } = req.body;
         const menusCollection = collections.menus();
+
+        // Ownership check
+        const item = await menusCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!item) return res.status(404).json({ success: false, message: 'Item not found' });
+        if (item.cafeName !== req.user.cafeName) {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only update items in your own cafe.' });
+        }
 
         const updateData = {};
         if (price !== undefined) updateData.price = Number(price);
         if (available !== undefined) updateData.available = available;
 
-        let objectId;
-        try {
-            objectId = new ObjectId(req.params.id);
-        } catch (e) {
-            return res.status(400).json({ success: false, message: 'Invalid item ID format' });
-        }
-
         const result = await menusCollection.updateOne(
-            { _id: objectId },
+            { _id: new ObjectId(req.params.id) },
             { $set: updateData }
         );
 
@@ -94,18 +102,21 @@ router.patch('/:id', async (req, res) => {
     }
 });
 
-// DELETE /api/menus/:id
-router.delete('/:id', async (req, res) => {
+// DELETE /api/menus/:id (Cafe Vendor Only)
+router.delete('/:id', authenticate, authorize(['cafe']), async (req, res) => {
     try {
+        if (!ObjectId.isValid(req.params.id)) return res.status(400).json({ success: false, message: 'Invalid ID' });
+        
         const menusCollection = collections.menus();
-        let objectId;
-        try {
-            objectId = new ObjectId(req.params.id);
-        } catch (e) {
-            return res.status(400).json({ success: false, message: 'Invalid item ID format' });
+        
+        // Ownership check
+        const item = await menusCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!item) return res.status(404).json({ success: false, message: 'Item not found' });
+        if (item.cafeName !== req.user.cafeName) {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only delete items from your own cafe.' });
         }
 
-        const result = await menusCollection.deleteOne({ _id: objectId });
+        const result = await menusCollection.deleteOne({ _id: new ObjectId(req.params.id) });
         if (result.deletedCount === 0) {
             return res.status(404).json({ success: false, message: 'Item not found' });
         }
@@ -116,10 +127,11 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// POST /api/menus/:id/rate - Submit a rating for an item
-router.post('/:id/rate', async (req, res) => {
+// POST /api/menus/:id/rate - Submit a rating for an item (Any Authenticated User)
+router.post('/:id/rate', authenticate, async (req, res) => {
     try {
-        const { userId, rating, comment } = req.body;
+        const { rating, comment } = req.body;
+        const userId = req.user._id;
         const menusCollection = collections.menus();
         
         if (rating === undefined) {

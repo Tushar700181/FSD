@@ -2,11 +2,18 @@ const express = require('express');
 const router = express.Router();
 const { collections } = require('../config/db');
 const { ObjectId } = require('mongodb');
+const { authenticate, authorize } = require('../middleware/auth');
 
 // POST /api/orders (Student places order)
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     try {
         const { studentId, studentName, items, total, cafeName, paymentMethod, phone, location } = req.body;
+        
+        // Ownership check
+        if (req.user.role !== 'admin' && studentId !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only place orders for yourself.' });
+        }
+
         const ordersCollection = collections.orders();
 
         if (!studentId) {
@@ -42,9 +49,15 @@ router.post('/', async (req, res) => {
 });
 
 // GET /api/orders/my/:studentId
-router.get('/my/:studentId', async (req, res) => {
+router.get('/my/:studentId', authenticate, async (req, res) => {
     try {
         const studentId = req.params.studentId;
+        
+        // Ownership check
+        if (req.user.role !== 'admin' && studentId !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: 'Forbidden: Access to other users orders is denied.' });
+        }
+
         const ordersCollection = collections.orders();
 
         // Find orders where studentId is either the ObjectId or the string version
@@ -70,10 +83,17 @@ router.get('/my/:studentId', async (req, res) => {
 });
 
 // GET /api/orders/vendor/:cafeName
-router.get('/vendor/:cafeName', async (req, res) => {
+router.get('/vendor/:cafeName', authenticate, authorize(['cafe']), async (req, res) => {
     try {
+        const { cafeName } = req.params;
+
+        // Security check: Vendor can only see their own orders
+        if (cafeName !== req.user.cafeName) {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only view orders for your own cafe.' });
+        }
+
         const ordersCollection = collections.orders();
-        const orders = await ordersCollection.find({ cafeName: req.params.cafeName }).sort({ createdAt: 1 }).toArray();
+        const orders = await ordersCollection.find({ cafeName }).sort({ createdAt: 1 }).toArray();
         res.json({ success: true, orders });
     } catch (err) {
         console.error('Fetch vendor orders error:', err.message);
@@ -82,10 +102,19 @@ router.get('/vendor/:cafeName', async (req, res) => {
 });
 
 // PATCH /api/orders/:id/status
-router.patch('/:id/status', async (req, res) => {
+router.patch('/:id/status', authenticate, authorize(['cafe']), async (req, res) => {
     try {
+        if (!ObjectId.isValid(req.params.id)) return res.status(400).json({ success: false, message: 'Invalid ID' });
+        
         const { status } = req.body;
         const ordersCollection = collections.orders();
+
+        // Ownership check
+        const order = await ordersCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+        if (order.cafeName !== req.user.cafeName) {
+            return res.status(403).json({ success: false, message: 'Forbidden: You can only update orders for your own cafe.' });
+        }
 
         await ordersCollection.updateOne(
             { _id: new ObjectId(req.params.id) },

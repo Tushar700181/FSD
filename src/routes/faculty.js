@@ -50,12 +50,19 @@ async function getFacultyStatus(facultyId, now) {
             if (classroom) roomCode = classroom.room_code;
         }
 
+        let substituteName = null;
+        if (slot.substituteId) {
+            const sub = await collections.users().findOne({ _id: new ObjectId(slot.substituteId) });
+            if (sub) substituteName = sub.fullName;
+        }
+
         return {
             status: slot.type === 'meeting' ? 'In Meeting' : 'In Class',
             period: activePeriod,
             type: slot.type,
             label: slot.label,
-            classroom: roomCode ? { roomCode, block: '', label: '' } : null
+            classroom: roomCode ? { roomCode, block: '', label: '' } : null,
+            substituteName
         };
     }
 
@@ -176,6 +183,14 @@ router.get('/:id/timetable', async (req, res) => {
         const classroomMap = {};
         classrooms.forEach(c => { classroomMap[c._id.toString()] = c; });
 
+        // Fetch all substitute names for the weekly grid
+        const substituteIds = slots.filter(s => s.substituteId).map(s => new ObjectId(s.substituteId));
+        const substitutes = substituteIds.length 
+            ? await collections.users().find({ _id: { $in: substituteIds } }).toArray()
+            : [];
+        const substituteMap = {};
+        substitutes.forEach(s => { substituteMap[s._id.toString()] = s.fullName; });
+
         // Build timetable — strip sensitive info for students
         const timetable = slots.map(slot => {
             const base = {
@@ -183,6 +198,11 @@ router.get('/:id/timetable', async (req, res) => {
                 period: slot.period,
                 type: slot.type
             };
+            
+            const subName = slot.substituteId ? substituteMap[slot.substituteId.toString()] : null;
+            if (subName) base.substituteName = subName;
+            if (slot.topics) base.topics = slot.topics;
+
             if (requesterRole !== 'student') {
                 base.label = slot.label;
                 let roomCode = slot.room || null;
@@ -228,6 +248,35 @@ router.post('/personal-block', async (req, res) => {
         res.json({ success: true, message: 'Personal block added' });
     } catch (err) {
         console.error('Personal block error:', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// ─── POST /api/faculty/appointments/request ──────────────────────────────────
+// Students can request a meeting slot
+router.post('/appointments/request', async (req, res) => {
+    try {
+        const { facultyId, slotKey, studentName, studentRoll, reason } = req.body;
+        if (!facultyId || !slotKey || !studentName || !studentRoll) {
+            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+
+        const [day, period] = slotKey.split('_');
+
+        await collections.appointments().insertOne({
+            facultyId: new ObjectId(facultyId),
+            day,
+            period,
+            studentName,
+            studentRoll,
+            reason: reason || '',
+            status: 'pending',
+            requestedAt: new Date()
+        });
+
+        res.json({ success: true, message: 'Appointment request submitted' });
+    } catch (err) {
+        console.error('Appointment request error:', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });

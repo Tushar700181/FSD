@@ -333,7 +333,10 @@
             try {
                 const res = await fetch('/api/menus', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-user-id': vendor.id || vendor._id
+                    },
                     body: JSON.stringify({ name, price, image, cafeName: vendor.cafeName })
                 });
 
@@ -370,7 +373,10 @@
 
         async function deleteItem(id) {
             if (!confirm('Are you sure you want to remove this item from the menu?')) return;
-            await fetch(`/api/menus/${id}`, { method: 'DELETE' });
+            await fetch(`/api/menus/${id}`, { 
+                method: 'DELETE',
+                headers: { 'x-user-id': vendor.id || vendor._id }
+            });
             fetchMenu();
         }
 

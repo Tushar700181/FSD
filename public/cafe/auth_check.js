@@ -14,19 +14,21 @@
         if (!path.includes('hotel_view.html') && !path.includes('manage_menu.html')) {
             window.location.href = 'hotel_view.html';
         }
-    } else if (user.role === 'student' || user.role === 'faculty') {
-        // Students/Faculty shouldn't access vendor pages
+    } else {
+        // Block all non-vendor roles from vendor pages
         if (path.includes('hotel_view.html') || path.includes('manage_menu.html')) {
-            window.location.href = 'CafeH.html';
+            // Redirect to home or cafe student view
+            alert('Unauthorized: Vendor access only.');
+            window.location.href = '../landing/index.html';
         }
     }
 })();
 
 function logoutUser() {
     if (confirm('Are you sure you want to logout?')) {
-        localStorage.removeItem('onecampus_user');
-        localStorage.removeItem('cafe_cart');
-        localStorage.removeItem('cafe_order_type');
+        // Clear all session and platform data
+        localStorage.clear();
+        sessionStorage.clear();
         window.location.href = '../login/login.html';
     }
 }

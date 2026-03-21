@@ -126,7 +126,9 @@
         // --- ORDER MANAGEMENT ---
         async function fetchOrders() {
             try {
-                const res = await fetch(`/api/orders/vendor/${vendor.cafeName}`);
+                const res = await fetch(`/api/orders/vendor/${vendor.cafeName}`, {
+                    headers: { 'x-user-id': vendor.id || vendor._id }
+                });
                 const data = await res.json();
                 renderOrders(data.orders);
             } catch (err) { console.error(err); }
@@ -167,7 +169,10 @@
         async function updateStatus(id, status) {
             await fetch(`/api/orders/${id}/status`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-user-id': vendor.id || vendor._id
+                },
                 body: JSON.stringify({ status })
             });
             fetchOrders();

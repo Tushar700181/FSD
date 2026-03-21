@@ -10,6 +10,14 @@
     <!-- Using Phosphor Icons for modern, clean icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="storage.js"></script>
+    <style>
+        /* Unauthorized Overlay Animation */
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .scale-in-center { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
 </head>
 
 <body>
@@ -32,10 +40,6 @@
             <a href="#" class="nav-item" id="nav-resolved" onclick="setView('resolved')">
                 <i class="ph ph-check-circle"></i>
                 Resolved
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ph ph-gear"></i>
-                Settings
             </a>
             <div style="border-top: 1px solid #e2e8f0; margin: 15px 0;"></div>
             <a href="javascript:void(0)" class="nav-item" onclick="logoutUser()" style="color: #ef4444;">
@@ -72,22 +76,22 @@
             <section class="stats-grid">
                 <div class="stat-card">
                     <span class="stat-label">Total Tickets</span>
-                    <span class="stat-value">124</span>
+                    <span class="stat-value">...</span>
                     <span class="stat-trend trend-up">
                         <i class="ph ph-trend-up"></i>
-                        +12% from last week
+                        Active monitoring
                     </span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Pending</span>
-                    <span class="stat-value" style="color: var(--warning)">45</span>
+                    <span class="stat-value" style="color: var(--warning)">...</span>
                     <span class="stat-trend">
                         Needs attention
                     </span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Resolved</span>
-                    <span class="stat-value" style="color: var(--success)">79</span>
+                    <span class="stat-value" style="color: var(--success)">...</span>
                     <span class="stat-trend trend-up">
                         <i class="ph ph-check-circle"></i>
                         High efficiency
@@ -95,10 +99,10 @@
                 </div>
                 <div class="stat-card">
                     <span class="stat-label">Avg. Response Time</span>
-                    <span class="stat-value">2.4h</span>
+                    <span class="stat-value">...</span>
                     <span class="stat-trend trend-down">
                         <i class="ph ph-trend-down"></i>
-                        -15% improvement
+                        Live calculation
                     </span>
                 </div>
             </section>
@@ -107,9 +111,6 @@
             <section class="table-container">
                 <div class="table-header">
                     <h2 class="table-title">Recent Tickets</h2>
-                    <div class="table-actions">
-                        <button onclick="openNewTicketModal()">+ New Ticket</button>
-                    </div>
                 </div>
                 <div class="table-wrapper">
                     <table id="tickets-table">
@@ -157,14 +158,39 @@
                             placeholder="Enter response for the student..." required></textarea>
                     </div>
                     <button type="submit" class="table-actions"
-                        style="width: 100%; border-radius: 8px; margin-top: 10px; padding: 12px; font-weight: 600;">Update
+                        style="width: 100%; border-radius: 8px; margin-top: 10px; padding: 12px; font-weight: 600; background: var(--primary); color: white; border: none; cursor: pointer;">Update
                         Ticket</button>
                 </form>
             </div>
         </div>
     </div>
 
+    <!-- Unauthorized Overlay -->
+    <div id="unauthorized-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 9999; font-family: 'Inter', sans-serif;">
+        <div class="scale-in-center" style="background: white; border-radius: 2rem; padding: 3rem; max-width: 480px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+            <div style="width: 80px; height: 80px; background: #fff1f2; color: #e11d48; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <i class="ph-bold ph-shield-warning" style="font-size: 40px;"></i>
+            </div>
+            <h2 style="font-size: 28px; font-weight: 800; color: #1e293b; margin-bottom: 12px; letter-spacing: -0.02em;">Access Restricted</h2>
+            <p style="color: #64748b; margin-bottom: 32px; line-height: 1.6; font-size: 15px;">The Placements Office (TPO) does not have authorization to access the Student Grievance system. Please return to your own dashboard.</p>
+            <a href="../landing/index.html" style="display: inline-flex; align-items: center; gap: 10px; background: #1e293b; color: white; border-radius: 12px; font-weight: 700; text-decoration: none; padding: 14px 28px; transition: all 0.2s;">
+                <i class="ph ph-house"></i>
+                Return to Home
+            </a>
+        </div>
+    </div>
+
     <script src="complaint_dashboard.js"></script>
+    <script>
+        (function() {
+            const user = JSON.parse(localStorage.getItem('onecampus_user'));
+            if (user && user.role === 'tpo') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.getElementById('unauthorized-overlay').style.display = 'flex';
+                });
+            }
+        })();
+    </script>
 </body>
 
 </html>
