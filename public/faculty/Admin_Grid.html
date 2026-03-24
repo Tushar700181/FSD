@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Timetable Manager — OneCampus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0f172a;
+            --teal: #2dd4bf;
+            --slate: #64748b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+        body { background: linear-gradient(135deg,#f0f9ff,#e0f2fe); min-height:100vh; color:#1e293b; }
+
+        /* Header */
+        .header { background: var(--navy); color:#fff; padding:1.2rem 2rem; display:flex; align-items:center; justify-content:space-between; }
+        .header h1 { font-size:1.6rem; font-weight:800; background:linear-gradient(to right,#fff,var(--teal)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .header .badge { background:rgba(255,255,255,.1); color:var(--teal); border-radius:2rem; padding:.3rem .9rem; font-size:.75rem; font-weight:700; letter-spacing:.06em; }
+
+        /* Layout */
+        .layout { display:grid; grid-template-columns:280px 1fr; gap:0; min-height:calc(100vh - 70px); }
+
+        /* Sidebar */
+        .sidebar { background:#fff; border-right:1px solid var(--border); padding:1.5rem; overflow-y:auto; }
+        .sidebar h3 { font-size:.75rem; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; margin-bottom:1rem; }
+        .faculty-list { list-style:none; }
+        .faculty-list li { padding:.75rem 1rem; border-radius:.8rem; cursor:pointer; transition:background .2s; display:flex; align-items:center; gap:.75rem; margin-bottom:.25rem; }
+        .faculty-list li:hover { background:#f0f9ff; }
+        .faculty-list li.active { background:#e0f2fe; color:#0369a1; font-weight:700; }
+        .faculty-list .f-avatar { width:36px; height:36px; border-radius:.6rem; object-fit:cover; }
+        .faculty-list .f-info { flex:1; }
+        .faculty-list .f-name { font-size:.9rem; font-weight:600; }
+        .faculty-list .f-dept { font-size:.75rem; color:var(--slate); }
+
+        /* Main panel */
+        .panel { padding:2rem; overflow-x:auto; }
+        .panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+        .panel-header h2 { font-size:1.3rem; font-weight:800; }
+        .btn-save { background:var(--navy); color:#fff; border:none; border-radius:.8rem; padding:.75rem 1.75rem; font-weight:700; cursor:pointer; font-size:.9rem; display:flex; align-items:center; gap:.5rem; transition:background .2s; }
+        .btn-save:hover { background:#1e3a5f; }
+        .btn-save.saving { opacity:.6; pointer-events:none; }
+
+        /* Timetable grid */
+        .tt-wrapper { overflow-x:auto; border-radius:1rem; box-shadow:0 4px 20px rgba(0,0,0,.08); }
+        table.tt { width:100%; border-collapse:collapse; min-width:680px; }
+        table.tt thead th { background:var(--navy); color:var(--teal); padding:.85rem 1rem; font-size:.8rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; text-align:center; }
+        table.tt thead th:first-child { text-align:left; width:110px; }
+        table.tt tbody tr:nth-child(even) td { background:#f8fafc; }
+        table.tt td { padding:0; border:1px solid var(--border); text-align:center; }
+        table.tt td:first-child { padding:.7rem 1rem; font-weight:700; font-size:.85rem; color:var(--navy); text-align:left; background:#fff; }
+
+        /* Cell */
+        .tt-cell {
+            height: 72px; position:relative; cursor:pointer; transition:background .15s;
+        }
+        .tt-cell:hover { background:#f0f9ff; }
+        .tt-cell.has-slot { background:#fee2e2; }
+        .tt-cell.has-meeting { background:#fef9c3; }
+        .tt-cell.has-lab { background:#e0f2fe; }
+
+        .slot-inner {
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            height:100%; gap:.2rem; padding:.25rem;
+        }
+        .slot-label { font-size:.72rem; font-weight:700; color:#1e293b; text-align:center; line-height:1.2; }
+        .slot-room  { font-size:.65rem; color:var(--slate); }
+        .slot-type-badge {
+            font-size:.6rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+            padding:.1rem .4rem; border-radius:2rem;
+        }
+        .type-class   .slot-type-badge { background:#fca5a5; color:#7f1d1d; }
+        .type-meeting .slot-type-badge { background:#fde68a; color:#78350f; }
+        .type-lab     .slot-type-badge { background:#bae6fd; color:#0c4a6e; }
+
+        .cell-add { font-size:.7rem; color:#94a3b8; }
+
+        /* Slot editor modal */
+        .slot-modal-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter:blur(4px); z-index:500; align-items:center; justify-content:center; }
+        .slot-modal-overlay.open { display:flex; }
+        .slot-modal { background:#fff; border-radius:1.25rem; padding:2rem; width:92%; max-width:420px; box-shadow:0 20px 50px rgba(0,0,0,.2); animation:su .25s ease; }
+        @keyframes su { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+        .slot-modal h3 { font-size:1.1rem; font-weight:700; margin-bottom:1.5rem; }
+        .form-group { margin-bottom:1.1rem; }
+        .form-group label { display:block; font-size:.8rem; font-weight:600; color:var(--slate); margin-bottom:.4rem; text-transform:uppercase; letter-spacing:.05em; }
+        .form-group input, .form-group select { width:100%; padding:.75rem 1rem; border:1px solid var(--border); border-radius:.7rem; font-size:.9rem; outline:none; transition:border .2s; }
+        .form-group input:focus, .form-group select:focus { border-color:var(--teal); }
+        .modal-actions { display:flex; gap:.75rem; margin-top:1.5rem; }
+        .btn-modal-save { flex:1; background:var(--navy); color:#fff; border:none; border-radius:.7rem; padding:.8rem; font-weight:700; cursor:pointer; }
+        .btn-modal-clear { background:#fee2e2; color:#991b1b; border:none; border-radius:.7rem; padding:.8rem 1.2rem; font-weight:700; cursor:pointer; }
+        .btn-modal-cancel { background:#f1f5f9; color:var(--slate); border:none; border-radius:.7rem; padding:.8rem 1.2rem; font-weight:700; cursor:pointer; }
+
+        /* Toast */
+        .toast {
+            position:fixed; bottom:2rem; right:2rem; background:var(--navy); color:#fff;
+            padding:.9rem 1.5rem; border-radius:1rem; font-weight:600; font-size:.9rem;
+            display:flex; align-items:center; gap:.75rem; box-shadow:0 8px 30px rgba(0,0,0,.2);
+            transform:translateY(100px); opacity:0; transition:all .3s; z-index:999;
+        }
+        .toast.show { transform:translateY(0); opacity:1; }
+        .toast.success { border-left:4px solid var(--teal); }
+        .toast.error   { border-left:4px solid #f87171; }
+
+        /* Placeholder */
+        .placeholder { display:flex; flex-direction:column; align-items:center; justify-content:center; height:60vh; gap:1rem; opacity:.4; }
+        .placeholder i { font-size:4rem; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div style="display:flex; align-items:center; gap:2rem;">
+        <h1>OneCampus</h1>
+        <a href="../landing/index.html" style="color:rgba(255,255,255,0.7); text-decoration:none; font-size:.85rem; font-weight:600; display:flex; align-items:center; gap:.5rem; transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </div>
+    <span class="badge"><i class="fas fa-shield-alt"></i> &nbsp;Academic Admin</span>
+</div>
+
+<div class="layout">
+    <!-- Sidebar: faculty picker -->
+    <aside class="sidebar">
+        <h3><i class="fas fa-users"></i> &nbsp;Faculty</h3>
+        <ul class="faculty-list" id="facultyList">
+            <li style="color:#94a3b8;font-size:.85rem;text-align:center;padding:2rem;">Loading…</li>
+        </ul>
+    </aside>
+
+    <!-- Main panel: grid  -->
+    <main class="panel" id="mainPanel">
+        <div class="placeholder">
+            <i class="fas fa-table"></i>
+            <p style="font-weight:600;font-size:1.1rem">Select a faculty to edit their timetable</p>
+        </div>
+    </main>
+</div>
+
+<!-- Cell edit modal -->
+<div class="slot-modal-overlay" id="slotModalOverlay">
+    <div class="slot-modal">
+        <h3 id="slotModalTitle">Edit Slot</h3>
+        <div class="form-group">
+            <label>Subject</label>
+            <input type="text" id="smSubject" placeholder="e.g. Artificial Intelligence">
+        </div>
+        <div class="form-group">
+            <label>Type</label>
+            <select id="smType">
+                <option value="class">Class</option>
+                <option value="lab">Lab</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="smLocation" placeholder="e.g. AD-101" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label>Time Slot</label>
+            <input type="text" id="smTime" placeholder="e.g. 09:00 - 10:00" autocomplete="off">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal-clear" onclick="clearSlot()"><i class="fas fa-trash"></i> Clear</button>
+            <button class="btn-modal-cancel" onclick="closeSlotModal()">Cancel</button>
+            <button class="btn-modal-save" onclick="saveSlot()"><i class="fas fa-check"></i> Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+
+<script>
+const DAYS    = ['Mon','Tue','Wed','Thu','Fri','Sat'];
+const PERIODS = ['P1','P2','P3','P4','Afternoon'];
+
+// ── Session guard ─────────────────────────────────────────────────────────
+const _session = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+if (!_session.role || _session.role !== 'admin' || _session.department !== 'Academic') {
+    // Not an academic admin → redirect to the viewer page
+    window.location.href = '/faculty/Faculty_Aval.html';
+}
+
+let currentFacultyId = null;
+let currentFacultyName = '';
+let gridState = {};   // key: "Day_Period" → { label, type, room, substituteId, topics }
+let originalState = {}; // snapshot before edits
+let allFaculty = [];    // cache for substitute dropdown
+
+// ─── Load faculty list ───────────────────────────────────────────────────────
+async function loadFacultyList() {
+    const res = await fetch('/api/faculty/status?role=admin', {
+        headers: { 'x-user-id': _session.id || _session._id }
+    });
+    const data = await res.json();
+    const list = document.getElementById('facultyList');
+    list.innerHTML = '';
+    allFaculty = data.faculty || [];
+    allFaculty.forEach(f => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <img class="f-avatar" src="https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random" alt="">
+            <div class="f-info">
+                <div class="f-name">${f.fullName}</div>
+                <div class="f-dept">${f.department || ''}</div>
+            </div>`;
+        li.onclick = () => selectFaculty(f._id, f.fullName, li);
+        list.appendChild(li);
+    });
+
+    // Also populate substitute dropdown once
+    const subSelect = document.getElementById('smSubstitute');
+    subSelect.innerHTML = '<option value="">-- No Substitute --</option>';
+    allFaculty.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f._id;
+        opt.textContent = f.fullName;
+        subSelect.appendChild(opt);
+    });
+}
+
+// ─── (loadClassrooms removed — admins now type the room code directly) ─────
+
+
+// ─── Select a faculty and load their grid ───────────────────────────────────
+async function selectFaculty(id, name, liEl) {
+    document.querySelectorAll('.faculty-list li').forEach(l => l.classList.remove('active'));
+    liEl.classList.add('active');
+    currentFacultyId = id;
+    currentFacultyName = name;
+
+    document.getElementById('mainPanel').innerHTML =
+        '<div class="placeholder"><i class="fas fa-spinner fa-spin"></i><p>Loading timetable…</p></div>';
+
+    const res = await fetch(`/api/admin/timetable/${id}`, {
+        headers: { 'x-user-id': _session.id || _session._id }
+    });
+    const data = await res.json();
+
+    gridState = {};
+    (data.slots || []).forEach(s => {
+        gridState[`${s.day}_${s.period}`] = {
+            subject: s.subject || '',
+            type:  s.type  || 'class',
+            location: s.location || '',
+            time: s.time || ''
+        };
+    });
+    originalState = JSON.parse(JSON.stringify(gridState));
+
+    renderGrid();
+}
+
+// ─── Render the Day x Period grid ────────────────────────────────────────────
+function renderGrid() {
+    const panel = document.getElementById('mainPanel');
+    panel.innerHTML = `
+        <div class="panel-header">
+            <h2><i class="fas fa-calendar-alt"></i> &nbsp;${currentFacultyName}'s Timetable</h2>
+            <button class="btn-save" onclick="saveChanges()" id="saveBtn">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+        <div class="tt-wrapper">
+            <table class="tt">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        ${DAYS.map(d => `<th>${d}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody id="ttBody"></tbody>
+            </table>
+        </div>`;
+
+    const tbody = document.getElementById('ttBody');
+    PERIODS.forEach(period => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${period}</td>`;
+        DAYS.forEach(day => {
+            const key = `${day}_${period}`;
+            const slot = gridState[key];
+            const td = document.createElement('td');
+            const cls = slot ? ` has-slot type-${slot.type}` : '';
+            td.className = `tt-cell${cls}`;
+            td.innerHTML = buildCellHTML(slot);
+            td.onclick = () => openSlotModal(day, period, key);
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+}
+
+function buildCellHTML(slot) {
+    if (!slot) return `<div class="slot-inner"><span class="cell-add"><i class="fas fa-plus-circle"></i></span></div>`;
+    return `<div class="slot-inner">
+        <span class="slot-type-badge">${slot.type}</span>
+        <span class="slot-label">${slot.subject || '—'}</span>
+        ${slot.location ? `<span class="slot-room">${slot.location}</span>` : ''}
+        ${slot.time ? `<span style="font-size:.6rem;color:var(--slate);">${slot.time}</span>` : ''}
+    </div>`;
+}
+
+// ─── Slot modal ──────────────────────────────────────────────────────────────
+let activeSlotKey = null;
+
+function openSlotModal(day, period, key) {
+    activeSlotKey = key;
+    document.getElementById('slotModalTitle').textContent = `${day} · ${period}`;
+    const slot = gridState[key] || {};
+    document.getElementById('smSubject').value = slot.subject || '';
+    document.getElementById('smType').value = slot.type || 'class';
+    document.getElementById('smLocation').value = slot.location || '';
+    document.getElementById('smTime').value = slot.time || '';
+    document.getElementById('slotModalOverlay').classList.add('open');
+    document.getElementById('smSubject').focus();
+}
+
+function closeSlotModal() {
+    document.getElementById('slotModalOverlay').classList.remove('open');
+    activeSlotKey = null;
+}
+
+function saveSlot() {
+    const subject = document.getElementById('smSubject').value.trim();
+    const type  = document.getElementById('smType').value;
+    const location = document.getElementById('smLocation').value.trim().toUpperCase();
+    const time = document.getElementById('smTime').value.trim();
+    gridState[activeSlotKey] = { subject, type, location, time };
+    closeSlotModal();
+    renderGrid();
+}
+
+function clearSlot() {
+    delete gridState[activeSlotKey];
+    closeSlotModal();
+    renderGrid();
+}
+
+// ─── Save diff to server ─────────────────────────────────────────────────────
+async function saveChanges() {
+    if (!currentFacultyId) return;
+    const btn = document.getElementById('saveBtn');
+    btn.classList.add('saving');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+
+    const added = [], removed = [], updated = [];
+
+    const allKeys = new Set([...Object.keys(gridState), ...Object.keys(originalState)]);
+    allKeys.forEach(key => {
+        const [day, period] = key.split('_');
+        const orig = originalState[key];
+        const curr = gridState[key];
+        if (!orig && curr) added.push({ day, period, ...curr });
+        else if (orig && !curr) removed.push({ day, period });
+        else if (orig && curr && JSON.stringify(orig) !== JSON.stringify(curr)) updated.push({ day, period, ...curr });
+    });
+
+    try {
+        const res = await fetch('/api/admin/timetable/update', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-user-id': _session.id || _session._id
+            },
+            body: JSON.stringify({ facultyId: currentFacultyId, added, removed, updated })
+        });
+        const data = await res.json();
+        if (data.success) {
+            originalState = JSON.parse(JSON.stringify(gridState));
+            showToast(data.message, 'success');
+        } else {
+            showToast('Save failed: ' + data.message, 'error');
+        }
+    } catch (e) {
+        showToast('Network error. Please retry.', 'error');
+    }
+
+    btn.classList.remove('saving');
+    btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+}
+
+// ─── Toast ───────────────────────────────────────────────────────────────────
+function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = `toast show ${type}`;
+    setTimeout(() => t.className = 'toast', 3500);
+}
+
+// ─── Keyboard close ──────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSlotModal(); });
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+loadFacultyList();
+</script>
+</body>
+</html>

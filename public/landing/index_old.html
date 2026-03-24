@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneCampus | Unified Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">One<span>Campus</span></div>
+        <ul class="nav-links">
+            <li><a href="../cafe/CafeH.html" target="_blank">Cafe Orders</a></li>
+            <li><a href="../faculty/Faculty_Aval.html" target="_blank">Faculty Availability</a></li>
+            <li><a href="../placement/Placement.html" target="_blank">Placement</a></li>
+            <li><a href="#">Leave Form</a></li>
+            <li><a href="../dashboard/student_portal.html">Complaints</a></li>
+            <li><a href="#">Maps</a></li>
+            <li id="auth-item" class="auth-item"><a href="../login/login.html" id="auth-btn"
+                    class="login-state">Login</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="slide active"
+            style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1920&q=80');">
+            <div class="hero-content">
+                <h1>Academic Success</h1>
+                <p>Stay ahead by tracking Faculty Availability and scheduling your sessions instantly.</p>
+                <a href="../faculty/Faculty_Aval.html" class="cta-button">Check Faculty Status</a>
+            </div>
+        </div>
+
+        <div class="slide"
+            style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1920&q=80');">
+            <div class="hero-content">
+                <h1>Hungry for More?</h1>
+                <p>Browse the latest campus menus and place your Cafe Orders online to avoid the rush.</p>
+                <a href="../cafe/CafeH.html" class="cta-button">Order Now</a>
+            </div>
+        </div>
+
+        <div class="slide"
+            style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1920&q=80');">
+            <div class="hero-content">
+                <h1>Future Ready</h1>
+                <p>Explore top placement opportunities and kickstart your career today.</p>
+                <a href="../placement/Placement.html" class="cta-button">View Placements</a>
+            </div>
+        </div>
+
+        <button class="arrow left-arrow" id="prevBtn">&#10094;</button>
+        <button class="arrow right-arrow" id="nextBtn">&#10095;</button>
+
+        <div class="dots-container" id="dotsContainer"></div>
+    </header>
+
+    <script src="js/nav_logic.js"></script>
+</body>
+
+</html>

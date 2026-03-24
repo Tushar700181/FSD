@@ -1,0 +1,20 @@
+{
+  "name": "OneCampus Node.js & MongoDB",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/FSD",
+  "forwardPorts": [5000],
+  "portsAttributes": {
+    "5000": {
+      "label": "OneCampus Web App",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "npm install && printf 'MONGO_URI=mongodb://db:27017/onecampus\\nPORT=5000\\nFACULTY_SIGNUP_KEY=faculty123\\nADMIN_SIGNUP_KEY=admin123\\nVENDOR_SIGNUP_KEY=cafe123' > .env",
+  "postAttachCommand": "npm run dev",
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md", "src/server.js"]
+    }
+  }
+}

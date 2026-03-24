@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | OneCampus</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="student_portal.css">
+    <script src="../complaints/storage.js"></script>
+    <style>
+        /* Unauthorized Overlay Animation */
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .scale-in-center { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="ph-fill ph-cube"></i>
+            </div>
+            <span class="logo-text">Portal</span>
+        </div>
+
+        <div class="user-profile-summary">
+            <div class="avatar">
+                <img id="sidebar-avatar" src="https://ui-avatars.com/api/?name=User&background=random" alt="Profile">
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="sidebar-name">Loading...</div>
+                <div class="user-role" id="sidebar-role">Student</div>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="../landing/index.html" class="nav-link">
+                <i class="ph ph-house"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-link active" onclick="showSection('active', this)">
+                <i class="ph-fill ph-list-dashes"></i>
+                <span>Complaint Status</span>
+            </a>
+            <a href="#" class="nav-link" onclick="showSection('past', this)">
+                <i class="ph ph-clock-counter-clockwise"></i>
+                <span>Past Complaints</span>
+            </a>
+            <a href="../profile/Ver2/profile_glass.html" class="nav-link">
+                <i class="ph ph-user"></i>
+                <span>My Profile</span>
+            </a>
+
+            <!-- Compose Button at Bottom -->
+            <button class="compose-btn" onclick="openModal()">
+                <i class="ph-bold ph-pencil-simple"></i>
+                <span>Register Complaint</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="search-bar">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" placeholder="Search my complaints...">
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i class="ph-fill ph-bell"></i></button>
+                <button onclick="StorageUtils.logout()" class="logout-btn"
+                    style="background:none; border:none; color:inherit; cursor:pointer; font:inherit;">Logout</button>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- Stats Bar -->
+            <section class="stats-bar">
+                <div class="stats-header">Stats Bar</div>
+                <div class="stats-cards">
+                    <!-- Total Filed -->
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-title">Total Filed: <span class="stat-num"
+                                    id="total-count">0</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar purple" style="width: 70%"></div>
+                        </div>
+                    </div>
+
+                    <!-- In Progress -->
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-title">In Progress: <span class="stat-num"
+                                    id="progress-count">0</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar yellow" style="width: 40%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Resolved -->
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-title">Resolved: <span class="stat-num"
+                                    id="resolved-count">0</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar green" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Complaints -->
+            <section class="active-complaints">
+                <h2 class="section-title" id="section-title">ACTIVE COMPLAINTS</h2>
+                <div class="complaints-grid" id="complaints-grid">
+                    <!-- Cards injected by JS -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- New Complaint Modal -->
+    <div class="modal-overlay" id="complaintModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">New Complaint</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="newComplaintForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select class="form-control" id="complaintCategory">
+                        <option>Academic</option>
+                        <option>Hostel</option>
+                        <option>Mess</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" class="form-control" placeholder="e.g., Internet not working in Room 302"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" rows="4" placeholder="Describe the issue in detail..."
+                        required></textarea>
+                </div>
+                <!-- Image Attachment -->
+                <div class="form-group">
+                    <label>Attach Images (Max 3) - Optional</label>
+                    <input type="file" class="form-control" accept="image/*" id="complaintImage" multiple>
+                </div>
+                <button type="submit" class="submit-btn" style="margin-top: 15px;">Submit Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-content" style="width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Complaint Details</h3>
+                <button class="close-btn" onclick="closeDetailsModal()">&times;</button>
+            </div>
+            <div id="detailsContent">
+                <!-- Content injected by JS -->
+            </div>
+            <div class="modal-footer" style="margin-top:20px; text-align:right;">
+                <button class="submit-btn" onclick="closeDetailsModal()"
+                    style="width:auto; padding: 10px 20px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="student_portal.js"></script>
+    <div id="unauthorized-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 9999; font-family: 'Inter', sans-serif;">
+        <div class="scale-in-center" style="background: white; border-radius: 2rem; padding: 3rem; max-width: 480px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+            <div style="width: 80px; height: 80px; background: #fff1f2; color: #e11d48; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <i class="ph-bold ph-shield-warning" style="font-size: 40px;"></i>
+            </div>
+            <h2 style="font-size: 28px; font-weight: 800; color: #1e293b; margin-bottom: 12px; letter-spacing: -0.02em;">Access Restricted</h2>
+            <p style="color: #64748b; margin-bottom: 32px; line-height: 1.6; font-size: 15px;">You are not authorized to access this module. Please return to your own dashboard.</p>
+            <a href="../landing/index.html" style="display: inline-flex; align-items: center; gap: 10px; background: #1e293b; color: white; border-radius: 12px; font-weight: 700; text-decoration: none; padding: 14px 28px; transition: all 0.2s;">
+                <i class="ph ph-house"></i>
+                Return to Home
+            </a>
+        </div>
+    </div>
+    <script>
+        (function() {
+            const user = JSON.parse(localStorage.getItem('onecampus_user'));
+            if (user && user.role === 'tpo') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.getElementById('unauthorized-overlay').style.display = 'flex';
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

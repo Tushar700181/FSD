@@ -1,0 +1,234 @@
+﻿Faculty Details
+***CSE***
+1. Dr. K. Sathya Babu
+* ID: 500cse200
+* Gender: Male
+* Qualification: Ph.D. (NIT Rourkela)
+* Designation: Professor
+* Date of Joining: 09.09.2021
+* Email: ksb@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 143)
+* Area of Interest: Artificial Intelligence
+2. Dr. Naresh Babu Muppalaneni
+* ID: 501cse201
+* Gender: Male
+* Qualification: Ph.D. (Acharya Nagarjuna University)
+* Designation: Associate Professor
+* Date of Joining: 27.10.2023
+* Email: nareshbabu@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 133)
+* Area of Interest: Machine Learning, Cryptography, Bioinformatics
+3. Dr. N. Srinivas Naik
+* ID: 502cse202
+* Gender: Male
+* Qualification: Ph.D. (University of Hyderabad)
+* Designation: Associate Professor & HOD
+* Date of Joining: 04.05.2023
+* Email: srinu@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 135)
+* Area of Interest: Big Data, Cloud Computing, Deep Learning, ML, Image Processing
+4. Dr. K. Nagaraju
+* ID: 503cse203
+* Gender: Male
+* Qualification: Ph.D. (NIT Calicut)
+* Designation: Assistant Professor (Grade I)
+* Date of Joining: 16.08.2021
+* Email: knagaraju@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 136)
+* Area of Interest: Theory of Computer Science, Automata Theory, Machine Learning, Deep Learning
+5. Dr. Anil Kumar R
+* ID: 504cse204
+* Gender: Male
+* Qualification: Ph.D. (IIT Hyderabad)
+* Designation: Assistant Professor (Grade I) & Head, Computer Center
+* Date of Joining: 09.09.2021
+* Email: anilkumar.r@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 140)
+* Area of Interest: 4G, 5G, High Efficiency Wi-Fi networks, IoT and Edge computing, SDN and NFV
+6. Dr. Shounak Chakraborty
+* ID: 505cse205
+* Gender: Male
+* Qualification: Ph.D. (IIIT Guwahati)
+* Designation: Assistant Professor (Grade I)
+* Date of Joining: 25.01.2021
+* Email: shounak@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 132)
+* Area of Interest: Artificial neural networks, remote sensing, pattern recognition, image processing
+***ECE***
+7. Dr. K. Krishna Naik
+* ID: 500ece200
+* Gender: Male
+* Qualification: Ph.D. (JNTUA Anantapur)
+* Designation: Associate Professor
+* Date of Joining: 19.10.2020
+* Email: krishnanaik@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 173)
+* Area of Interest: Wireless and Mobile Communications, Adhoc Networks, Software Defined Radio / Cognitive Radio, Global Navigation Satellite Systems, Underwater Communication
+8. Dr. P. Ranga Babu
+* ID: 501ece201
+* Gender: Male
+* Qualification: Ph.D. (University of Hyderabad)
+* Designation: Associate Professor
+* Date of Joining: 30.08.2023
+* Email: p.rangababu@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 177)
+* Area of Interest: Digital VLSI, Multimedia Architectures on FPGA and ASIC, Embedded Machine Learning Systems, IoT, Microelectronics and VLSI Signal Processing, Sensor Fabrication, Renewable Energy, Forecasting and Power Quality
+9. Dr. Mohamed Asan Basiri M
+* ID: 502ece202
+* Gender: Male
+* Qualification: Ph.D. (IIITDM Kancheepuram)
+* Designation: Assistant Professor (Grade-I)
+* Date of Joining: 05.03.2019
+* Email: asan@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 179)
+* Area of Interest: VLSI for Signal Processing, VLSI for Information Security (InfoSec)
+10. Dr. Eswaramoorthy K. V.
+* ID: 503ece203
+* Gender: Male
+* Qualification: Ph.D. (IISc Bangalore)
+* Designation: Assistant Professor (Grade-I)
+* Date of Joining: Not specified in the image
+* Email: eswaramoorthykv@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 174)
+* Area of Interest: Electrochemical biosensors, Non-invasive body fluid monitoring, Biomedical Instrumentation, Industrial Automation, Electrochemical techniques, Analog and Power Electronics, IoT for Agriculture, Manufacturing Industry, Smart City
+11. Dr. Valluri Siva Prasad
+* ID: 504ece204
+* Gender: Male
+* Qualification: Ph.D. (NIT Warangal)
+* Designation: Assistant Professor (Grade-I) & HOD
+* Date of Joining: Not specified in the image
+* Email: vsp@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 178)
+* Area of Interest: Wireless Communication, Software Defined Radio, MIMO, Visible Light Systems, Physical Layer Design
+12. Dr. Yaswanth K. N. G. B.
+* ID: 505ece205
+* Gender: Male
+* Qualification: Ph.D. (IIT Madras)
+* Designation: Assistant Professor
+* Date of Joining: Not specified in the image
+* Email: yaswanthkngb@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 181)
+* Area of Interest: Inverse Problems in Electromagnetics, Computational Electromagnetics, Non-destructive Evaluation, RFIC/MMIC Design, Antenna Design
+***MECH***
+13. Dr. J. Krishnaiah
+* ID: 500mech200
+* Gender: Male
+* Qualification: Ph.D. (IIT Kharagpur)
+* Designation: Associate Professor
+* Email: krishnaiah@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 203)
+* Area of Interest: Applied research on data-driven systems for industrial/business requirements, Predictive Modeling, Advanced Control Techniques, Nontraditional Optimization, Pattern Recognition, Data Mining, Information Retrieval, Document Classification, Analytics, Segmentation, Clustering & Classification, Image Processing, Handwritten/Optical Character Recognition.
+14. Dr. Muvvala Pullarao
+* ID: 501mech201
+* Gender: Male
+* Qualification: Ph.D. (IIT Madras)
+* Designation: Assistant Professor (Grade-I)
+* Email: muvvala@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 205)
+* Area of Interest: Thermal Management of Electronics, Impinging Jet Cooling, Solar Thermal Energy, Battery Cooling, Phase Change Materials, Optimization Studies.
+15. Dr. Mani Prakash
+* ID: 502mech202
+* Gender: Male
+* Qualification: Ph.D. (TU Dortmund, Germany)
+* Designation: Assistant Professor (Grade-I)
+* Email: smp@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 204)
+* Area of Interest: Smart Materials, Solid Mechanics, Constitutive Modeling & Continuum Mechanics.
+16. Dr. Akhtar Khan
+* ID: 503mech203
+* Gender: Male
+* Qualification: Ph.D. (NIT Rourkela)
+* Designation: Assistant Professor (Grade-I) & HoD
+* Email: akhtar@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 206)
+* Area of Interest: Machining of difficult-to-cut materials, Machine Tool Technology, Optimization Methods in Engineering Design (Single & Multi-Objective), Design of Experiments, Multi-Criteria Decision Making.
+17. Dr. Vipindas K
+* ID: 504mech204
+* Gender: Male
+* Qualification: Ph.D. (NIT Calicut)
+* Designation: Assistant Professor (Grade-I)
+* Email: vipindas@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 209)
+* Area of Interest: Conventional Machining, Metal Cutting, Micro Machining, Micro End Milling, Micro Turning, Machining of Composites, Surface Texturing.
+18. Dr. Ravi Kumar Mandava
+* ID: 505mech205
+* Gender: Male
+* Qualification: Ph.D. (IIT Bhubaneswar)
+* Designation: Assistant Professor (Grade-I)
+* Email: ravikumarr103@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 208)
+* Area of Interest: Robotics, Soft Computing, Manufacturing.
+19. Dr. R. Seetharam
+* ID: 506mech206
+* Gender: Male
+* Qualification: Ph.D. (NIT Warangal)
+* Designation: Assistant Professor (Grade-I)
+* Email: seetharam@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 215)
+* Area of Interest: Metal Forming, Development of Microstructure and Constitutive Models, Deformation Behavior of Lightweight Metals, Ultra-lightweight HEA-based Reinforced Nanocomposites, Development of UFG Structure of Composites and SMA Materials.
+
+
+*** DOS ***
+20. Dr. Murali
+* ID: 500dos200
+* Gender: Male
+* Qualification: Ph.D. (Physics, IGCAR)
+* Designation: Associate Professor
+* Date of Joining: 14.02.2019
+* Email: dmurali@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 235)
+* Area of Interest: Computational condensed matter. Uses ab-initio electronic structure calculations to model physical behavior of materials. Applications include photovoltaic effect in perovskite solar cells, phonon transport, solid oxide fuel cells, and nanostructure evolution in structural materials.
+21. Dr. D. Amaranatha Reddy
+* ID: 501dos201
+* Gender: Male
+* Qualification: Ph.D. (Physics, S V University, Tirupati)
+* Designation: Associate Professor
+* Date of Joining: 05.08.2020
+* Email: drreddy@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 241)
+* Area of Interest: Synthesis and characterization of nanoscale materials. Applications include solar fuels (hydrogen production), photocatalytic water purification, photocatalytic CO₂ conversion, energy storage using supercapacitors, and photodetectors.
+22. Dr. Ravinder Katta
+* ID: 502dos202
+* Gender: Male
+* Qualification: Ph.D. (Mathematics, IIT Roorkee)
+* Designation: Assistant Professor (Grade-I)
+* Date of Joining: 14.02.2019
+* Email: ravinder@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 237)
+* Area of Interest: Mathematical Control Theory, Inverse Problems.
+23. Dr. T. Pandiyarajan
+* ID: 503dos203
+* Gender: Male
+* Qualification: Ph.D. (Physics, NIT Tiruchirappalli)
+* Designation: Assistant Professor (Grade-I) & HOD
+* Date of Joining: 18.01.2021
+* Email: pandiyarajan@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 233)
+* Area of Interest: Optical nanomaterials, Bioactive nanostructured materials, Thin film fabrication, Raman spectroscopy, Photocatalysis.
+24. Dr. P. V. Prakash Madduri
+* ID: 504dos204
+* Gender: Male
+* Qualification: Ph.D. (Physics, Central University, Hyderabad)
+* Designation: Assistant Professor (Grade-I)
+* Date of Joining: 20.01.2021
+* Email: prakash.madduri@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 232)
+* Area of Interest: Magnetism at nanoscale and mesoscale, Core-shell nanoparticles, Magnetic skyrmions and antiskyrmions, Magnetic excitations and magnonics, Magnetotransport in bulk and nanomaterials, Ferromagnetic resonance, Magnetic refrigeration.
+25. Dr. Anirban Majumdar
+* ID: 505dos205
+* Gender: Male
+* Qualification: Ph.D. (Mathematics, IIT Guwahati)
+* Designation: Assistant Professor (Grade-I)
+* Date of Joining: 03.09.2021
+* Email: anirban@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 234)
+* Area of Interest: Parameter uniform numerical methods for singularly perturbed problems, Numerical solutions of partial differential equations, Differential equations.
+26. Dr. Mani Shankar Pandey
+* ID: 506dos206
+* Gender: Male
+* Qualification: Ph.D. (Mathematics, IIIT Allahabad)
+* Designation: Assistant Professor (Grade-I)
+* Date of Joining: 22.02.2023
+* Email: mspandey@iiitk.ac.in
+* Phone: 08518-289100 (Extension: 236)
+* Area of Interest: Multiplicative Lie Algebra, Gyrogroup, Skew Braces.

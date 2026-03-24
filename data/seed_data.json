@@ -1,0 +1,98 @@
+{
+  "placements": [
+    {
+      "type": "drive",
+      "company": "Google",
+      "role": "Software Engineer",
+      "package": "₹24 LPA",
+      "deadline": "2025-01-15",
+      "status": "Open",
+      "color": "from-blue-500 to-blue-600",
+      "initial": "G"
+    },
+    {
+      "type": "drive",
+      "company": "Microsoft",
+      "role": "Product Manager",
+      "package": "₹28 LPA",
+      "deadline": "2025-01-18",
+      "status": "Open",
+      "color": "from-sky-400 to-sky-500",
+      "initial": "M"
+    },
+    {
+      "type": "drive",
+      "company": "Amazon",
+      "role": "SDE Intern",
+      "package": "₹60K/month",
+      "deadline": "2025-01-10",
+      "status": "Closing Soon",
+      "color": "from-orange-400 to-orange-500",
+      "initial": "A"
+    },
+    {
+      "type": "drive",
+      "company": "Deloitte",
+      "role": "Business Analyst",
+      "package": "₹12 LPA",
+      "deadline": "2025-01-22",
+      "status": "Open",
+      "color": "from-violet-500 to-violet-600",
+      "initial": "D"
+    }
+  ],
+  "alumni": [
+    {
+      "name": "Rahul Sharma",
+      "batch": "2019",
+      "company": "Google",
+      "position": "Senior Software Engineer",
+      "initials": "RS",
+      "color": "from-slate-600 to-slate-700"
+    },
+    {
+      "name": "Priya Krishnan",
+      "batch": "2018",
+      "company": "Microsoft",
+      "position": "Product Manager",
+      "initials": "PK",
+      "color": "from-rose-500 to-rose-600"
+    },
+    {
+      "name": "Arjun Mehta",
+      "batch": "2020",
+      "company": "Amazon",
+      "position": "SDE III",
+      "initials": "AM",
+      "color": "from-amber-500 to-amber-600"
+    }
+  ],
+  "stats": {
+    "summary": {
+      "totalOffers2024": 287,
+      "highestPackage": "₹45 LPA",
+      "averagePackage": "₹12.4 LPA",
+      "companiesVisited": 68
+    },
+    "yearlyOffers": [
+      { "year": 2020, "offers": 156, "height": "45%" },
+      { "year": 2021, "offers": 189, "height": "55%" },
+      { "year": 2022, "offers": 234, "height": "70%" },
+      { "year": 2023, "offers": 256, "height": "78%" },
+      { "year": 2024, "offers": 287, "height": "90%" }
+    ],
+    "branchDistribution": [
+      { "branch": "CSE", "count": 100, "percentage": 35, "color": "#10b981" },
+      { "branch": "ECE", "count": 72, "percentage": 25, "color": "#0ea5e9" },
+      { "branch": "ME", "count": 57, "percentage": 20, "color": "#f59e0b" },
+      { "branch": "Civil", "count": 34, "percentage": 12, "color": "#8b5cf6" },
+      { "branch": "Others", "count": 24, "percentage": 8, "color": "#ec4899" }
+    ],
+    "packageDistribution": [
+      { "label": "₹5-10 LPA", "count": 100, "percentage": 35, "color": "from-slate-400 to-slate-500" },
+      { "label": "₹10-15 LPA", "count": 129, "percentage": 45, "color": "from-emerald-400 to-emerald-500" },
+      { "label": "₹15-25 LPA", "count": 43, "percentage": 15, "color": "from-sky-400 to-sky-500" },
+      { "label": "₹25+ LPA", "count": 15, "percentage": 5, "color": "from-violet-400 to-violet-500" }
+    ]
+  }
+}

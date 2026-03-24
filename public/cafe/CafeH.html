@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Campuseats - Order Food</title>
+    <link rel="stylesheet" href="CafeH.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="auth_check.js"></script>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Campus<span>eats</span></div>
+        <nav>
+            <div class="search-box">
+                <input type="text" placeholder="Search...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <a href="../landing/index.html">Home</a>
+            <a href="CafeM.html">Menu</a>
+            <a href="cart.html">Cart</a>
+            <a href="myorders.html">My Orders</a>
+        </nav>
+        <div class="nav-icons">
+            <!-- Login removed at user request, container kept for layout -->
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Order your<br><span>favourite Foods</span></h1>
+            <p>Fresh and tasty food delivered to your doorstep with fast service.</p>
+
+            <div class="order-action">
+                <a href="CafeM.html" class="order-now-btn">
+                    <span class="icon-circle"><i class="fa-solid fa-bag-shopping"></i></span>
+                    Order Now
+                </a>
+            </div>
+
+            <div class="food-list">
+                <div class="food-card green" onclick="window.location.href='CafeM.html'" style="cursor: pointer;">
+                    <img src="friedrice.jpg">
+                    <h4>Fried Rice</h4>
+                    <p>₹80</p>
+                </div>
+                <div class="food-card pink" onclick="window.location.href='CafeM.html'" style="cursor: pointer;">
+                    <img src="eggburji.jpg">
+                    <h4>Egg Burji</h4>
+                    <p>₹60</p>
+                </div>
+                <div class="food-card orange" onclick="window.location.href='CafeM.html'" style="cursor: pointer;">
+                    <img src="Butterchicken.png">
+                    <h4>Butter Chicken</h4>
+                    <p>₹130</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-image">
+            <img src="bir2.png" alt="Food Bowl">
+        </div>
+    </section>
+    <script src="auth_check.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel View - Campuseats</title>
+    <link rel="stylesheet" href="hotel_view.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-bowl-food" style="color: var(--primary-green); font-size: 24px;"></i>
+            </div>
+            <ul class="nav-links">
+                <li class="active border-nav"><a href="hotel_view.html" title="Orders"><i
+                            class="fa-solid fa-clipboard-list"></i></a></li>
+                <li class="border-nav"><a href="manage_menu.html" title="Manage Menu"><i
+                            class="fa-solid fa-utensils"></i></a></li>
+            </ul>
+            <div class="logout">
+                <a href="javascript:void(0)" onclick="logoutVendor()" title="Logout"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="hotel-content">
+            <header class="top-header">
+                <div class="header-text">
+                    <span class="date">June 15, 2023</span>
+                    <h1>Campus<span>eats</span></h1>
+                </div>
+
+                <!-- Optional Header Elements can go here -->
+            </header>
+
+            <!-- Split Layout Container -->
+            <div class="hotel-layout">
+                <!-- Left Panel (30%) - Quick Actions / Summary -->
+                <div class="left-panel">
+                    <h2>Quick Actions</h2>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <a href="manage_menu.html" class="status-btn process"
+                            style="text-decoration: none; text-align: center; display: block; padding: 15px; font-size: 1rem;">
+                            <i class="fa-solid fa-utensils"></i> Manage Menu
+                        </a>
+
+                        <div
+                            style="background: #f9f9f9; padding: 20px; border-radius: 12px; border: 1px dashed #ccc; text-align: center;">
+                            <p style="color: #666; font-size: 0.9rem;">Keep your menu updated to attract more students!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel (70%) -->
+                <div class="right-panel">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Orders - <span id="cafeDisplayName">Loading...</span></h2>
+                        <button onclick="fetchOrders()"
+                            style="background: none; border: 1px solid #ccc; padding: 5px 10px; border-radius: 5px; cursor: pointer;"><i
+                                class="fa-solid fa-sync"></i> Refresh</button>
+                    </div>
+
+                    <div class="orders-container">
+                        <!-- Table Header -->
+                        <div class="orders-header">
+                            <span class="col-time">Time</span>
+                            <span class="col-id">Order ID</span>
+                            <span class="col-items">Items</span>
+                            <span class="col-qty">Qty</span>
+                            <span class="col-loc">Loc</span>
+                            <span class="col-phone">Phone</span>
+                            <span class="col-bill">Bill</span>
+                            <span class="col-pay">Pay</span>
+                            <span class="col-status">Status</span>
+                        </div>
+
+                        <!-- Ongoing Orders -->
+                        <h3 class="order-section-title">Ongoing <span id="ongoingCount" class="badge green">0</span>
+                        </h3>
+                        <div id="ongoingList" class="orders-list ongoing">
+                            <!-- Dynamic Content -->
+                        </div>
+
+                        <!-- Completed Orders -->
+                        <h3 class="order-section-title">Completed <span id="completedCount" class="badge gray">0</span>
+                        </h3>
+                        <div id="completedList" class="orders-list completed">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer for Stats -->
+            <footer class="hotel-footer">
+                <div class="footer-stat">
+                    <span>Total Orders Completed:</span>
+                    <span id="statCompleted" class="val">0</span>
+                </div>
+                <div class="footer-stat">
+                    <span>Sales Amount:</span>
+                    <span id="statSales" class="val">₹0</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="vendor_common.js"></script>
+    <script>
+        const vendor = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+        // Session check is now handled in vendor_common.js
+
+        document.getElementById('cafeDisplayName').innerText = vendor.cafeName;
+
+        document.getElementById('cafeDisplayName').innerText = vendor.cafeName;
+
+        // --- ORDER MANAGEMENT ---
+        async function fetchOrders() {
+            try {
+                const res = await fetch(`/api/orders/vendor/${vendor.cafeName}`, {
+                    headers: { 'x-user-id': vendor.id || vendor._id }
+                });
+                const data = await res.json();
+                renderOrders(data.orders);
+            } catch (err) { console.error(err); }
+        }
+
+        function renderOrders(orders) {
+            const ongoing = orders.filter(o => o.status === 'Pending');
+            const completed = orders.filter(o => o.status === 'Done');
+
+            document.getElementById('ongoingCount').innerText = ongoing.length;
+            document.getElementById('completedCount').innerText = completed.length;
+            document.getElementById('statCompleted').innerText = completed.length;
+            document.getElementById('statSales').innerText = `₹${completed.reduce((s, o) => s + o.total, 0)}`;
+
+            document.getElementById('ongoingList').innerHTML = ongoing.map(o => renderOrderRow(o, true)).join('');
+            document.getElementById('completedList').innerHTML = completed.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(o => renderOrderRow(o, false)).join('');
+        }
+
+        function renderOrderRow(o, isOngoing) {
+            const time = new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `
+                <div class="order-row ${isOngoing ? 'ongoing-row' : 'completed-row'}">
+                    <span class="col-time">${time}</span>
+                    <span class="col-id">#${o._id.slice(-4)}</span>
+                    <span class="col-items">${o.items.map(i => `${i.name} (${i.qty})`).join(', ')}</span>
+                    <span class="col-qty">${o.items.reduce((s, i) => s + i.qty, 0)}</span>
+                    <span class="col-loc">${o.location}</span>
+                    <span class="col-phone">${o.phone}</span>
+                    <span class="col-bill">₹${o.total}</span>
+                    <span class="col-pay">${o.paymentMethod}</span>
+                    <div class="col-status">
+                        ${isOngoing ? `<button class="status-btn process" onclick="updateStatus('${o._id}', 'Done')">Done</button>` : `<span class="status-text">Completed</span>`}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function updateStatus(id, status) {
+            await fetch(`/api/orders/${id}/status`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-user-id': vendor.id || vendor._id
+                },
+                body: JSON.stringify({ status })
+            });
+            fetchOrders();
+        }
+
+        // Init
+        fetchOrders();
+        setInterval(fetchOrders, 30000); // Auto refresh every 30s
+    </script>
+</body>
+
+</html>

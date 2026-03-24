@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Register | OneCampus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="complaint_dashboard.css">
+    <!-- Using Phosphor Icons for modern, clean icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="storage.js"></script>
+    <style>
+        /* Unauthorized Overlay Animation */
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .scale-in-center { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <i class="ph-fill ph-ticket brand-icon"></i>
+            <span>Helpdsk.</span>
+        </div>
+        <div class="nav-links">
+            <a href="../landing/index.html" class="nav-item">
+                <i class="ph ph-house"></i>
+                Home
+            </a>
+            <a href="#" class="nav-item active" id="nav-inbox" onclick="setView('inbox')">
+                <i class="ph ph-envelope-simple"></i>
+                Inbox
+            </a>
+            <a href="#" class="nav-item" id="nav-resolved" onclick="setView('resolved')">
+                <i class="ph ph-check-circle"></i>
+                Resolved
+            </a>
+            <div style="border-top: 1px solid #e2e8f0; margin: 15px 0;"></div>
+            <a href="javascript:void(0)" class="nav-item" onclick="logoutUser()" style="color: #ef4444;">
+                <i class="ph ph-sign-out"></i>
+                Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-bar">
+            <div class="search-container">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" placeholder="Search tickets, IDs, or keywords...">
+            </div>
+
+            <div class="user-profile">
+                <div class="notifications">
+                    <i class="ph ph-bell" style="font-size: 20px; color: var(--text-secondary); cursor: pointer;"></i>
+                </div>
+                <div class="avatar">OM</div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard Overview</h1>
+            </div>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Total Tickets</span>
+                    <span class="stat-value">...</span>
+                    <span class="stat-trend trend-up">
+                        <i class="ph ph-trend-up"></i>
+                        Active monitoring
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Pending</span>
+                    <span class="stat-value" style="color: var(--warning)">...</span>
+                    <span class="stat-trend">
+                        Needs attention
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Resolved</span>
+                    <span class="stat-value" style="color: var(--success)">...</span>
+                    <span class="stat-trend trend-up">
+                        <i class="ph ph-check-circle"></i>
+                        High efficiency
+                    </span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Avg. Response Time</span>
+                    <span class="stat-value">...</span>
+                    <span class="stat-trend trend-down">
+                        <i class="ph ph-trend-down"></i>
+                        Live calculation
+                    </span>
+                </div>
+            </section>
+
+            <!-- Tickets Table -->
+            <section class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">Recent Tickets</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table id="tickets-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Requester</th>
+                                <th>Date</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets-body">
+                            <!-- Rows will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Action Modal -->
+    <div class="modal-overlay" id="actionModal">
+        <div class="modal-content" style="width: 450px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Ticket</h3>
+                <button class="close-btn" onclick="closeActionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="updateTicketForm" onsubmit="handleUpdateSubmit(event)">
+                    <input type="hidden" id="update-ticket-id">
+                    <div class="input-group">
+                        <label class="input-label">New Status</label>
+                        <select id="update-status" class="form-select" required>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="margin-top: 15px;">
+                        <label class="input-label">Official Response</label>
+                        <textarea id="update-response" class="form-textarea"
+                            placeholder="Enter response for the student..." required></textarea>
+                    </div>
+                    <button type="submit" class="table-actions"
+                        style="width: 100%; border-radius: 8px; margin-top: 10px; padding: 12px; font-weight: 600; background: var(--primary); color: white; border: none; cursor: pointer;">Update
+                        Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unauthorized Overlay -->
+    <div id="unauthorized-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 9999; font-family: 'Inter', sans-serif;">
+        <div class="scale-in-center" style="background: white; border-radius: 2rem; padding: 3rem; max-width: 480px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+            <div style="width: 80px; height: 80px; background: #fff1f2; color: #e11d48; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <i class="ph-bold ph-shield-warning" style="font-size: 40px;"></i>
+            </div>
+            <h2 style="font-size: 28px; font-weight: 800; color: #1e293b; margin-bottom: 12px; letter-spacing: -0.02em;">Access Restricted</h2>
+            <p style="color: #64748b; margin-bottom: 32px; line-height: 1.6; font-size: 15px;">The Placements Office (TPO) does not have authorization to access the Student Grievance system. Please return to your own dashboard.</p>
+            <a href="../landing/index.html" style="display: inline-flex; align-items: center; gap: 10px; background: #1e293b; color: white; border-radius: 12px; font-weight: 700; text-decoration: none; padding: 14px 28px; transition: all 0.2s;">
+                <i class="ph ph-house"></i>
+                Return to Home
+            </a>
+        </div>
+    </div>
+
+    <script src="complaint_dashboard.js"></script>
+    <script>
+        (function() {
+            const user = JSON.parse(localStorage.getItem('onecampus_user'));
+            if (user && user.role === 'tpo') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.getElementById('unauthorized-overlay').style.display = 'flex';
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

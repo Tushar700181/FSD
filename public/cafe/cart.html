@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Cart - Campuseats</title>
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-bowl-food"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="CafeH.html" title="Home"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="CafeM.html" title="Menu"><i class="fa-solid fa-utensils"></i></a></li>
+                <li class="active"><a href="cart.html" title="Cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                <li><a href="myorders.html" title="My Orders"><i class="fa-solid fa-clock-rotate-left"></i></a></li>
+                <li><a href="profile.html" title="Profile"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+            <div class="logout">
+                <a href="javascript:void(0)" onclick="logoutUser()" title="Logout"><i
+                        class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="menu-content">
+            <header class="top-header">
+                <div class="header-text">
+                    <span class="date">June 15, 2023</span>
+                    <h1>Campus<span>eats</span></h1>
+                </div>
+
+                <div class="header-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search Here">
+                    <i class="fa-solid fa-filter"></i>
+                </div>
+            </header>
+
+            <div class="main-wrapper">
+                <header class="cart-header">
+                    <h1>My Carts</h1>
+                    <!-- Global total removed -->
+                </header>
+
+                <div id="cart-container" class="cart-grid">
+                    <!-- Dynamic Cart Groups -->
+                </div>
+
+                <div id="empty-cart-msg" style="display: none; text-align: center; padding: 50px; color: #888;">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 50px; margin-bottom: 20px;"></i>
+                    <p>Your cart is empty.</p>
+                    <a href="CafeM.html" style="color: var(--primary-green); font-weight: 600;">Go to Menu</a>
+                </div>
+                <div id="paymentModal" class="payment-modal-overlay">
+                    <div class="payment-modal">
+                        <div class="modal-header">
+                            <h2>Confirm Payment</h2>
+                            <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+                        </div>
+                        <div class="total-section">
+                            <span>Amount to Pay</span>
+                            <h1 id="modalTotalAmount">₹0</h1>
+                        </div>
+                        <div class="payment-options">
+                            <p>Select Payment Method:</p>
+                            <div class="option-buttons">
+                                <button class="pay-opt-btn active" id="btn-upi" onclick="selectPayment('upi')">
+                                    <i class="fa-solid fa-qrcode"></i> UPI
+                                </button>
+                                <button class="pay-opt-btn" id="btn-cash" onclick="selectPayment('cash')">
+                                    <i class="fa-solid fa-money-bill-1"></i> Cash
+                                </button>
+                            </div>
+                            <div id="qrSection" class="qr-section">
+                                <div class="qr-container">
+                                    <img src="qrplaceholder.jpg" alt="UPI QR Code">
+                                    <p>Scan to pay via any UPI app</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="confirm-pay-btn">Confirm & Place Order</button>
+                    </div>
+                </div>
+
+                <script>
+                    let cart = JSON.parse(localStorage.getItem('cafe_cart') || '[]');
+                    const user = JSON.parse(localStorage.getItem('onecampus_user') || '{}');
+
+                    function renderCart() {
+                        const container = document.getElementById('cart-container');
+                        const emptyMsg = document.getElementById('empty-cart-msg');
+                        const orderType = localStorage.getItem('cafe_order_type') || 'dine';
+                        const orderTypeText = orderType === 'delivery' ? 'Delivery' : 'Dine In';
+
+                        if (cart.length === 0) {
+                            container.style.display = 'none';
+                            emptyMsg.style.display = 'block';
+                            return;
+                        }
+
+                        container.style.display = 'flex';
+                        emptyMsg.style.display = 'none';
+
+                        // Group by cafe
+                        const groups = cart.reduce((acc, item) => {
+                            if (!acc[item.cafeName]) acc[item.cafeName] = [];
+                            acc[item.cafeName].push(item);
+                            return acc;
+                        }, {});
+
+                        container.innerHTML = Object.keys(groups).map(cafeName => {
+                            const items = groups[cafeName];
+                            const total = items.reduce((sum, i) => sum + (i.price * i.qty), 0);
+                            return `
+                                <section class="hotel-group">
+                                    <div class="hotel-header">
+                                        <div class="header-main">
+                                            <h2>${cafeName}</h2>
+                                            <span class="order-type-badge">${orderTypeText}</span>
+                                        </div>
+                                        <span class="hotel-total">${items.length} Items</span>
+                                    </div>
+                                    <div class="item-list">
+                                        ${items.map(item => `
+                                            <div class="cart-item">
+                                                <img src="${item.image}" alt="${item.name}" class="item-img" onerror="this.src='https://via.placeholder.com/50'">
+                                                <div class="item-info">
+                                                    <h3>${item.name}</h3>
+                                                    <p>Freshly prepared</p>
+                                                </div>
+                                                <div class="quantity-pill">
+                                                    <button onclick="changeQty('${item.id}', -1)">-</button>
+                                                    <span>${item.qty < 10 ? '0' + item.qty : item.qty}</span>
+                                                    <button onclick="changeQty('${item.id}', 1)">+</button>
+                                                </div>
+                                                <span class="price">₹${item.price * item.qty}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    <div class="cart-actions">
+                                        <div class="cart-total-info">
+                                            <span>Total:</span>
+                                            <span class="amount">₹${total}</span>
+                                        </div>
+                                        <button class="checkout-btn" onclick="openPaymentModal('${cafeName}', ${total})">Pay Now</button>
+                                    </div>
+                                </section>
+                            `;
+                        }).join('');
+                    }
+
+                    function changeQty(id, delta) {
+                        const item = cart.find(i => i.id === id);
+                        if (item) {
+                            item.qty += delta;
+                            if (item.qty <= 0) {
+                                cart = cart.filter(i => i.id !== id);
+                            }
+                            localStorage.setItem('cafe_cart', JSON.stringify(cart));
+                            renderCart();
+                        }
+                    }
+
+                    let activeCafe = '';
+                    let activeTotal = 0;
+
+                    function openPaymentModal(cafeName, total) {
+                        activeCafe = cafeName;
+                        activeTotal = total;
+                        document.getElementById('modalTotalAmount').innerText = `₹${total}`;
+                        document.getElementById('paymentModal').classList.add('active');
+                    }
+
+                    function closePaymentModal() {
+                        document.getElementById('paymentModal').classList.remove('active');
+                    }
+
+                    document.querySelector('.confirm-pay-btn').addEventListener('click', async () => {
+                        const paymentMethod = document.getElementById('btn-upi').classList.contains('active') ? 'UPI' : 'Cash';
+
+                        const cafeItems = cart.filter(i => i.cafeName === activeCafe);
+
+                        const orderType = localStorage.getItem('cafe_order_type') || 'dine';
+                        const deliveryLoc = localStorage.getItem('cafe_delivery_location') || 'Campus (Hostel)';
+
+                        const orderData = {
+                            studentId: user.id || user._id,
+                            studentName: user.fullName,
+                            items: cafeItems.map(i => ({ name: i.name, qty: i.qty, price: i.price })),
+                            total: activeTotal,
+                            cafeName: activeCafe,
+                            paymentMethod: paymentMethod,
+                            orderType: orderType,
+                            phone: user.phone || 'Not Provided',
+                            location: orderType === 'delivery' ? deliveryLoc : 'Dine-In'
+                        };
+
+                        try {
+                            const res = await fetch('/api/orders', {
+                                method: 'POST',
+                                headers: { 
+                                    'Content-Type': 'application/json',
+                                    'x-user-id': user.id || user._id
+                                },
+                                body: JSON.stringify(orderData)
+                            });
+                            const data = await res.json();
+                            if (data.success) {
+                                alert('Order placed successfully!');
+                                // Remove these items from cart
+                                cart = cart.filter(i => i.cafeName !== activeCafe);
+                                localStorage.setItem('cafe_cart', JSON.stringify(cart));
+                                window.location.href = 'myorders.html';
+                            } else {
+                                alert('Failed to place order: ' + data.message);
+                            }
+                        } catch (err) {
+                            alert('Error connecting to server');
+                        }
+                    });
+
+                    function selectPayment(method) {
+                        const btnUpi = document.getElementById('btn-upi');
+                        const btnCash = document.getElementById('btn-cash');
+                        const qrSection = document.getElementById('qrSection');
+
+                        btnUpi.classList.remove('active');
+                        btnCash.classList.remove('active');
+
+                        if (method === 'upi') {
+                            btnUpi.classList.add('active');
+                            qrSection.style.display = 'block';
+                        } else {
+                            btnCash.classList.add('active');
+                            qrSection.style.display = 'none';
+                        }
+                    }
+
+                    // Init
+                    renderCart();
+                </script>
+</body>
+
+</html>
