@@ -1,0 +1,66 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+.bgimg
+{
+    height:600px;
+}
+.library{
+    position: absolute;
+    bottom:0px;
+    display:inline-block;
+}
+.LIFT {
+    position: absolute;
+    top: 238px;
+    left: 103px;
+    font-weight: bold;
+}
+
+.HODMECH {
+    position: absolute;
+    top: 60px;
+    left: 15px;
+    font-weight: bold;
+}
+
+.COMPUTATIONALLAB {
+    position: absolute;
+    top: 180px;
+    left: 655px;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.DREAMSLAB {
+    position: absolute;
+    top: 180px;
+    left: 829px;
+    font-weight: bold;
+    font-size: 10px; 
+}
+
+.WASHROOM {
+    position: absolute;
+    top: 141px;
+    left: 1148px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.STAFFROOM {
+    position: absolute;
+    top: 126px;
+    left: 318px;
+    font-weight: bold;
+    font-size: 20px;
+}    

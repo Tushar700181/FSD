@@ -1,0 +1,86 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+
+.bgimg{
+    height: 700px;
+}
+
+.storage{
+    position: absolute;
+    font-size: .7em;
+    top: 280px;
+    left: 435px;
+    writing-mode: vertical-rl;
+
+}
+.openarea1{
+  position: absolute;
+  top: 150px;
+  left: 420px;
+}
+.openarea2{
+  position: absolute;
+  top: 480px;
+  left: 230px;
+}
+.Lift{
+  position: absolute;
+  top: 345px;
+  left: 320px;
+  font-size: 1.1em;
+}
+
+.washroom1{
+  position: absolute;
+  top: 240px;
+  left: 170px;
+}
+
+.washroom2{
+  position: absolute;
+  top: 480px;
+  left: 460px;
+}
+
+.toilet1{
+  position: absolute;
+  top: 150px;
+  left: 178px;
+}
+
+.toilet2{
+  position: absolute;
+  top: 395px;
+  left: 475px;
+}
+
+/*.storage{
+  top: 100px;
+  left: 100px;
+}*/
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+}
+  
+.modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+}
+
+.modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+}
+

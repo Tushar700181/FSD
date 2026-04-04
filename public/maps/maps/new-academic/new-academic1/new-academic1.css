@@ -1,0 +1,167 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+
+.bgimg
+{
+    height:600px;
+}
+.registrar
+{
+  position:absolute;
+  top:240px;
+  left:50px;
+  font-size: 8px;
+  color:blue
+
+}
+.registrarstaff
+{
+  position:absolute;
+  top:220px;
+  left:150px;
+  font-size: 8px;
+  color:blue
+
+}
+.financial
+{
+  position:absolute;
+  top:250px;
+  left:150px;
+  font-size: 8px;
+  color:blue
+
+}
+.placement
+{
+  position:absolute;
+  top:62px;
+  left:626px;
+  font-size: 10px;
+  color:blue
+  
+
+}
+.admin
+{
+  position:absolute;
+  top:62px;
+  left:756px;
+  font-size: 10px;
+  color:blue
+
+}
+.academics
+{
+  position:absolute;
+  top:235px;
+  left:650px;
+  font-size: 11px;
+  color:blue
+
+}
+.accounts
+{
+  position:absolute;
+  top:242px;
+  left:746px;
+  font-size: 10px;
+  color:blue
+
+}
+.maletoilet
+{
+  position:absolute;
+  top:260px;
+  left:240px;
+  font-size: 12px;
+  color:blue
+
+}
+.femaletoilet
+{
+  position:absolute;
+  top:235px;
+  left:520px;
+  font-size: 14px;
+  color:blue
+
+}
+.complex
+{
+  position:absolute;
+  top:70px;
+  left:1050px;
+  font-size: 20px;
+  color:blue
+
+}
+.tunga
+{
+  position:absolute;
+  top:450px;
+  left:1000px;
+  font-size: 20px;
+  color:blue
+
+}
+.maletoilet1
+{
+  position:absolute;
+  top:250px;
+  left:1120px;
+  font-size: 11px;
+  color:blue
+
+}
+.femaletoilet1
+{
+  position:absolute;
+  top:370px;
+  left:1120px;
+  font-size: 13px;
+  color:blue
+
+}
+.discussion1
+{
+  position:absolute;
+  top:110px;
+  left:160px;
+  font-size: 10px;
+  color:blue
+
+}
+.lift
+{
+  position:absolute;
+  top:330px;
+  left:1023px;
+  font-size: 12px;
+  color:blue
+
+}
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }

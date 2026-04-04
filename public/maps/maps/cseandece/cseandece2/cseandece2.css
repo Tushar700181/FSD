@@ -1,0 +1,124 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+.bgimg
+{
+    height: 600px;
+}
+.ec101
+{
+    position:absolute;
+    top: 100px;
+    left:30px;
+
+
+}
+.me101
+{
+    position:absolute;
+    top: 100px;
+    left:180px;
+
+}
+.washroom
+{
+    position:absolute;
+    top: 100px;
+    left:280px;
+
+
+}
+.washroom1
+{
+    position:absolute;
+    top: 380px;
+    left:250px;
+
+
+}
+.cs101
+{
+    position:absolute;
+    top: 100px;
+    left:550px;
+
+
+}
+.cs102
+{
+    position:absolute;
+    top: 100px;
+    left:740px;
+
+
+}
+.lift
+{
+    position:absolute;
+    top: 40px;
+    left:390px;
+
+
+}
+
+.aicselab
+{
+  position : absolute;
+  top: 400px;
+  left: 780px;
+  font-size: 15px;
+
+}
+
+.cyberlab
+{
+  position : absolute;
+  top: 380px;
+  left: 550px;
+  font-size: 15px;
+
+  
+  
+}
+
+.sdpd
+{
+  position : absolute;
+  top: 380px;
+  left: 5px;
+  font-size: 15px;
+
+}
+
+.lift1
+{
+  position : absolute;
+  top: 380px;
+  left: 450px;
+  font-size: 15px;
+
+}
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+}
+  
+.modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+}
+
+.modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+}

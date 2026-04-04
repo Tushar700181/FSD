@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sidebar-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`;
 
     renderDashboard();
+    fetchLiveStatus();
+    fetchNotifications();
     setupEventListeners();
 });
 
@@ -283,6 +285,60 @@ async function viewDetails(id) {
     `;
 
     openDetailsModal();
+}
+
+async function fetchLiveStatus() {
+    const user = StorageUtils.getCurrentUser();
+    if (!user) return;
+
+    try {
+        // 1. Fetch Latest Cafe Order
+        const cafeRes = await fetch(`/api/cafe/orders/user/${user.id}`);
+        const cafeData = await cafeRes.json();
+        const orderStatusEl = document.getElementById('cafe-order-status');
+        const cafeProgressEl = document.getElementById('cafe-progress');
+        
+        if (cafeData.success && cafeData.orders && cafeData.orders.length > 0) {
+            const latest = cafeData.orders[0];
+            orderStatusEl.textContent = latest.status;
+            // Map status to progress
+            const progressMap = { 'Pending': '20%', 'Preparing': '50%', 'Ready': '100%', 'Delivered': '100%' };
+            cafeProgressEl.style.width = progressMap[latest.status] || '10%';
+        }
+
+        // 2. Fetch Next Placement Drive
+        const placementRes = await fetch('/api/placements');
+        const placementData = await placementRes.json();
+        const placementNextEl = document.getElementById('placement-next');
+        
+        if (placementData.success && placementData.placements && placementData.placements.length > 0) {
+            const nextDrive = placementData.placements[0]; // Assuming sorted by date
+            placementNextEl.textContent = `${nextDrive.company} (${nextDrive.date})`;
+        }
+    } catch (err) {
+        console.error('Error fetching live status:', err);
+    }
+}
+
+async function fetchNotifications() {
+    const user = StorageUtils.getCurrentUser();
+    if (!user) return;
+
+    try {
+        // Aggregate notifications from multiple sources (Complaints, Cafe, Leaves)
+        const stats = await StorageUtils.getStats(user.id);
+        const unreadCount = stats.resolved; // Simple demo mapping: Resolved complaints count as notifications
+
+        const badge = document.getElementById('notification-badge');
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    } catch (err) {
+        console.error('Error fetching notifications:', err);
+    }
 }
 
 

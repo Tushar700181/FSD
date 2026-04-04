@@ -1,0 +1,85 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+.bgimg{
+    height: 600px;
+    width:auto;
+}
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }
+.library{
+    position: absolute;
+    bottom:0px;
+    display:inline-block;
+}
+
+
+.LIFT {
+     position: absolute;
+    top: 205px;
+    left: 100px;
+    font-weight: bold;
+}
+
+
+.ELECTRICROOM {
+  position: absolute;
+  top: 60px;
+  left: 15px;
+  font-weight: bold;
+  height: 20px;
+
+}
+
+.DESIGN_DYNAMICS_LAB {
+    position: absolute;
+    top: 148px;
+    left: 271px;
+    font-weight: bold;
+}
+
+.THERMAL_FLUIDS_CLASS {
+    position: absolute;
+    top: 140px;
+    left: 656px;
+    font-weight: bold;
+
+}
+
+.THERMAL_FLUIDS_LABORATORY {
+    position: absolute;
+    top: 140px;
+    left: 826px;
+    font-weight: bold;
+
+}
+
+.WASHROOM {
+    position: absolute;
+    top: 141px;
+    left: 1144px;
+    font-weight: bold;
+    font-size: 20px;
+}

@@ -509,7 +509,11 @@
               </div>
               <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Gender</label>
-                <input type="text" id="apply-gender" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-slate-600 text-sm outline-none transition-all">
+                <select id="apply-gender" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-slate-600 text-sm outline-none transition-all">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Others">Others</option>
+                </select>
               </div>
             </div>
 
@@ -521,7 +525,7 @@
               </div>
               <div class="col-span-2 space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Parent Name</label>
-                <input type="text" id="apply-parent-name" placeholder="Guardian Name" class="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all text-sm">
+                <input type="text" id="apply-parent-name" placeholder="Name" class="w-full px-3 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all text-sm">
               </div>
             </div>
 
@@ -670,6 +674,10 @@
           <button class="w-full py-2.5 bg-slate-900 text-white text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors"
             onclick="openApplyModal('${drive._id}', '${drive.company}', '${drive.role}')">
             Apply Now
+          </button>` : userRole === 'tpo' ? `
+          <button class="w-full py-2.5 bg-rose-500 text-white text-sm font-medium rounded-xl hover:bg-rose-600 transition-colors"
+            onclick="deleteDrive('${drive._id}')">
+            Remove Drive
           </button>` : `
           <div class="text-center py-2 px-3 bg-slate-50 border border-slate-100 rounded-xl text-slate-400 text-xs font-medium italic">
             Applications for Students Only
@@ -840,12 +848,24 @@
       document.getElementById('apply-role').value = role;
       document.getElementById('apply-drive-info').innerText = `${company} • ${role}`;
       
-      // 1. Pre-fill basic identity from session (and toggle editable state)
+      // 0. Fetch high-authority identity info (matches Leave form logic)
+      let fullProfile = {};
+      try {
+        const profileRes = await fetch(`/api/auth/profile/${userSession.id || userSession._id}`, {
+            headers: { 'x-user-id': userSession.id || userSession._id }
+        });
+        const profileData = await profileRes.json();
+        if (profileData.success) fullProfile = profileData.user;
+      } catch (err) {
+        console.error('Error fetching identity profile:', err);
+      }
+
+      // 1. Pre-fill identity from high-authority profile or session
       const identityFields = [
-        { id: 'apply-full-name', value: userSession.fullName },
-        { id: 'apply-roll-no', value: userSession.idNumber },
-        { id: 'apply-dept', value: userSession.department || userSession.branch },
-        { id: 'apply-gender', value: userSession.gender }
+        { id: 'apply-full-name', value: fullProfile.fullName || userSession.fullName },
+        { id: 'apply-roll-no', value: fullProfile.idNumber || userSession.idNumber || userSession.rollNo },
+        { id: 'apply-dept', value: fullProfile.department || userSession.department || userSession.branch },
+        { id: 'apply-gender', value: fullProfile.gender || userSession.gender || 'Male' }
       ];
 
       identityFields.forEach(field => {
@@ -959,6 +979,25 @@
         submitBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Submit Application';
       }
     });
+
+    async function deleteDrive(id) {
+        if (!confirm('Are you sure you want to remove this placement drive?')) return;
+        try {
+            const res = await fetch(`/api/placements/drive/${id}`, {
+                method: 'DELETE',
+                headers: { 'x-user-id': userSession.id || userSession._id }
+            });
+            if (res.ok) {
+                alert('Drive removed successfully');
+                fetchDrives();
+            } else {
+                const err = await res.json();
+                alert(err.message || 'Error removing drive');
+            }
+        } catch (err) {
+            console.error('Delete error:', err);
+        }
+    }
 
     // --- Form Submissions ---
     document.getElementById('driveForm').addEventListener('submit', async (e) => {

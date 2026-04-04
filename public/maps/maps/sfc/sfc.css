@@ -1,0 +1,92 @@
+
+@font-face {
+  font-family: 'mateSC';
+  src: url(../../fonts/Mate_SC/MateSC-Regular.ttf) format("truetype");
+}
+.nav{
+  justify-content: center;
+  background-color:#80BCBD ;
+  padding: 10px;
+}
+#myInput{
+border:2px solid black;
+border-radius: 7px;
+width:40vw;
+max-width: 200px;
+min-width: 130px;
+
+}
+#btn {
+  background-color: #789461;
+  border-radius: 7px;
+  color: white;
+  padding: 10px;
+  
+  width:100px;
+
+
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.first-chilli
+{
+  height:50px
+}
+.second-chilli
+{
+  height:50px;
+  
+  transform: scaleX(-1);
+}
+@media only screen and ((min-width: 339px) and (max-width: 460px)  ) {
+  .second-chilli {
+      display: none;
+  }
+}
+
+
+#btn:hover,#btn:focus {
+  background-color: #D4E7C5;
+  color: black;
+}
+.htext{
+  background-color: #80BCBD;
+  margin: 0px;
+  font-family: "mateSC",'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+}
+input[type="search"] {
+  padding-left: 10px;
+}
+.nav1{
+  position: sticky;
+  top:0px;
+}
+body::-webkit-scrollbar{
+  scrollbar-width: none;
+}
+.table-dark{
+  position: sticky;
+  top:100px;
+}
+tr{
+  z-index: 10;
+}
+tr:nth-child(odd)>td {
+  background-color: #b3b3b3; 
+}
+
+tr:nth-child(even) {
+  background-color: #ffffff; 
+}
+tr:hover>td{
+  background-color: #999999;
+  cursor: pointer;
+}
+h1{
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal; 
+}

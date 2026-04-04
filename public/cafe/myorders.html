@@ -81,19 +81,25 @@
 
         async function fetchMyOrders() {
             const studentId = user.id || user._id;
+            const ongoingList = document.getElementById('ongoingOrdersList');
+            const pastList = document.getElementById('pastOrdersList');
+            
             try {
                 const res = await fetch(`/api/orders/my/${studentId}`, {
-                    headers: { 'x-user-id': user.id || user._id }
+                    headers: { 'x-user-id': studentId }
                 });
                 const data = await res.json();
 
                 if (data.success) {
+                    sessionStorage.setItem('last_orders', JSON.stringify(data.orders));
                     renderOrders(data.orders);
                 } else {
                     console.error('Failed to fetch orders:', data.message);
+                    ongoingList.innerHTML = `<p style="color: #e74c3c; padding: 20px;">Error: ${data.message}</p>`;
                 }
             } catch (err) {
                 console.error('Error fetching orders:', err);
+                ongoingList.innerHTML = `<p style="color: #e74c3c; padding: 20px;">Connection failed. Please retry.</p>`;
             }
         }
 
@@ -189,23 +195,20 @@
             const orders = JSON.parse(sessionStorage.getItem('last_orders') || '[]');
             const order = orders.find(o => o._id === orderId);
             
-            if (!order) return;
-
-            const modal = document.getElementById('ratingOverlay');
-            const list = document.getElementById('ratingItemsList');
-            
-            list.innerHTML = order.items.map(item => `
-                <div class="rating-item" data-item-id="${item.id}">
+            list.innerHTML = order.items.map(item => {
+                const itemId = item.id || item._id;
+                return `
+                <div class="rating-item" data-item-id="${itemId}">
                     <span style="font-weight: 600; font-size: 14px;">${item.name}</span>
-                    <div class="stars" id="stars-${item.id}">
-                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 1)"></i>
-                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 2)"></i>
-                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 3)"></i>
-                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 4)"></i>
-                        <i class="fa-solid fa-star" onclick="setRating('${item.id}', 5)"></i>
+                    <div class="stars" id="stars-${itemId}">
+                        <i class="fa-solid fa-star" onclick="setRating('${itemId}', 1)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${itemId}', 2)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${itemId}', 3)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${itemId}', 4)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating('${itemId}', 5)"></i>
                     </div>
                 </div>
-            `).join('');
+            `;}).join('');
             
             modal.style.display = 'flex';
         }
@@ -257,19 +260,7 @@
             document.getElementById('ratingOverlay').style.display = 'none';
         }
 
-        async function fetchMyOrders() {
-            const studentId = user.id || user._id;
-            try {
-                const res = await fetch(`/api/orders/my/${studentId}`);
-                const data = await res.json();
-                if (data.success) {
-                    sessionStorage.setItem('last_orders', JSON.stringify(data.orders));
-                    renderOrders(data.orders);
-                }
-            } catch (err) {
-                console.error('Error fetching orders:', err);
-            }
-        }
+        // fetchMyOrders consolidated at the top
 
         // Init
         fetchMyOrders();

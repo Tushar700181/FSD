@@ -1,0 +1,44 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+
+.bgimg
+{
+    height:600px;
+}
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }
+
+.terrace{
+  position: absolute;
+  top: 150px;
+  left: 1100px;
+}
+
+.washroom{
+  position: absolute;
+  top: 150px;
+  left: 650px;
+}

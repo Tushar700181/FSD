@@ -38,7 +38,8 @@ const collections = {
     timetable_slots: () => getDB().collection('timetable_slots'),
     personal_blocks: () => getDB().collection('personal_blocks'),
     appointments: () => getDB().collection('appointments'),
-    faculty_registry: () => getDB().collection('faculty_registry')
+    faculty_registry: () => getDB().collection('faculty_registry'),
+    placements: () => getDB().collection('placements')
 };
 
 module.exports = { connectDB, getDB, collections };

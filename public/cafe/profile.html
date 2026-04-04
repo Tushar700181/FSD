@@ -267,7 +267,10 @@
             try {
                 const res = await fetch(`/api/auth/locations/${userId}`, {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-user-id': userId
+                    },
                     body: JSON.stringify({ label, address })
                 });
 
@@ -297,7 +300,8 @@
 
             try {
                 const res = await fetch(`/api/auth/locations/${userId}/${locationId}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: { 'x-user-id': userId }
                 });
 
                 const data = await res.json();
@@ -319,7 +323,10 @@
             try {
                 const res = await fetch('/api/auth/locations/active', {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-user-id': userId
+                    },
                     body: JSON.stringify({ userId, locationId: locId })
                 });
 

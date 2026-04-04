@@ -1,0 +1,157 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+.bgimg
+{
+    height: 600px;
+}
+.ec201
+{
+    position:absolute;
+    top: 100px;
+    left:30px;
+   
+
+
+}
+.me201
+{
+    position:absolute;
+    top: 100px;
+    left:180px;
+   
+
+}
+.washroom
+{
+    position:absolute;
+    top: 100px;
+    left:280px;
+   
+
+
+}
+.washroom1
+{
+    position:absolute;
+    top: 380px;
+    left:250px;
+   
+
+
+}
+.cs201
+{
+    position:absolute;
+    top: 100px;
+    left:550px;
+   
+
+
+}
+.cs202
+{
+    position:absolute;
+    top: 100px;
+    left:740px;
+   
+
+
+}
+.lift
+{
+    position:absolute;
+    top: 40px;
+    left:390px;
+   
+
+
+}
+.digitalcircuitlab
+{
+    position:absolute;
+    top: 400px;
+    left:20px;
+   
+
+
+}
+.lift1
+{
+    position:absolute;
+    top: 360px;
+    left:450px;
+   
+
+
+}
+.analogcircuitlab
+{
+    position:absolute;
+    top: 380px;
+    left:130px;
+   
+
+
+}
+.electricdesignlab
+{
+    position:absolute;
+    top: 380px;
+    left:540px;
+   
+
+
+}
+.rfandmicrowavelab
+{
+    position:absolute;
+    top: 380px;
+    left:600px;
+   
+
+
+}
+.communicationlab
+{
+    position:absolute;
+    top: 380px;
+    left:830px;
+   
+
+
+}
+.lab5g
+{
+    position:absolute;
+    top: 380px;
+    left:770px;
+   
+
+
+}
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+}
+  
+.modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+}
+
+.modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+}
+

@@ -336,4 +336,22 @@ router.post('/bulk-upload-past-offers', authenticate, authorize(['tpo']), async 
     }
 });
 
+// DELETE /api/placements/drive/:id - Remove a placement drive (TPO only)
+router.delete('/drive/:id', authenticate, authorize(['tpo']), async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+            return res.status(400).json({ success: false, message: 'Invalid drive ID' });
+        }
+        const result = await collections.getDB().collection('placements').deleteOne({ _id: new ObjectId(id) });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ success: false, message: 'Drive not found' });
+        }
+        res.json({ success: true, message: 'Placement drive removed successfully' });
+    } catch (err) {
+        console.error('Delete drive error:', err);
+        res.status(500).json({ success: false, message: 'Error removing placement drive' });
+    }
+});
+
 module.exports = router;

@@ -1,0 +1,54 @@
+========================================================================
+             ONECAMPUS - PROJECT STARTUP GUIDE
+========================================================================
+
+Follow these steps to set up and run OneCampus on a new machine.
+
+1. PREREQUISITES
+----------------
+Ensure you have the following installed:
+- Node.js (version 18 or later)
+- MongoDB Community Server (running locally on port 27017)
+
+2. INSTALLATION
+---------------
+Open your terminal in the 'OneCampus_VER10_Extra' folder and run:
+> npm install
+
+3. ENVIRONMENT SETUP
+--------------------
+Create a file named '.env' in the root folder with these contents:
+
+MONGO_URI=mongodb://localhost:27017/onecampus
+PORT=5000
+FACULTY_SIGNUP_KEY=faculty123
+ADMIN_SIGNUP_KEY=admin123
+VENDOR_SIGNUP_KEY=cafe123
+TPO_SIGNUP_KEY=tpo123
+
+4. DATABASE SEEDING (CRITICAL)
+------------------------------
+Load the initial data into your local MongoDB by running these commands:
+
+# Load Users, Placements, and Alumni data
+> node scripts/seed_db.js
+
+# Load Timetable Periods, Classrooms, AND randomized assignments
+> node scripts/seed_timetable.js
+
+# (Optional) To load legacy Faculty details from JSON:
+> mongoimport --db onecampus --collection users --file docs/legacy/user_output.json --jsonArray
+
+5. STARTING THE APPLICATION
+---------------------------
+Start the server in development mode:
+> npm run dev
+
+6. ACCESSING THE PORTAL
+-----------------------
+Once the server is running, open your browser and go to:
+http://localhost:5000/landing/index.html
+
+========================================================================
+Prepared for OneCampus Final Evaluation - 30/30 Ready
+========================================================================

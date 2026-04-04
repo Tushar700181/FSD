@@ -580,7 +580,7 @@
             <li><a href="../placement/Placement.html">Placement</a></li>
             <li><a href="../leave/Leaveform.html">Leave</a></li>
             <li><a href="../dashboard/student_portal.html">Complaints</a></li>
-            <li><a href="#">Maps</a></li>
+            <li><a href="C:/Users/moham/OneDrive/Desktop/OneCampus_VER10_Extra1/maps/maps/index.html">Maps</a></li>
             <li id="auth-item" class="auth-item">
                 <!-- Data will be injected -->
             </li>
@@ -616,7 +616,7 @@
             <a href="../dashboard/student_portal.html" class="quick-chip">
                 <i class="fa-solid fa-comment-dots"></i> Complaints
             </a>
-            <a href="#" class="quick-chip">
+            <a href="../maps/index.html" class="quick-chip">
                 <i class="fa-solid fa-map"></i> Campus Map
             </a>
         </div>
@@ -711,7 +711,7 @@
                 <h3>Complaints</h3>
                 <p>Raise and resolve grievances with full transparency.</p>
             </a>
-            <a href="#" class="feature-card">
+            <a href="../maps/index.html" class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-map"></i></div>
                 <h3>Campus Maps</h3>
                 <p>Navigate every building, lab, and room with ease.</p>
@@ -797,9 +797,15 @@
 
         if (user) {
             authItem.innerHTML = `
-                <a href="../profile/Ver2/profile_glass.html" class="login-state">
-                    <i class="fa-solid fa-user-circle"></i> ${user.fullName.split(' ')[0]}
-                </a>
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <button id="notification-btn" style="background:none; border:none; color:var(--text-mid); font-size:1.2rem; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="notification-badge" class="hidden" style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--cream);">0</span>
+                    </button>
+                    <a href="../profile/Ver2/profile_glass.html" class="login-state">
+                        <i class="fa-solid fa-user-circle"></i> ${user.fullName.split(' ')[0]}
+                    </a>
+                </div>
                 <div class="profile-dropdown">
                     <div class="dropdown-header">
                         <div class="user-name">${user.fullName}</div>
@@ -913,5 +919,6 @@
 
         document.addEventListener('DOMContentLoaded', checkAuthState);
     </script>
+    <script src="js/notifications.js"></script>
 </body>
 </html>

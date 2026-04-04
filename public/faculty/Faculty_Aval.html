@@ -281,7 +281,8 @@
 
                 // Show faculty management features
                 document.getElementById('facultyManagement').style.display = 'block';
-                document.getElementById('myProfilePic').src = user.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`;
+                const cleanName = user.fullName.replace(/^(Dr\.|Prof\.|Mr\.|Ms\.)\s+/i, '');
+                document.getElementById('myProfilePic').src = user.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(cleanName)}&background=random`;
 
                 // Highlight active manual status
                 const currentManual = user.manualStatus || 'Auto';
@@ -438,7 +439,7 @@
                             return `
                                 <div class="faculty-card" onclick="openModal('${f._id}')">
                                     <div class="card-top">
-                                        <img class="card-image" src="${f.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random`}" alt="${f.fullName}">
+                                        <img class="card-image" src="${f.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName.replace(/^(Dr\.|Prof\.|Mr\.|Ms\.)\s+/i, ''))}&background=random`}" alt="${f.fullName}">
                                         <div class="faculty-header-info">
                                             <h3>${f.fullName}</h3>
                                             <p>${f.designation || ''}</p>
@@ -448,10 +449,10 @@
                                         <li><i class="fas fa-envelope"></i> ${f.email}</li>
                                         <li><i class="fas fa-door-open"></i> Cabin: ${f.cabin || 'N/A'}</li>
                                         <li><i class="fas fa-microscope"></i> ${f.focusAreas || 'N/A'}</li>
-                                        <li style="justify-content:space-between;margin-top:1rem;">
-                                            <div style="display:flex;flex-direction:column;">
-                                                <span style="font-weight:600">Status</span>
-                                                ${f.availability.substituteName ? `<div class="sub-badge" style="margin-top:.2rem;"><i class="fas fa-exchange-alt"></i> Sub: ${f.availability.substituteName}</div>` : ''}
+                                        <li style="display:flex; align-items:center; gap:0.75rem; margin-top:1rem;">
+                                            <div style="display:flex; flex-direction:column;">
+                                                <span style="font-weight:600; font-size:0.85rem;">Status</span>
+                                                ${f.availability && f.availability.substituteName ? `<div class="sub-badge" style="margin-top:.1rem;"><i class="fas fa-exchange-alt"></i> Sub: ${f.availability.substituteName}</div>` : ''}
                                             </div>
                                             <span class="status-badge ${cls}">${label}</span>
                                         </li>
@@ -532,7 +533,7 @@
 
                 content.innerHTML = `
                     <div class="modal-faculty-header">
-                        <img class="modal-avatar" src="${f.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName)}&background=random`}" alt="${f.fullName}">
+                        <img class="modal-avatar" src="${f.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(f.fullName.replace(/^(Dr\.|Prof\.|Mr\.|Ms\.)\s+/i, ''))}&background=random`}" alt="${f.fullName}">
                         <div>
                             <div style="display:flex;align-items:center;gap:1rem;">
                                 <h2>${f.fullName}</h2>

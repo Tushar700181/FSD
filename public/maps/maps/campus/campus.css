@@ -1,0 +1,117 @@
+*{
+    margin: 0;
+    padding: 0;
+
+}
+.bgimg
+{
+    width:700px;
+}
+
+.mech-block
+{
+    height: 35px;
+    position: absolute;
+    top: 250px;
+    left:410px;
+}
+.cse-ece-block
+{
+    height: 35px;
+    position: absolute;
+    top: 240px;
+    left:330px;
+}
+.new-academic
+{
+    height: 35px;
+    position: absolute;
+    top: 200px;
+    left:380px;
+}
+.old-academic
+{
+    height: 35px;
+    position: absolute;
+    top: 180px;
+    left:200px;
+}
+.mess
+{
+    height: 35px;
+    position: absolute;
+    top: 480px;
+    left:330px;
+}
+.staff
+{
+    height: 25px;
+    position: absolute;
+    top: 435px;
+    left:235px;
+}
+.director
+{
+    height: 25px;
+    position: absolute;
+    top: 460px;
+    left:270px;
+}
+.sports
+{
+    height: 35px;
+    position: absolute;
+    top: 460px;
+    left:170px;
+}
+.kalpana-chawla
+{
+    height: 35px;
+    position: absolute;
+    top: 500px;
+    left:380px;
+}
+.kalam
+{
+    height: 30px;
+    position: absolute;
+    top: 430px;
+    left:460px;
+}
+.mvhr
+{
+    height: 30px;
+    position: absolute;
+    top: 430px;
+    left:510px;
+}
+.srkh
+{
+    height: 30px;
+    position: absolute;
+    top: 430px;
+    left:390px;
+}
+.mech-workshop
+{
+    height: 30px;
+    position: absolute;
+    top: 285px;
+    left:450px;
+}
+
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }

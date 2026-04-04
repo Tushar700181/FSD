@@ -1,0 +1,18 @@
+h1{
+    text-align: center;
+    
+}
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OneCampus | Maps</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/iiitdmk-logo.png" sizes="18x18" type="image/png">
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="navbar" id="navbar">
+        <a href="../landing/index.html" style="text-decoration:none">
+            <div class="logo">One<span>Campus</span> <span style="font-size: 0.95rem; color: var(--text-light); font-family: 'DM Sans', sans-serif;">| Maps</span></div>
+        </a>
+        <ul class="nav-links">
+            <!-- Spaces Dropdown -->
+            <li class="dropdown-wrapper">
+                <button class="nav-item">Spaces <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: 5px; opacity: 0.7;"></i></button>
+                <div class="dropdown-menu">
+                    <a class="campus dropdown-item" href="#">Campus</a>
+                    <a class="cseandece dropdown-item" href="#">CSE & ECE Block</a>
+                    <a class="mech dropdown-item" href="#">ME Block</a>
+                    <a class="new-academic dropdown-item" href="#">New Academic Block</a>
+                    <a class="old-academic dropdown-item" href="#">Old Academic Block</a>
+                    <a class="playground dropdown-item" href="#">Playground</a>
+                    <a class="srkh dropdown-item" href="#">SRK HOR</a>
+                    <a class="kalam dropdown-item" href="#">Kalam HOR</a>
+                    <a class="mvhr dropdown-item" href="#">MV HOR</a>
+                    <a class="kchor dropdown-item" href="#">KC HOR</a>
+                </div>
+            </li>
+            
+            <!-- Search Dropdown -->
+            <li class="dropdown-wrapper">
+                <button class="nav-item search-trigger" onclick="myFunction()">
+                    <i class="fa-solid fa-magnifying-glass" style="margin-right:5px; opacity: 0.8;"></i> Search Location
+                </button>
+                <div class="dropdown-menu search-menu" id="myDropdown">
+                    <div class="search-input-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search rooms, labs, halls..." id="myInput" onkeyup="arnav()">
+                    </div>
+                    <div class="search-results">
+                      <a class="arnav_search" href="#">5G USAGE LAB</a>
+                      <a class="arnav_search" href="#">ANALOG CIRCUIT LAB</a>
+                      <a class="arnav_search" href="#">COMMUNICATION LAB</a>
+                      <a class="arnav_search" href="#">CS 201</a>
+                      <a class="arnav_search" href="#">CS 202</a>
+                      <a class="arnav_search" href="#">DIGITAL CIRCUIT </a>
+                      <a class="arnav_search" href="#">EC 201</a>
+                      <a class="arnav_search" href="#">ELECTRIC DESIGN AND RF AND MICROWAVE LAB</a>
+                      <a class="arnav_search" href="#">ME 201</a>
+                      <a class="arnav_search" href="#">ACADEMIC CELL</a>
+                      <a class="arnav_search" href="#">ACCOUNT AND AUDIT SECTION</a>
+                      <a class="arnav_search" href="#">ADMINISTRATIVE SECTION</a>
+                      <a class="arnav_search" href="#">DISCUSSION ROOM</a>
+                      <a class="arnav_search" href="#">FINANCIAL OFFICER</a>
+                      <a class="arnav_search" href="#">PURCHASE SECTION</a>
+                      <a class="arnav_search" href="#">TUNGABHADRA SEMINAR HALL</a>
+                      <a class="arnav_search" href="#">MULTIPURPOSE SEMINAR HALL</a>
+                      <a class="arnav_search" href="#">REGISTRAR STAFF</a>
+                      <a class="arnav_search" href="#">AIDS AND CSE LAB</a>
+                      <a class="arnav_search" href="#">CS 101</a>
+                      <a class="arnav_search" href="#">CS 102</a>
+                      <a class="arnav_search" href="#">CYBER PHYSICAL SYSTEM LAB</a>
+                      <a class="arnav_search" href="#">EC 101</a>
+                      <a class="arnav_search" href="#">ME 101</a>
+                      <a class="arnav_search" href="#">SOFTWARE DESIGN AND PRODUCT DEVLOPMENT</a>
+                      <a class="arnav_search" href="#">BASKETBALL GROUND</a>
+                      <a class="arnav_search" href="#">KABADDI COURT</a>
+                      <a class="arnav_search" href="#">CRICKET PRACTICE NETS</a>
+                      <a class="arnav_search" href="#">MULTI PURPOSE GROUND</a>
+                      <a class="arnav_search" href="#">SARDAR VALLABHAI PATEL BADMINTON STADIUM</a>
+                      <a class="arnav_search" href="#">VOLLEY BALL -1 COURT</a>
+                      <a class="arnav_search" href="#">VOLLEY BALL - 2 COURT</a>
+                      <a class="arnav_search" href="#">TENNIS COURT</a>
+                      <a class="arnav_search" href="#">CCTV SERVER ROOM (ACADEMIC BUILDING)</a>
+                      <a class="arnav_search" href="#">CHAIRMAN ROOM</a>
+                      <a class="arnav_search" href="#">CONFERENCE ROOM NEW ACADEMIC</a>
+                      <a class="arnav_search" href="#">DEAN ROOM -1 </a>
+                      <a class="arnav_search" href="#">DEAN ROOM -2</a>
+                      <a class="arnav_search" href="#">DEAN ROOM -3</a>
+                      <a class="arnav_search" href="#">DEAN ROOM -4</a>
+                      <a class="arnav_search" href="#">KRISHNA SEMINAR HALL</a>
+                      <a class="arnav_search" href="#">HUNDRI SEMINAR HALL</a>
+                      <a class="arnav_search" href="#">DINING (ACADEMIC BUILDING)</a>
+                      <a class="arnav_search" href="#">DIRECTOR'S ROOM </a>
+                      <a class="arnav_search" href="#">COMPUTATIONAL LABORATORY</a>
+                      <a class="arnav_search" href="#">DREAAMS LABORATORY</a>
+                      <a class="arnav_search" href="#">MECHANICAL DEPARTMENT OFFICE</a>
+                      <a class="arnav_search" href="#">MECHANICAAL HOD</a>
+                      <a class="arnav_search" href="#">STAFF ROOMS MECHANICAL</a>
+                      <a class="arnav_search" href="#">DESIGN AND DYNAMICS LABORATORY</a>
+                      <a class="arnav_search" href="#">THERMAL AND FLUIDS</a>
+                      <a class="arnav_search" href="#">DRONE LAB</a>
+                      <a class="arnav_search" href="#">ELECTRIC DRIVES AND INDTUMENTAL LAB</a>
+                      <a class="arnav_search" href="#">EMBEDDED SYSTEM AND IOT LAB</a>
+                      <a class="arnav_search" href="#">FIRE STATION PUMP</a>
+                      <a class="arnav_search" href="#">HALL</a>
+                      <a class="arnav_search" href="#">LIBRARY</a>
+                      <a class="arnav_search" href="#">MEETING ROOM</a>
+                      <a class="arnav_search" href="#">MICROPROCESSOR AND MICROCONTROLLER LAB</a>
+                      <a class="arnav_search" href="#">READING HALL</a>
+                      <a class="arnav_search" href="#">STORE ROOM</a>
+                      <a class="arnav_search" href="#">VLSI AND DSP LAB</a>
+                      <a class="arnav_search" href="#">ATM</a>
+                      <a class="arnav_search" href="#">CONFERENCE HALL</a>
+                      <a class="arnav_search" href="#">DS101</a>
+                      <a class="arnav_search" href="#">DS102</a>
+                      <a class="arnav_search" href="#">DS103</a>
+                      <a class="arnav_search" href="#">DS104</a>
+                      <a class="arnav_search" href="#">LANGUAGE LAB</a>
+                      <a class="arnav_search" href="#">OFFICE DOS</a>
+                      <a class="arnav_search" href="#">OLD SEMINAR HALL</a>
+                      <a class="arnav_search" href="#">STAFF ROOM DOS</a>
+                      <a class="arnav_search" href="#">CSE LAB(DOS)</a>
+                      <a class="arnav_search" href="#">IOT LAB(DOS)</a>
+                      <a class="arnav_search" href="#">SIC LAB(DOS)</a>
+                      <a class="arnav_search" href="#">PHYSICS LAB2(DOS)</a>
+                      <a class="arnav_search" href="#">VLSI LABS(OLD SEMINAR)</a>
+                      <a class="arnav_search" href="#">PHYSICS LAB</a>
+                      <a class="arnav_search" href="#">PHYSICS RESEARCH FACILITY</a>    
+                      <a class="arnav_search" href="#">COMPUTING LAB</a>
+                      <a class="arnav_search" href="#">HIGH PERFORMANCE COMPUTING AND RESEARCH</a>
+                      <a class="arnav_search" href="#">FACULTY CABIN(CSE)</a>
+                      <a class="arnav_search" href="#">FACULTY CABIN(ECE)</a>
+                      <a class="arnav_search" href="#">MVRH HALL OF RESIDENCE</a>        
+                      <a class="arnav_search" href="#">SRKH HALL OF RESIDENCE</a> 
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item d-none d-lg-block"><span style="color:var(--border)">|</span></li>
+            <li><a href="../landing/index.html" class="nav-item">Back to Home</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAP CONTAINER -->
+    <main class="map-layout">
+        <!-- Overlay display for search and direction -->
+        <div id="searchdisplay" style="display:none;"></div>
+        <a id="asearch" href="#" target="_blank" style="display:none;"><i class="fa-solid fa-location-arrow" style="margin-right: 6px;"></i><span id="asearch-text"></span></a>
+        
+        <iframe class="map" src="maps/campus/campus.html" frameborder="0"></iframe>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="search.js"></script>
+    <script src="script.js"></script>
+    <script src="iframecontent.js"></script>
+    <script>
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.closest('.search-trigger') && !event.target.closest('.search-menu')) {
+          var dropdowns = document.getElementsByClassName("search-menu");
+          for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+        }
+      }
+      
+      const originalHref = document.getElementById("asearch");
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if(mutation.type === "childList") {
+              if(originalHref.innerHTML.indexOf("fa-location-arrow") === -1 && originalHref.innerHTML !== "") {
+                 let text = originalHref.innerText.replace("CLICK HERE FOR DIRECTIONS", "Get Directions");
+                 if(!text) text = "Get Directions";
+                 originalHref.innerHTML = `<i class="fa-solid fa-location-arrow" style="margin-right: 6px;"></i> ${text}`;
+              }
+            }
+        });
+      });
+      observer.observe(originalHref, { childList: true });
+    </script>
+</body>
+</html>

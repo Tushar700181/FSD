@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sai Food Court</title>
+    <link rel="stylesheet" href="sfc.css">
+    <link rel="icon" href="https://iiitk.ac.in/images/logo/logo_white.png" sizes="16x16" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+ <nav class="nav1">
+
+    
+  <center> <div>
+    <h1 class="htext"><img src="chilli.png" class="first-chilli" alt=""><b> Sai Food Court Menu</b><img src="chilli.png" class = "second-chilli" alt=""></h1>
+  </div></center>
+  <div class="nav"> 
+      <form class="d-flex" role="search">
+          <input  type="search"id="myInput" onkeyup="arnav()" aria-label="Search" placeholder="  Search Here ">
+          <button id ="btn" class="btn btn-outline-success fw-bolder" type="submit">Search</button>
+      </form>
+  </div>
+
+  
+  </nav>
+    <table class="table">
+        <thead class="table-dark">
+          <th>Sr. No.</th>
+          <th>Item</th>
+          <th>Price</th>
+        </thead>
+
+
+        <tbody id="food" class="food">
+        </tbody>
+      </table>
+      <script src="sfc.js"></script>
+</body>
+</html>

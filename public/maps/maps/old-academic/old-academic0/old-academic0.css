@@ -1,0 +1,120 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+
+.bgimg
+{
+    height:600px;
+}
+/* positioning starts here*/
+
+.meeting-room{
+  display: inline-block;
+  position: absolute;
+  padding: 2px;
+  font-weight: 600;
+  font-size: 14px;
+  bottom: 0px;
+}
+
+.seminarhall{
+  position: absolute;
+  top: 86px;
+  left: 145px;
+}
+.ds102{
+  position: absolute;
+  top: 223px;
+  left: 238px;
+}
+.ds101{
+  position: absolute;
+  top: 222px;
+  left: 308px;
+}
+.staff{
+  position: absolute;
+  top: 230px;
+  left: 620px;
+}
+
+.atm{
+  position: absolute;
+  top: 140px;
+  left: 435px;
+}
+.ds103{
+  position: absolute;
+  top: 488px;
+  left: 40px;
+}
+.ds104{
+  position: absolute;
+  top: 488px;
+  left: 92px;
+}
+.washroom1{
+  position: absolute;
+  top: 125px;
+  left: 258px;
+}
+.washroom2{
+  position: absolute;
+  top: 507px;
+  left: 142px;
+  font-size: 12px;
+}
+.vacantlab1{
+  position: absolute;
+  top: 358px;
+  left: 50px;
+}
+.vacantlab3{
+  position: absolute;
+  top: 501px;
+  font-size: 12px;
+  left: 227px;
+}
+
+.office{
+  position: absolute;
+  top: 496px;
+  left: 275px;
+  font-size: 12px;
+}
+.conferencehall{
+  position: absolute;
+  top: 363px;
+  left: 204px;
+  font-size: 10px;
+}
+.langlab{
+  position: absolute;
+  top: 363px;
+  left: 280px;
+  font-size: 12px;
+}
+/* position ends here */
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }

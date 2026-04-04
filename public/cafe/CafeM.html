@@ -198,7 +198,10 @@
                     try {
                         const res = await fetch(`/api/menus/${itemId}/rate`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'x-user-id': userId
+                            },
                             body: JSON.stringify({ userId, rating: value })
                         });
                         const data = await res.json();
@@ -230,7 +233,10 @@
                     try {
                         const res = await fetch('/api/auth/favorites/toggle', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'x-user-id': userId
+                            },
                             body: JSON.stringify({ userId, itemId })
                         });
                         const data = await res.json();

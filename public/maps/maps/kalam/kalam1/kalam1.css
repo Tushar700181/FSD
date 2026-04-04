@@ -1,0 +1,111 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+.bgimg
+{
+    height:600px;
+}
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }
+
+.washroom{
+    position: absolute;
+    top: 170px;
+    left: 245px;
+    text-align:center;
+    color: rgb(17, 91, 141);
+}
+.openarea{
+    position: absolute;
+    top: 80px;
+    left: 580px;
+    color: rgb(17, 91, 141);
+}
+.washroom2{
+    position: absolute;
+    top: 450px;
+    left: 560px;
+    text-align:center ;
+    color: rgb(17, 91, 141);
+}
+.lift{
+    position:absolute;
+    top: 338px;
+    left: 337px;
+    color: rgb(17, 91, 141);
+}
+.terrace{
+  position: absolute;
+  top: 170px;
+  left: 810px;
+  text-align:right ;
+  color: rgb(17, 91, 141);
+}
+.terrace1{
+    position: absolute;
+    top: 475px;
+    left: 90px;
+    color: rgb(17, 91, 141);
+}
+.electricityroom{
+    position: absolute;
+    top: 390px;
+    left: 273px;   
+    color: rgb(17, 91, 141);
+}
+.stairs{
+    position: absolute;
+    top: 350px;
+    left: 443px;  
+    color: rgb(17, 91, 141);
+}
+.stairsi{
+    position: absolute;
+    top: 230px;
+    left: 583px;
+    text-align: center;
+    color: rgb(17, 91, 141);
+}
+.electricityroomi{
+    position: absolute;
+    top: 220px;
+    left: 620px;
+    text-align: center;
+    color: rgb(17, 91, 141);
+}
+.open2{
+    position: absolute;
+    top: 520px;
+    left: 405px;
+    text-align: center;
+    color: rgb(17, 91, 141);
+}
+.open3{
+    position: absolute;
+    top: 510px;
+    left: 270px;
+    text-align: center;
+    color: rgb(17, 91, 141);
+}

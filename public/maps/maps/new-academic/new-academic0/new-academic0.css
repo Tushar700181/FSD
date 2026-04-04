@@ -1,0 +1,148 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+.bgimg
+{
+    height:600px;
+}
+.conferenceroom
+{
+  position: absolute;
+  top:55px;
+  left:90px;
+  color:rgb(2, 15, 255);
+}
+.chairman
+{
+  position: absolute;
+  top:55px;
+  left:720px;
+  color:rgb(2, 15, 255);
+}
+.dining
+{
+  position: absolute;
+  top:240px;
+  left:750px;
+  color:rgb(2, 15, 255);
+}
+.dean1
+{
+  position: absolute;
+  top:50px;
+  left:590px;
+  color:rgb(2, 15, 255);
+  font-size: 15px;;
+}
+.dean2
+{
+  position: absolute;
+  top:50px;
+  left:650px;
+  color:rgb(2, 15, 255);
+  font-size: 15px;
+}
+.directorsroom
+{
+  position: absolute;
+  top:250px;
+  left:50px;
+  color:rgb(2, 15, 255);
+  font-size: 15px;
+}
+.dean3
+{
+  position: absolute;
+  top:250px;
+  left:620px;
+  color:rgb(2, 15, 255);
+  font-size: 15px;
+}
+.dean4
+{
+  position: absolute;
+  top:250px;
+  left:680px;
+  color:rgb(2, 15, 255);
+  font-size: 15px;
+}
+.maletoilet
+{
+  position: absolute;
+  top:260px;
+  left:250px;
+  color:rgb(2, 15, 255);
+  font-size: 15px;
+}
+.femaletoilet
+{
+  position: absolute;
+  top:240px;
+  left:500px;
+  color:rgb(2, 15, 255);
+  font-size: 15px;
+}
+.maletoilet1
+{
+  position: absolute;
+  top:250px;
+  left:1100px;
+  color:rgb(2, 15, 255);
+  font-size: 10px;
+}
+.lift
+{
+  position: absolute;
+  top:326px;
+  left:1025px;
+  color:rgb(2, 15, 255);
+  font-size: 10px;
+
+}
+.femaletoilet1
+{
+  position: absolute;
+  top:290px;
+  left:1125px;
+  color:rgb(2, 15, 255);
+  font-size: 10px;
+}
+.krishna
+{
+  position: absolute;
+  top:70px;
+  left:1000px;
+  color:rgb(2, 15, 255);
+  font-size: 20px;
+}
+.hundri
+{
+  position: absolute;
+  top:450px;
+  left:1000px;
+  color:rgb(2, 15, 255);
+  font-size: 20px;
+}
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }

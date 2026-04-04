@@ -14,6 +14,7 @@ const placementRoutes = require('./routes/placements');
 const facultyRoutes = require('./routes/faculty');
 const adminFacultyRoutes = require('./routes/admin_faculty');
 const adminStudentsRoutes = require('./routes/admin_students');
+const notificationRoutes = require('./routes/notifications');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use('/api/placements', placementRoutes);
 app.use('/api/faculty', facultyRoutes);
 app.use('/api/admin', adminFacultyRoutes);
 app.use('/api/admin', adminStudentsRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // 2. Static Files
 const frontendPath = path.resolve(__dirname, '../public');

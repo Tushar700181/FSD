@@ -1,0 +1,128 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    color: rgb(17, 91, 141);
+    font-weight: 600;
+}
+
+.modal-body{
+    color:black;
+    font-weight: 400;
+  }
+
+.bgimg
+{
+    width: 730px;
+}
+.reading-hall
+{
+    position:absolute;
+    top: 125px;
+    left:620px;
+
+}
+.meeting-room
+{
+    position: absolute;
+    top: 120px;
+    left: 450px;
+}
+.library
+{
+    position: absolute;
+    top: 160px;
+    left: 450px;
+}
+.hall
+{
+    position: absolute;
+    top: 350px;
+    left: 25px;
+    font-size: smaller;
+}
+.fire-pump-station
+{
+    position: absolute;
+    top: 350px;
+    left: 100px;
+    font-size: smaller;
+}
+.washroom
+{
+    position: absolute;
+    top: 320px;
+    left: 220px;
+    font-size: smaller;
+}
+.storeroom
+{
+    position: absolute;
+    top: 340px;
+    left: 300px;
+    font-size: smaller;
+}
+.mpmclab
+{
+    position: absolute;
+    top: 350px;
+    left: 550px;
+    font-size: smaller;
+}
+.elecdriveslab
+{
+    position: absolute;
+    top: 350px;
+    left: 595px;
+    font-size: smaller;
+}
+.dronelab
+{
+    position: absolute;
+    top: 350px;
+    left: 625px;
+    font-size: smaller;
+}
+.iotlab
+{
+    position: absolute;
+    top: 350px;
+    left: 665px;
+    font-size: smaller;
+}
+.vlsidsplab
+{
+    position: absolute;
+    top: 350px;
+    left: 700px;
+    font-size: smaller;
+}
+.laboratories
+{
+    position: absolute;
+    top: 315px;
+    left: 570px;
+    font-size: 25px;
+}
+.vacant{
+    position: absolute;
+    top: 132px;
+    left: 170px;
+}
+
+/* colours Modal */
+.modal-header {
+    background-color: #343a40; /* Dark Gray */
+    color: #ffffff; /* White */
+  }
+  
+  .modal-footer {
+    background-color: #f8f9fa; /* Lighter Gray */
+    color: black;
+  }
+  
+  .modal-content {
+    background-color: #ffffff; /* White */
+    color: #333333; /* Dark Gray */
+  }
+
